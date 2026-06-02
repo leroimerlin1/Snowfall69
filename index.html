@@ -695,7 +695,7 @@
         <div class="info-row"><span class="info-row-icon">ℹ️</span><span class="info-row-label">Pour toute commande, une carte d'identité 🪪 et une photo 📸 de vous sont nécessaires.</span></div>
         <div style="margin-top:12px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:12px 14px;text-align:center">
           <span style="color:#888;font-size:0.85rem">Contact secrétaire</span><br>
-          <span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px">@sav_Snowfall69</span>
+          <span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px">@franklin69200</span>
         </div>
       </div>
       <div class="info-card">
@@ -734,9 +734,9 @@
           <div class="reseau-text"><div class="reseau-name">Telegram VIP</div><div class="reseau-sub">Canal privé ⭐️</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-        <div class="reseau-item" data-link="http://t.me/sav_Snowfall69">
+        <div class="reseau-item" data-link="https://t.me/franklin69200">
           <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="SAV"></div>
-          <div class="reseau-text"><div class="reseau-name">Secrétaire</div><div class="reseau-sub">@sav_Snowfall69 👨‍💼</div></div>
+          <div class="reseau-text"><div class="reseau-name">Secrétaire</div><div class="reseau-sub">@franklin69200 👨‍💼</div></div>
           <div class="reseau-arrow">›</div>
         </div>
       </div>
@@ -941,7 +941,7 @@ window._firestoreExtra = { getDocs, collection, query, where, deleteDoc, doc, Ti
 
 let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
-const TELEGRAM_CONTACT = "https://t.me/sav_Snowfall69";
+const TELEGRAM_CONTACT = "https://t.me/franklin69200";
 const CODE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
 
 // ══════════════════════════════════════════════════════════
@@ -1021,7 +1021,6 @@ function getLocalSession() {
 }
 
 function saveLocalSession(uid, displayName, username) {
-  // Session lasts until browser close (no explicit expiry - removed on logout)
   localStorage.setItem('sf69_session', JSON.stringify({ uid, displayName, username, expiresAt: Date.now() + 365*24*60*60*1000 }));
 }
 
@@ -1031,15 +1030,11 @@ function clearLocalSession() {
 
 // Decide what to show on gate
 async function initGate() {
-  // Check if already logged in via Firebase
-  // We use onAuthStateChanged later, but for gate we check local session
   const session = getLocalSession();
   if (session) {
-    // Has a saved session — try to show login form pre-filled
     showGateLogin();
     return;
   }
-  // No session — check if there's an active code to show timer
   const codeData = await getActiveCode();
   if (codeData) startGateTimer(codeData.expiresAt);
   showGateCode();
@@ -1074,19 +1069,16 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   const data = await getActiveCode();
   if (!data) { errEl.textContent = '❌ Aucun code actif. Demandez-en un.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
   if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
-  // Code valid — check if user already has account
   const session = getLocalSession();
   if (session) {
-    // Has existing account, go to login step
     showGateLogin();
   } else {
-    // New user, go to registration
     showGateRegister();
   }
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// Request code via Telegram
+// Request code via Telegram — now points to @franklin69200
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1563,7 +1555,7 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
   if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
-  window.open(`https://t.me/sav_Snowfall69?text=${encodeURIComponent(message)}`,'_blank');
+  window.open(`https://t.me/franklin69200?text=${encodeURIComponent(message)}`,'_blank');
 };
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
