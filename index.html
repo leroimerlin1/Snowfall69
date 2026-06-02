@@ -27,6 +27,32 @@
       touch-action:manipulation;
     }
 
+    /* ═══ INAPP BANNER ═══ */
+    #inapp-banner {
+      display:none;
+      position:fixed; top:0; left:0; right:0; z-index:99999;
+      background:linear-gradient(135deg,#c0392b,#e74c3c);
+      color:#fff; padding:14px 16px 12px;
+      text-align:center;
+      font-family:'Barlow',sans-serif;
+      font-size:0.82rem; font-weight:600;
+      line-height:1.5;
+      border-bottom:2px solid rgba(255,255,255,0.2);
+      box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    }
+    #inapp-banner.show { display:block; }
+    #inapp-banner strong { font-weight:900; }
+    #inapp-open-btn {
+      display:inline-block; margin-top:8px;
+      padding:8px 20px;
+      background:#fff; color:#c0392b;
+      border:none; border-radius:20px;
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:0.85rem; font-weight:900;
+      letter-spacing:1px; text-transform:uppercase;
+      cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.2);
+    }
+
     /* ═══ INTRO VIDEO ═══ */
     #intro-video-screen {
       display:none;
@@ -214,6 +240,20 @@
       cursor:pointer; user-select:none;
       animation:fadeUp 0.5s 1.2s ease both;
     }
+
+    /* ═══ OPEN IN BROWSER BUTTON (gate) ═══ */
+    .gate-open-browser-btn {
+      width:100%; padding:13px;
+      background:rgba(239,68,68,0.12);
+      border:1.5px solid rgba(239,68,68,0.4);
+      color:#ef4444; border-radius:12px;
+      font-family:'Barlow Condensed',sans-serif;
+      font-size:0.9rem; font-weight:800;
+      letter-spacing:1px; cursor:pointer;
+      margin-top:10px;
+      display:none;
+    }
+    .gate-open-browser-btn.show { display:block; }
 
     /* ═══════════════ SPLASH ═══════════════ */
     .splash {
@@ -582,6 +622,14 @@
 </head>
 <body>
 
+<!-- IN-APP BROWSER BANNER -->
+<div id="inapp-banner">
+  <strong>⚠️ Navigateur intégré détecté</strong><br>
+  Pour que le site fonctionne correctement, ouvre-le dans <strong>Safari</strong> ou <strong>Chrome</strong>.
+  <br>
+  <button id="inapp-open-btn" onclick="openInRealBrowser()">📱 Ouvrir dans le navigateur</button>
+</div>
+
 <!-- LIGHTBOX -->
 <div id="photo-lightbox">
   <img id="lb-img" src="" alt="">
@@ -617,6 +665,8 @@
       <input type="password" class="gate-input reg-input" id="login-pass" placeholder="Votre mot de passe" autocomplete="current-password">
       <button class="gate-btn" id="login-submit-btn">Se connecter</button>
       <div class="gate-error" id="gate-login-error"></div>
+      <!-- Bouton ouvrir dans browser si in-app -->
+      <button class="gate-open-browser-btn" id="login-browser-btn" onclick="openInRealBrowser()">📱 Problème de connexion ? Ouvrir dans Chrome/Safari</button>
     </div>
 
     <!-- PANEL CODE -->
@@ -629,6 +679,8 @@
       <div class="gate-error" id="gate-code-error"></div>
       <div class="gate-or">OU</div>
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
+      <!-- Bouton ouvrir dans browser si in-app -->
+      <button class="gate-open-browser-btn" id="code-browser-btn" onclick="openInRealBrowser()">📱 Ça ne marche pas ? Ouvrir dans Chrome/Safari</button>
     </div>
 
     <!-- PANEL REGISTER -->
@@ -1062,6 +1114,86 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimest
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
+// ══════════════════════════════════════════════════════════
+// DÉTECTION IN-APP BROWSER — CORRECTION PRINCIPALE
+// ══════════════════════════════════════════════════════════
+function isInAppBrowser() {
+  const ua = navigator.userAgent || '';
+  return (
+    /FBAN|FBAV|Instagram|Snapchat|Twitter\/|TikTok|Line\/|WhatsApp|MicroMessenger|GSA\//.test(ua) ||
+    // Telegram in-app browser sur Android
+    /Telegram/.test(ua) ||
+    // Facebook/Instagram webview iOS
+    (/iPhone|iPad/.test(ua) && !/Safari\//.test(ua) && /AppleWebKit/.test(ua)) ||
+    // Android generic webview (pas Chrome, pas Firefox)
+    (/Android/.test(ua) && /wv/.test(ua))
+  );
+}
+
+window.openInRealBrowser = function() {
+  const url = window.location.href;
+  // iOS : tente de forcer l'ouverture dans Safari
+  // Android : tente d'ouvrir intent vers Chrome
+  const ua = navigator.userAgent || '';
+  if (/iPhone|iPad/.test(ua)) {
+    // Sur iOS, on peut utiliser un lien universel ou juste window.open
+    window.location.href = 'googlechrome://' + url.replace(/^https?:\/\//, '');
+    setTimeout(() => { window.location.href = url; }, 300);
+  } else {
+    window.open(url, '_blank');
+  }
+  // Fallback : copier l'URL dans le presse-papier avec instruction
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('📋 Lien copié !\nColle-le dans Chrome ou Safari pour accéder au site.');
+    }).catch(() => {
+      prompt('Copie ce lien et ouvre-le dans Chrome ou Safari :', url);
+    });
+  } else {
+    prompt('Copie ce lien et ouvre-le dans Chrome ou Safari :', url);
+  }
+};
+
+// Afficher la bannière et les boutons si in-app
+if (isInAppBrowser()) {
+  document.getElementById('inapp-banner').classList.add('show');
+  // Afficher les boutons "ouvrir dans le navigateur" sur les panels
+  setTimeout(() => {
+    document.getElementById('login-browser-btn')?.classList.add('show');
+    document.getElementById('code-browser-btn')?.classList.add('show');
+  }, 500);
+}
+
+// ══════════════════════════════════════════════════════════
+// SAFE STORAGE — FALLBACK SI localStorage BLOQUÉ
+// ══════════════════════════════════════════════════════════
+const _memStore = {};
+
+function safeStorageSet(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch(e) {
+    _memStore[key] = value;
+  }
+}
+
+function safeStorageGet(key) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : (_memStore[key] || null);
+  } catch(e) {
+    return _memStore[key] || null;
+  }
+}
+
+function safeStorageDel(key) {
+  try { localStorage.removeItem(key); } catch(e) {}
+  delete _memStore[key];
+}
+
+// ══════════════════════════════════════════════════════════
+// FIREBASE INIT
+// ══════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyBtScxTiiatY2VkUWSjpYN5RsOF9aJByPk",
   authDomain: "snowfall69-6b718.firebaseapp.com",
@@ -1085,10 +1217,7 @@ let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
 const ADMIN_USERNAME = "snowfall_admin";
 const ADMIN_SECRET   = "Snowfall69Admin!";
-
-// ══ CONTACT MIS À JOUR ══
 const TELEGRAM_CONTACT = "https://t.me/franklin69200";
-
 const CODE_DURATION_MS = 30 * 60 * 1000;
 
 // ══════════════════════════════════════════════════════════
@@ -1117,7 +1246,7 @@ window.switchGateTab = (tab) => {
 };
 
 // ══════════════════════════════════════════════════════════
-// INTRO VIDEO — SON AUTOMATIQUE
+// INTRO VIDEO
 // ══════════════════════════════════════════════════════════
 function showIntroVideo(onFinish) {
   const screen  = document.getElementById('intro-video-screen');
@@ -1127,11 +1256,9 @@ function showIntroVideo(onFinish) {
   screen.classList.add('active');
   video.currentTime = 0;
 
-  // Tentative de lecture avec son
   video.muted = false;
   video.volume = 1;
   video.play().catch(() => {
-    // Si le navigateur bloque le son, on passe en muet puis on relance
     video.muted = true;
     video.play().catch(() => {});
   });
@@ -1164,7 +1291,10 @@ async function getActiveCode() {
     if (!data.code || !data.expiresAt) return null;
     if (Date.now() > data.expiresAt) return null;
     return data;
-  } catch(e) { return null; }
+  } catch(e) {
+    console.warn('getActiveCode error:', e);
+    return null;
+  }
 }
 
 async function adminGenerateCode() {
@@ -1211,27 +1341,33 @@ function startGateTimer(expiresAt) {
   codeTimerInterval = setInterval(update, 1000);
 }
 
+// ══ SESSION (utilise safeStorage) ══
 function getLocalSession() {
   try {
-    const s = JSON.parse(localStorage.getItem('sf69_session') || 'null');
+    const s = safeStorageGet('sf69_session');
     if (!s) return null;
-    if (Date.now() > s.expiresAt) { localStorage.removeItem('sf69_session'); return null; }
+    if (Date.now() > s.expiresAt) { safeStorageDel('sf69_session'); return null; }
     return s;
   } catch(e) { return null; }
 }
 
 function saveLocalSession(uid, displayName, username) {
-  localStorage.setItem('sf69_session', JSON.stringify({ uid, displayName, username, expiresAt: Date.now() + 365*24*60*60*1000 }));
+  safeStorageSet('sf69_session', { uid, displayName, username, expiresAt: Date.now() + 365*24*60*60*1000 });
 }
 
 function clearLocalSession() {
-  localStorage.removeItem('sf69_session');
+  safeStorageDel('sf69_session');
 }
 
 async function initGate() {
   switchGateTab('login');
-  const codeData = await getActiveCode();
-  if (codeData) startGateTimer(codeData.expiresAt);
+  // Tentative de récupération du code — en in-app browser ça peut échouer
+  try {
+    const codeData = await getActiveCode();
+    if (codeData) startGateTimer(codeData.expiresAt);
+  } catch(e) {
+    console.warn('Impossible de charger le code (in-app browser?):', e);
+  }
 }
 
 // ══ ADMIN GATE LOGIN ══
@@ -1258,6 +1394,10 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
       showSplashThenLaunch(true);
     } catch(e) {
       errEl.textContent = 'Erreur de connexion: ' + e.message;
+      // In-app browser hint
+      if (isInAppBrowser()) {
+        errEl.innerHTML += '<br><small style="color:#888">💡 Ouvre ce site dans Chrome ou Safari pour une meilleure compatibilité.</small>';
+      }
     }
     btn.disabled = false; btn.textContent = 'Accès Admin';
   } else {
@@ -1270,22 +1410,55 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
   errEl.textContent = '';
-  if (!input || input.length < 6) { errEl.textContent = 'Entrez un code à 6 chiffres.'; return; }
+
+  if (!input || input.length < 6) {
+    errEl.textContent = 'Entrez un code à 6 chiffres.';
+    return;
+  }
+
   const btn = document.getElementById('gate-verify-btn');
   btn.disabled = true; btn.textContent = 'Vérification...';
-  const data = await getActiveCode();
-  if (!data) { errEl.textContent = '❌ Aucun code actif. Demandez-en un.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
-  if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
 
-  document.getElementById('access-gate').classList.add('hidden');
-  showIntroVideo(() => {
-    document.getElementById('access-gate').classList.remove('hidden');
-    switchGateTab('register');
-  });
+  try {
+    const data = await getActiveCode();
+
+    if (!data) {
+      // Affiche un message adapté selon si c'est un in-app browser ou non
+      if (isInAppBrowser()) {
+        errEl.innerHTML = '⚠️ Connexion bloquée par le navigateur intégré.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+      } else {
+        errEl.textContent = '❌ Aucun code actif. Demandez-en un nouveau.';
+      }
+      btn.disabled = false; btn.textContent = 'Vérifier le code';
+      return;
+    }
+
+    if (data.code !== input) {
+      errEl.textContent = '❌ Code incorrect.';
+      btn.disabled = false; btn.textContent = 'Vérifier le code';
+      return;
+    }
+
+    // Code valide !
+    document.getElementById('access-gate').classList.add('hidden');
+    showIntroVideo(() => {
+      document.getElementById('access-gate').classList.remove('hidden');
+      switchGateTab('register');
+    });
+
+  } catch(e) {
+    console.error('Verify code error:', e);
+    if (isInAppBrowser()) {
+      errEl.innerHTML = '⚠️ Ce navigateur bloque la vérification.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+    } else {
+      errEl.textContent = '❌ Erreur réseau. Réessayez.';
+    }
+  }
+
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// ══ DEMANDER LE CODE → franklin69200 ══
+// ══ DEMANDER LE CODE ══
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1312,7 +1485,11 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
     saveLocalSession(cred.user.uid, name, username);
     launchApp();
   } catch(e) {
-    errEl.textContent = e.code === 'auth/email-already-in-use' ? 'Identifiant déjà utilisé.' : 'Erreur : ' + e.message;
+    if (isInAppBrowser()) {
+      errEl.innerHTML = '⚠️ Navigateur intégré incompatible.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+    } else {
+      errEl.textContent = e.code === 'auth/email-already-in-use' ? 'Identifiant déjà utilisé.' : 'Erreur : ' + e.message;
+    }
   }
   btn.disabled = false; btn.textContent = 'Créer mon compte';
 });
@@ -1338,7 +1515,12 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
       saveLocalSession(cred.user.uid, name, username);
       launchApp();
     } catch(e2) {
-      errEl.textContent = 'Identifiant ou mot de passe incorrect.';
+      if (isInAppBrowser()) {
+        errEl.innerHTML = '⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+        document.getElementById('login-browser-btn').classList.add('show');
+      } else {
+        errEl.textContent = 'Identifiant ou mot de passe incorrect.';
+      }
     }
   }
   btn.disabled = false; btn.textContent = 'Se connecter';
@@ -1396,6 +1578,7 @@ async function uploadToCloudinary(file, progressBarId, statusId, progressWrapId)
     xhr.send(fd);
   });
 }
+
 async function uploadFiles(files,items,previewsId,delFn,pbId,sId,pwId){
   for(const f of files){
     try{
@@ -1626,8 +1809,13 @@ window.sendChatMsg=async()=>{const input=document.getElementById('chat-input'),t
 // ══════════════════════════════════════════════════════════
 // PANIER
 // ══════════════════════════════════════════════════════════
-let cart=JSON.parse(localStorage.getItem('cart_snowfall69'))||[];
-function saveCart(){localStorage.setItem('cart_snowfall69',JSON.stringify(cart));updateBadge();}
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem('cart_snowfall69')) || []; } catch(e) { cart = _memStore['cart_snowfall69'] || []; }
+
+function saveCart(){
+  safeStorageSet('cart_snowfall69', cart);
+  updateBadge();
+}
 function updateBadge(){const b=document.getElementById('cart-badge');b.textContent=cart.length||'';b.style.display=cart.length>0?'inline-block':'none';}
 
 // ══════════════════════════════════════════════════════════
@@ -1817,7 +2005,7 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ══ COMMANDE → franklin69200 ══
+// ══ COMMANDE ══
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
