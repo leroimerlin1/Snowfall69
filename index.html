@@ -1137,7 +1137,7 @@ window.openInRealBrowser = function() {
   const ua = navigator.userAgent || '';
   if (/iPhone|iPad/.test(ua)) {
     // Sur iOS, on peut utiliser un lien universel ou juste window.open
-    window.location.href = 'googlechrome://' + url.replace(/^https?:\/\//, '');
+    window.location.href = 'googlechrome://' + url.replace(/^https?:\/\//, 'https://leroimerlin1.github.io/Snowfall69/');
     setTimeout(() => { window.location.href = url; }, 300);
   } else {
     window.open(url, '_blank');
