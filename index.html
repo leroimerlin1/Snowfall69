@@ -27,6 +27,40 @@
       touch-action:manipulation;
     }
 
+    /* ═══ INTRO VIDEO ═══ */
+    #intro-video-screen {
+      display:none;
+      position:fixed; inset:0; z-index:10500;
+      background:#000;
+      align-items:center; justify-content:center;
+      overflow:hidden;
+    }
+    #intro-video-screen.active { display:flex; }
+    #intro-video-el {
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover;
+      object-position:center;
+    }
+    #intro-skip-btn {
+      position:absolute; bottom:max(40px, env(safe-area-inset-bottom,20px)); right:20px;
+      z-index:10;
+      background:rgba(0,0,0,0.55);
+      border:1.5px solid rgba(245,167,0,0.5);
+      color:var(--gold);
+      font-family:'Bebas Neue', sans-serif;
+      font-size:1rem; letter-spacing:2px;
+      padding:10px 22px; border-radius:30px;
+      cursor:pointer;
+      backdrop-filter:blur(6px);
+      opacity:0;
+      animation: fadeInSkip 1s 2s ease forwards;
+    }
+    @keyframes fadeInSkip {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
     /* ═══════════════ ACCESS GATE ═══════════════ */
     #access-gate {
       position:fixed; inset:0; background:#000; z-index:10000;
@@ -69,8 +103,6 @@
       background:linear-gradient(90deg, transparent, var(--gold), transparent);
       margin:16px auto; animation:fadeUp 0.6s 0.45s ease both;
     }
-
-    /* Gate panels */
     .gate-panel {
       width:100%;
       background:rgba(255,255,255,0.02);
@@ -139,8 +171,6 @@
       font-weight:700; letter-spacing:1px;
     }
     .gate-or::before, .gate-or::after { content:''; flex:1; height:1px; background:rgba(255,255,255,0.07); }
-
-    /* Registration specific */
     .reg-warning {
       background:rgba(245,167,0,0.07);
       border:1px solid rgba(245,167,0,0.25);
@@ -351,7 +381,7 @@
     .reseaux-list { display:flex; flex-direction:column; gap:12px; }
     .reseau-item { background:rgba(255,255,255,0.02); border:1px solid rgba(245,167,0,0.12); border-radius:16px; padding:14px 16px; display:flex; align-items:center; gap:14px; cursor:pointer; transition:all 0.2s; }
     .reseau-item:active { transform:scale(0.98); border-color:var(--gold); background:rgba(245,167,0,0.05); }
-    .reseau-icon-wrap { width:50px; height:50px; flex-shrink:0; border-radius:14px; border:1.5px solid rgba(245,167,0,0.2); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .reseau-icon-wrap { width:50px; height:50px; flex-shrink:0; border-radius:14px; border:1.5px solid rgba(245,167,0,0.2); display:flex; align-items:center; justify-content:center; font-size:1.5rem; overflow:hidden; background:rgba(245,167,0,0.05); }
     .reseau-icon-wrap img { width:34px!important; height:34px!important; object-fit:contain; }
     .reseau-text { flex:1; }
     .reseau-name { font-family:'Barlow Condensed', sans-serif; font-size:1rem; font-weight:800; color:#fff; text-transform:uppercase; letter-spacing:0.5px; }
@@ -471,8 +501,6 @@
     .upload-progress-wrap { width:100%; height:3px; background:rgba(245,167,0,0.1); border-radius:999px; overflow:hidden; margin-top:10px; display:none; }
     .upload-progress-bar { height:100%; background:linear-gradient(90deg,var(--gold),var(--gold-light)); border-radius:999px; transition:width 0.3s; }
     .upload-status { font-size:0.7rem; color:rgba(245,167,0,0.7); margin-top:7px; font-weight:700; display:none; }
-
-    /* Admin access code panel */
     .admin-code-panel { background:rgba(245,167,0,0.05); border:1.5px solid rgba(245,167,0,0.2); border-radius:16px; padding:18px; margin-bottom:18px; }
     .admin-code-display { font-family:'Bebas Neue', sans-serif; font-size:2.5rem; letter-spacing:12px; color:var(--gold); text-align:center; text-shadow:0 0 20px rgba(245,167,0,0.4); padding:12px 0; background:rgba(0,0,0,0.4); border-radius:12px; margin:12px 0; }
     .admin-code-info { font-size:0.75rem; color:#555; text-align:center; line-height:1.5; }
@@ -530,6 +558,12 @@
   <button id="lb-close">✕ Fermer</button>
 </div>
 
+<!-- INTRO VIDEO SCREEN -->
+<div id="intro-video-screen">
+  <video id="intro-video-el" src="ae snow.mp4" autoplay playsinline muted preload="auto"></video>
+  <button id="intro-skip-btn">Passer ›</button>
+</div>
+
 <!-- ACCESS GATE -->
 <div id="access-gate">
   <div class="gate-glow"></div>
@@ -538,7 +572,6 @@
     <div class="gate-logo-num">69</div>
     <div class="gate-line"></div>
 
-    <!-- Step 1: Enter code -->
     <div class="gate-panel" id="gate-step-code">
       <div class="gate-panel-title">🔐 Accès Privé</div>
       <div class="gate-panel-sub">Entrez le code d'accès ou demandez-le à notre contact.</div>
@@ -550,7 +583,6 @@
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
     </div>
 
-    <!-- Step 2: Register -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
@@ -558,7 +590,7 @@
       <label class="gate-field-label">Prénom</label>
       <input type="text" class="gate-input reg-input" id="reg-name" placeholder="Votre prénom">
       <label class="gate-field-label">Identifiant</label>
-      <input type="text" class="gate-input reg-input" id="reg-username" placeholder="Ex: john_doe (lettres, chiffres, _)" autocomplete="username">
+      <input type="text" class="gate-input reg-input" id="reg-username" placeholder="Ex: john_doe" autocomplete="username">
       <label class="gate-field-label">Mot de passe</label>
       <input type="password" class="gate-input reg-input" id="reg-password" placeholder="Minimum 6 caractères" autocomplete="new-password">
       <label class="gate-field-label">Confirmer le mot de passe</label>
@@ -567,7 +599,6 @@
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
 
-    <!-- Step: Login (returning user) -->
     <div class="gate-panel" id="gate-step-login" style="display:none">
       <div class="gate-panel-title">👋 Bon retour</div>
       <div class="gate-panel-sub">Connectez-vous ou demandez un nouveau code.</div>
@@ -690,20 +721,38 @@
     <!-- INFOS -->
     <div id="infos-page">
       <div class="page-title" style="padding-top:8px">Infos</div>
+
+      <!-- Bloc identité -->
       <div class="info-card">
-        <div class="info-card-header"><div class="info-card-icon">🪪</div><div class="info-card-title">Snowfall69</div></div>
-        <div class="info-row"><span class="info-row-icon">ℹ️</span><span class="info-row-label">Pour toute commande, une carte d'identité 🪪 et une photo 📸 de vous sont nécessaires.</span></div>
-        <div style="margin-top:12px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:12px 14px;text-align:center">
-          <span style="color:#888;font-size:0.85rem">Contact secrétaire</span><br>
-          <span style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px">@franklin69200</span>
+        <div class="info-card-header">
+          <div class="info-card-icon">❄️</div>
+          <div>
+            <div class="info-card-title">SNOWFALL</div>
+            <div style="font-size:0.72rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;margin-top:2px">(69-42-38-01-74) 📍</div>
+          </div>
+        </div>
+        <div style="text-align:center;padding:10px 0 6px">
+          <div style="font-size:1.6rem;margin-bottom:6px">🌎👽😜🤪🤯🥶</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:var(--gold);margin-bottom:2px">RHÔNE-ALPES</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
+        </div>
+        <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:12px 14px;text-align:center">
+          <span style="color:#888;font-size:0.8rem;font-weight:600">Contact principal</span><br>
+          <a href="https://t.me/Snowfall692" target="_blank" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;text-decoration:none">@Snowfall692</a>
+        </div>
+        <div class="info-row" style="margin-top:14px">
+          <span class="info-row-icon">ℹ️</span>
+          <span class="info-row-label">Pour toute commande, une carte d'identité 🪪 et une photo 📸 de vous sont nécessaires.</span>
         </div>
       </div>
+
+      <!-- Livraison -->
       <div class="info-card">
         <div class="info-card-header"><div class="info-card-icon">🚚</div><div class="info-card-title">Livraison</div></div>
         <div class="info-row" style="margin-bottom:10px">
           <span class="info-row-icon">📍</span>
           <div><div class="info-row-label">Départements desservis</div>
-          <div class="dept-badges"><span class="dept-badge">69</span><span class="dept-badge">42</span><span class="dept-badge">38</span><span class="dept-badge">01</span></div></div>
+          <div class="dept-badges"><span class="dept-badge">69</span><span class="dept-badge">42</span><span class="dept-badge">38</span><span class="dept-badge">01</span><span class="dept-badge">74</span></div></div>
         </div>
         <div class="price-table">
           <div class="price-table-label">Tarifs</div>
@@ -714,6 +763,8 @@
         </div>
         <div class="minimum-label"><span>Minimum 70€</span></div>
       </div>
+
+      <!-- Meet-up -->
       <div class="info-card">
         <div class="info-card-header"><div class="info-card-icon">📍</div><div class="info-card-title">Meet-up</div></div>
         <div class="meetup-row">
@@ -728,17 +779,84 @@
     <!-- RESEAUX -->
     <div id="reseaux-page">
       <div class="page-title" style="padding-top:8px">Nos Réseaux</div>
+
+      <!-- Identité en haut -->
+      <div style="background:rgba(245,167,0,0.04);border:1px solid rgba(245,167,0,0.15);border-radius:16px;padding:18px 16px;margin-bottom:16px;text-align:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;color:var(--gold);margin-bottom:4px">SNOWFALL</div>
+        <div style="font-size:0.82rem;color:rgba(245,167,0,0.7);font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;margin-bottom:10px">(69-42-38-01-74) 📍</div>
+        <div style="font-size:1.4rem;margin-bottom:8px">🌎👽😜🤪🤯🥶</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:#ddd;margin-bottom:2px">RHÔNE-ALPES</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:0.88rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
+      </div>
+
       <div class="reseaux-list">
-        <div class="reseau-item" data-link="https://t.me/+xkLrkV6xQBQ2OTQ0">
-          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Telegram"></div>
-          <div class="reseau-text"><div class="reseau-name">Telegram VIP</div><div class="reseau-sub">Canal privé ⭐️</div></div>
+
+        <!-- Canal Potato Chocolate -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px;margin-bottom:0">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL POTATO 🍫</div>
+          <div class="reseau-item" style="margin-bottom:8px;border-radius:12px" data-link="https://tatokdym.org/snowfallyon6900">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫</div>
+            <div class="reseau-text"><div class="reseau-name">tatokdym.org</div><div class="reseau-sub">snowfallyon6900</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+          <div class="reseau-item" style="border-radius:12px" data-link="https://tato.im/snowfallyon6900">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫</div>
+            <div class="reseau-text"><div class="reseau-name">tato.im</div><div class="reseau-sub">snowfallyon6900</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <!-- Canal Potato Snowflake -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL POTATO ❄️</div>
+          <div class="reseau-item" style="margin-bottom:8px;border-radius:12px" data-link="https://tatokdym.org/Snowfall_6900">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">❄️</div>
+            <div class="reseau-text"><div class="reseau-name">tatokdym.org</div><div class="reseau-sub">Snowfall_6900</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+          <div class="reseau-item" style="border-radius:12px" data-link="https://tato.im/Snowfall_6900">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">❄️</div>
+            <div class="reseau-text"><div class="reseau-name">tato.im</div><div class="reseau-sub">Snowfall_6900</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <!-- Canal Luffa -->
+        <div class="reseau-item" data-link="https://callup.luffa.im/c/Bkrpn3xvw37">
+          <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫🍁❄️</div>
+          <div class="reseau-text"><div class="reseau-name">Canal Luffa</div><div class="reseau-sub">🍫🍁❄️ luffa.im</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-        <div class="reseau-item" data-link="https://t.me/franklin69200">
-          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="SAV"></div>
-          <div class="reseau-text"><div class="reseau-name">Secrétaire</div><div class="reseau-sub">@franklin69200 👨‍💼</div></div>
+
+        <!-- Canal Telegram -->
+        <div class="reseau-item" data-link="https://t.me/Sn6900">
+          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Telegram">
+          </div>
+          <div class="reseau-text"><div class="reseau-name">Canal Telegram ℹ️</div><div class="reseau-sub">@Sn6900</div></div>
           <div class="reseau-arrow">›</div>
         </div>
+
+        <!-- Tous nos canaux -->
+        <div class="reseau-item" data-link="https://qrco.de/bfgCV3">
+          <div class="reseau-icon-wrap" style="font-size:1.3rem">🥇</div>
+          <div class="reseau-text"><div class="reseau-name">Tous nos canaux</div><div class="reseau-sub">qrco.de/bfgCV3</div></div>
+          <div class="reseau-arrow">›</div>
+        </div>
+
+        <!-- Contact Potato -->
+        <div class="reseau-item" data-link="https://t.me/Snowfall692">
+          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Contact">
+          </div>
+          <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@Snowfall692 🥇</div></div>
+          <div class="reseau-arrow">›</div>
+        </div>
+
       </div>
     </div>
 
@@ -802,8 +920,6 @@
           <h2>🛠️ Admin Panel</h2>
           <button id="admin-logout-btn">Déconnexion</button>
         </div>
-
-        <!-- Code d'accès -->
         <div class="admin-section-title">🔐 Code d'accès client</div>
         <div class="admin-code-panel">
           <div class="admin-code-info">Code actuel (visible uniquement par l'admin) :</div>
@@ -811,7 +927,6 @@
           <div class="admin-code-timer" id="admin-code-timer">Aucun code actif</div>
           <button class="admin-gen-btn" id="admin-gen-code-btn">🔄 Générer un nouveau code (30 min)</button>
         </div>
-
         <div class="admin-section-title">📦 Stock & Badges</div>
         <div id="admin-products-list"></div>
         <div class="admin-section-title">➕ Ajouter un produit</div>
@@ -941,8 +1056,29 @@ window._firestoreExtra = { getDocs, collection, query, where, deleteDoc, doc, Ti
 
 let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
-const TELEGRAM_CONTACT = "https://t.me/franklin69200";
-const CODE_DURATION_MS = 30 * 60 * 1000; // 30 minutes
+const TELEGRAM_CONTACT = "https://t.me/Snowfall692";
+const CODE_DURATION_MS = 30 * 60 * 1000;
+
+// ══════════════════════════════════════════════════════════
+// INTRO VIDEO
+// ══════════════════════════════════════════════════════════
+function showIntroVideo(onFinish) {
+  const screen = document.getElementById('intro-video-screen');
+  const video  = document.getElementById('intro-video-el');
+  const skipBtn = document.getElementById('intro-skip-btn');
+
+  screen.classList.add('active');
+  video.currentTime = 0;
+  video.play().catch(() => {});
+
+  const done = () => {
+    screen.classList.remove('active');
+    onFinish();
+  };
+
+  video.onended = done;
+  skipBtn.onclick = done;
+}
 
 // ══════════════════════════════════════════════════════════
 // ACCESS GATE SYSTEM
@@ -994,7 +1130,6 @@ async function loadAdminCodeDisplay() {
   else { document.getElementById('admin-code-display').textContent = '——————'; document.getElementById('admin-code-timer').textContent = 'Aucun code actif'; }
 }
 
-// Show expiry countdown on gate
 function startGateTimer(expiresAt) {
   const wrap = document.getElementById('gate-timer-info');
   const countdown = document.getElementById('gate-timer-countdown');
@@ -1010,7 +1145,6 @@ function startGateTimer(expiresAt) {
   codeTimerInterval = setInterval(update, 1000);
 }
 
-// Check if user has a valid local session
 function getLocalSession() {
   try {
     const s = JSON.parse(localStorage.getItem('sf69_session') || 'null');
@@ -1028,13 +1162,9 @@ function clearLocalSession() {
   localStorage.removeItem('sf69_session');
 }
 
-// Decide what to show on gate
 async function initGate() {
   const session = getLocalSession();
-  if (session) {
-    showGateLogin();
-    return;
-  }
+  if (session) { showGateLogin(); return; }
   const codeData = await getActiveCode();
   if (codeData) startGateTimer(codeData.expiresAt);
   showGateCode();
@@ -1058,7 +1188,7 @@ function showGateRegister() {
   document.getElementById('gate-step-login').style.display = 'none';
 }
 
-// Verify code button
+// Verify code → show intro video → then register or login
 document.getElementById('gate-verify-btn').addEventListener('click', async () => {
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
@@ -1069,22 +1199,23 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   const data = await getActiveCode();
   if (!data) { errEl.textContent = '❌ Aucun code actif. Demandez-en un.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
   if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
-  const session = getLocalSession();
-  if (session) {
-    showGateLogin();
-  } else {
-    showGateRegister();
-  }
+
+  // ✅ Code correct → jouer la vidéo intro
+  document.getElementById('access-gate').classList.add('hidden');
+  showIntroVideo(() => {
+    document.getElementById('access-gate').classList.remove('hidden');
+    const session = getLocalSession();
+    if (session) showGateLogin(); else showGateRegister();
+  });
+
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// Request code via Telegram — now points to @franklin69200
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
-// Gate register submit
 document.getElementById('reg-submit-btn').addEventListener('click', async () => {
   const name = document.getElementById('reg-name').value.trim();
   const username = document.getElementById('reg-username').value.trim().toLowerCase();
@@ -1110,7 +1241,6 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
   btn.disabled = false; btn.textContent = 'Créer mon compte';
 });
 
-// Gate login submit
 document.getElementById('login-submit-btn').addEventListener('click', async () => {
   const username = document.getElementById('login-user').value.trim().toLowerCase();
   const password = document.getElementById('login-pass').value;
@@ -1137,10 +1267,7 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
   btn.disabled = false; btn.textContent = 'Se connecter';
 });
 
-// Switch from login to code
-document.getElementById('gate-use-code-btn').addEventListener('click', () => {
-  showGateCode();
-});
+document.getElementById('gate-use-code-btn').addEventListener('click', () => { showGateCode(); });
 
 function launchApp() {
   document.getElementById('access-gate').classList.add('hidden');
@@ -1309,7 +1436,7 @@ document.getElementById('save-new-product-btn').addEventListener('click',async()
   renderAdminPanel();renderProducts();alert('✅ Produit créé !');
 });
 
-// ── AUTH (in-app modal) ───────────────────────────────────────────────────────
+// ── AUTH ──────────────────────────────────────────────────────────────────────
 window.switchAuthTab=(tab)=>{document.getElementById('tab-login').classList.toggle('active',tab==='login');document.getElementById('tab-register').classList.toggle('active',tab==='register');document.getElementById('auth-login-form').style.display=tab==='login'?'block':'none';document.getElementById('auth-register-form').style.display=tab==='register'?'block':'none';document.getElementById('auth-error').textContent='';};
 function openAuthModal(){document.getElementById('auth-modal').classList.add('open');}
 function closeAuthModal(){document.getElementById('auth-modal').classList.remove('open');}
@@ -1555,15 +1682,11 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
   if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
-  window.open(`https://t.me/franklin69200?text=${encodeURIComponent(message)}`,'_blank');
+  window.open(`https://t.me/Snowfall692?text=${encodeURIComponent(message)}`,'_blank');
 };
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-onAuthStateChanged(_auth, (user) => {
-  // Keep Firebase auth in sync but don't redirect — gate handles access
-});
-
-// Start gate
+onAuthStateChanged(_auth, () => {});
 initGate();
 </script>
 </body>
