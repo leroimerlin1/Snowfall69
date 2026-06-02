@@ -66,11 +66,13 @@
       position:fixed; inset:0; background:#000; z-index:10000;
       display:flex; align-items:center; justify-content:center;
       padding:20px;
+      overflow-y:auto;
     }
     #access-gate.hidden { display:none; }
     .gate-wrap {
       width:100%; max-width:380px;
       display:flex; flex-direction:column; align-items:center; gap:0;
+      padding:20px 0;
     }
     .gate-glow {
       position:fixed; top:-10%; left:50%; transform:translateX(-50%);
@@ -103,6 +105,27 @@
       background:linear-gradient(90deg, transparent, var(--gold), transparent);
       margin:16px auto; animation:fadeUp 0.6s 0.45s ease both;
     }
+
+    /* Gate tabs */
+    .gate-tabs {
+      display:flex; gap:0; width:100%;
+      background:rgba(255,255,255,0.03);
+      border:1.5px solid rgba(245,167,0,0.2);
+      border-radius:16px; padding:4px; margin-bottom:16px;
+      animation:fadeUp 0.5s 0.5s ease both;
+    }
+    .gate-tab {
+      flex:1; padding:11px 8px; text-align:center;
+      font-family:'Barlow Condensed', sans-serif;
+      font-size:0.88rem; font-weight:800; letter-spacing:1.5px;
+      text-transform:uppercase; color:#555;
+      border-radius:12px; cursor:pointer; transition:all 0.25s;
+    }
+    .gate-tab.active {
+      background:linear-gradient(135deg, var(--gold), #E09500);
+      color:#000;
+    }
+
     .gate-panel {
       width:100%;
       background:rgba(255,255,255,0.02);
@@ -183,6 +206,15 @@
       font-size:0.7rem; font-weight:800; color:#555;
       letter-spacing:1.5px; text-transform:uppercase;
       margin-bottom:6px; display:block;
+    }
+
+    /* Admin gate badge */
+    .admin-gate-hint {
+      text-align:center; margin-top:16px;
+      font-size:0.7rem; color:#2a2a2a;
+      font-weight:700; letter-spacing:1px;
+      cursor:pointer; user-select:none;
+      animation:fadeUp 0.5s 1.2s ease both;
     }
 
     /* ═══════════════ SPLASH ═══════════════ */
@@ -572,9 +604,28 @@
     <div class="gate-logo-num">69</div>
     <div class="gate-line"></div>
 
-    <div class="gate-panel" id="gate-step-code">
-      <div class="gate-panel-title">🔐 Accès Privé</div>
-      <div class="gate-panel-sub">Entrez le code d'accès ou demandez-le à notre contact.</div>
+    <!-- TABS: Se connecter / Nouveau client -->
+    <div class="gate-tabs">
+      <div class="gate-tab active" id="gate-tab-login" onclick="switchGateTab('login')">🔑 Se connecter</div>
+      <div class="gate-tab" id="gate-tab-code" onclick="switchGateTab('code')">🆕 Nouveau client</div>
+    </div>
+
+    <!-- PANEL LOGIN (affiché par défaut) -->
+    <div class="gate-panel" id="gate-step-login">
+      <div class="gate-panel-title">👋 Bon retour</div>
+      <div class="gate-panel-sub">Connectez-vous à votre compte.</div>
+      <label class="gate-field-label">Identifiant</label>
+      <input type="text" class="gate-input reg-input" id="login-user" placeholder="Votre identifiant" autocomplete="username">
+      <label class="gate-field-label">Mot de passe</label>
+      <input type="password" class="gate-input reg-input" id="login-pass" placeholder="Votre mot de passe" autocomplete="current-password">
+      <button class="gate-btn" id="login-submit-btn">Se connecter</button>
+      <div class="gate-error" id="gate-login-error"></div>
+    </div>
+
+    <!-- PANEL CODE (nouveau client) -->
+    <div class="gate-panel" id="gate-step-code" style="display:none">
+      <div class="gate-panel-title">🔐 Code d'accès</div>
+      <div class="gate-panel-sub">Entrez le code reçu ou demandez-le à notre contact.</div>
       <div class="gate-timer-info" id="gate-timer-info">⏱ Ce code expire dans <span id="gate-timer-countdown"></span></div>
       <input type="tel" class="gate-input" id="gate-code-input" placeholder="· · · · · ·" maxlength="6" autocomplete="off">
       <button class="gate-btn" id="gate-verify-btn">Vérifier le code</button>
@@ -583,6 +634,7 @@
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
     </div>
 
+    <!-- PANEL REGISTER (après code validé) -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
@@ -599,17 +651,20 @@
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
 
-    <div class="gate-panel" id="gate-step-login" style="display:none">
-      <div class="gate-panel-title">👋 Bon retour</div>
-      <div class="gate-panel-sub">Connectez-vous ou demandez un nouveau code.</div>
-      <label class="gate-field-label">Identifiant</label>
-      <input type="text" class="gate-input reg-input" id="login-user" placeholder="Votre identifiant" autocomplete="username">
-      <label class="gate-field-label">Mot de passe</label>
-      <input type="password" class="gate-input reg-input" id="login-pass" placeholder="Votre mot de passe" autocomplete="current-password">
-      <button class="gate-btn" id="login-submit-btn">Se connecter</button>
-      <div class="gate-error" id="gate-login-error"></div>
-      <div class="gate-or">OU</div>
-      <button class="gate-btn-outline" id="gate-use-code-btn">🔐 Utiliser un code d'accès</button>
+    <!-- Lien discret admin -->
+    <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
+
+    <!-- PANEL ADMIN LOGIN (caché) -->
+    <div class="gate-panel" id="gate-step-admin" style="display:none">
+      <div class="gate-panel-title">🛡️ Accès Administrateur</div>
+      <div class="gate-panel-sub">Réservé à l'équipe Snowfall69.</div>
+      <label class="gate-field-label">Identifiant admin</label>
+      <input type="text" class="gate-input reg-input" id="admin-login-user" placeholder="Identifiant" autocomplete="off">
+      <label class="gate-field-label">Mot de passe admin</label>
+      <input type="password" class="gate-input reg-input" id="admin-login-pass" placeholder="Mot de passe" autocomplete="off">
+      <button class="gate-btn" id="admin-gate-login-btn">Accès Admin</button>
+      <div class="gate-error" id="gate-admin-error"></div>
+      <button class="gate-btn-outline" style="margin-top:4px" onclick="switchGateTab('login')">← Retour</button>
     </div>
   </div>
 </div>
@@ -721,8 +776,6 @@
     <!-- INFOS -->
     <div id="infos-page">
       <div class="page-title" style="padding-top:8px">Infos</div>
-
-      <!-- Bloc identité -->
       <div class="info-card">
         <div class="info-card-header">
           <div class="info-card-icon">❄️</div>
@@ -745,8 +798,6 @@
           <span class="info-row-label">Pour toute commande, une carte d'identité 🪪 et une photo 📸 de vous sont nécessaires.</span>
         </div>
       </div>
-
-      <!-- Livraison -->
       <div class="info-card">
         <div class="info-card-header"><div class="info-card-icon">🚚</div><div class="info-card-title">Livraison</div></div>
         <div class="info-row" style="margin-bottom:10px">
@@ -763,8 +814,6 @@
         </div>
         <div class="minimum-label"><span>Minimum 70€</span></div>
       </div>
-
-      <!-- Meet-up -->
       <div class="info-card">
         <div class="info-card-header"><div class="info-card-icon">📍</div><div class="info-card-title">Meet-up</div></div>
         <div class="meetup-row">
@@ -779,8 +828,6 @@
     <!-- RESEAUX -->
     <div id="reseaux-page">
       <div class="page-title" style="padding-top:8px">Nos Réseaux</div>
-
-      <!-- Identité en haut -->
       <div style="background:rgba(245,167,0,0.04);border:1px solid rgba(245,167,0,0.15);border-radius:16px;padding:18px 16px;margin-bottom:16px;text-align:center">
         <div style="font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:4px;color:var(--gold);margin-bottom:4px">SNOWFALL</div>
         <div style="font-size:0.82rem;color:rgba(245,167,0,0.7);font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;margin-bottom:10px">(69-42-38-01-74) 📍</div>
@@ -788,10 +835,7 @@
         <div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:3px;color:#ddd;margin-bottom:2px">RHÔNE-ALPES</div>
         <div style="font-family:'Bebas Neue',sans-serif;font-size:0.88rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
       </div>
-
       <div class="reseaux-list">
-
-        <!-- Canal Potato Chocolate -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px;margin-bottom:0">
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL POTATO 🍫</div>
           <div class="reseau-item" style="margin-bottom:8px;border-radius:12px" data-link="https://tatokdym.org/snowfallyon6900">
@@ -805,10 +849,7 @@
             <div class="reseau-arrow">›</div>
           </div>
         </div>
-
         <div style="height:12px"></div>
-
-        <!-- Canal Potato Snowflake -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px">
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL POTATO ❄️</div>
           <div class="reseau-item" style="margin-bottom:8px;border-radius:12px" data-link="https://tatokdym.org/Snowfall_6900">
@@ -822,17 +863,12 @@
             <div class="reseau-arrow">›</div>
           </div>
         </div>
-
         <div style="height:12px"></div>
-
-        <!-- Canal Luffa -->
         <div class="reseau-item" data-link="https://callup.luffa.im/c/Bkrpn3xvw37">
           <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫🍁❄️</div>
           <div class="reseau-text"><div class="reseau-name">Canal Luffa</div><div class="reseau-sub">🍫🍁❄️ luffa.im</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-
-        <!-- Canal Telegram -->
         <div class="reseau-item" data-link="https://t.me/Sn6900">
           <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Telegram">
@@ -840,15 +876,11 @@
           <div class="reseau-text"><div class="reseau-name">Canal Telegram ℹ️</div><div class="reseau-sub">@Sn6900</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-
-        <!-- Tous nos canaux -->
         <div class="reseau-item" data-link="https://qrco.de/bfgCV3">
           <div class="reseau-icon-wrap" style="font-size:1.3rem">🥇</div>
           <div class="reseau-text"><div class="reseau-name">Tous nos canaux</div><div class="reseau-sub">qrco.de/bfgCV3</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-
-        <!-- Contact Potato -->
         <div class="reseau-item" data-link="https://t.me/Snowfall692">
           <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Contact">
@@ -856,7 +888,6 @@
           <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@Snowfall692 🥇</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-
       </div>
     </div>
 
@@ -1056,8 +1087,39 @@ window._firestoreExtra = { getDocs, collection, query, where, deleteDoc, doc, Ti
 
 let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
+// ══ COMPTE ADMIN DÉDIÉ ══
+const ADMIN_USERNAME = "snowfall_admin";
+const ADMIN_SECRET   = "Snowfall69Admin!";
 const TELEGRAM_CONTACT = "https://t.me/Snowfall692";
 const CODE_DURATION_MS = 30 * 60 * 1000;
+
+// ══════════════════════════════════════════════════════════
+// GATE TABS
+// ══════════════════════════════════════════════════════════
+window.switchGateTab = (tab) => {
+  // Hide all panels
+  ['gate-step-login','gate-step-code','gate-step-register','gate-step-admin'].forEach(id => {
+    document.getElementById(id).style.display = 'none';
+  });
+  // Update tab buttons (only login & code are visible tabs)
+  document.getElementById('gate-tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('gate-tab-code').classList.toggle('active', tab === 'code');
+
+  if (tab === 'login') {
+    document.getElementById('gate-step-login').style.display = 'block';
+  } else if (tab === 'code') {
+    document.getElementById('gate-step-code').style.display = 'block';
+  } else if (tab === 'register') {
+    document.getElementById('gate-step-register').style.display = 'block';
+    // keep tab-code highlighted
+    document.getElementById('gate-tab-code').classList.add('active');
+    document.getElementById('gate-tab-login').classList.remove('active');
+  } else if (tab === 'admin') {
+    document.getElementById('gate-step-admin').style.display = 'block';
+    document.getElementById('gate-tab-login').classList.remove('active');
+    document.getElementById('gate-tab-code').classList.remove('active');
+  }
+};
 
 // ══════════════════════════════════════════════════════════
 // INTRO VIDEO
@@ -1066,22 +1128,16 @@ function showIntroVideo(onFinish) {
   const screen = document.getElementById('intro-video-screen');
   const video  = document.getElementById('intro-video-el');
   const skipBtn = document.getElementById('intro-skip-btn');
-
   screen.classList.add('active');
   video.currentTime = 0;
   video.play().catch(() => {});
-
-  const done = () => {
-    screen.classList.remove('active');
-    onFinish();
-  };
-
+  const done = () => { screen.classList.remove('active'); onFinish(); };
   video.onended = done;
   skipBtn.onclick = done;
 }
 
 // ══════════════════════════════════════════════════════════
-// ACCESS GATE SYSTEM
+// ACCESS CODE SYSTEM
 // ══════════════════════════════════════════════════════════
 let codeTimerInterval = null;
 let adminCodeTimerInterval = null;
@@ -1164,31 +1220,49 @@ function clearLocalSession() {
 
 async function initGate() {
   const session = getLocalSession();
-  if (session) { showGateLogin(); return; }
+  // If session exists → show login tab by default (pre-filled from session not needed but show login)
+  switchGateTab('login');
+  // Check code timer for "code" tab
   const codeData = await getActiveCode();
   if (codeData) startGateTimer(codeData.expiresAt);
-  showGateCode();
 }
 
-function showGateCode() {
-  document.getElementById('gate-step-code').style.display = 'block';
-  document.getElementById('gate-step-register').style.display = 'none';
-  document.getElementById('gate-step-login').style.display = 'none';
-}
+// ══ ADMIN GATE LOGIN ══
+document.getElementById('admin-gate-login-btn').addEventListener('click', async () => {
+  const user = document.getElementById('admin-login-user').value.trim().toLowerCase();
+  const pass = document.getElementById('admin-login-pass').value;
+  const errEl = document.getElementById('gate-admin-error');
+  errEl.textContent = '';
 
-function showGateLogin() {
-  document.getElementById('gate-step-code').style.display = 'none';
-  document.getElementById('gate-step-register').style.display = 'none';
-  document.getElementById('gate-step-login').style.display = 'block';
-}
+  if (user === ADMIN_USERNAME && pass === ADMIN_SECRET) {
+    // Admin recognized: sign into Firebase with admin account
+    const btn = document.getElementById('admin-gate-login-btn');
+    btn.disabled = true; btn.textContent = 'Connexion...';
+    try {
+      // Try Firebase login first, create if doesn't exist
+      let cred;
+      try {
+        cred = await signInWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
+      } catch(e) {
+        // Create admin account in Firebase if it doesn't exist
+        cred = await createUserWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
+        await updateProfile(cred.user, { displayName: 'Admin Snowfall69' });
+        await setDoc(doc(_db, 'users', ADMIN_USERNAME), { uid: cred.user.uid, name: 'Admin Snowfall69', username: ADMIN_USERNAME, isAdmin: true });
+      }
+      saveLocalSession(cred.user.uid, 'Admin Snowfall69', ADMIN_USERNAME);
+      // Skip intro video for admin, go directly to admin panel
+      document.getElementById('access-gate').classList.add('hidden');
+      showSplashThenLaunch(true); // true = openAdmin after
+    } catch(e) {
+      errEl.textContent = 'Erreur de connexion: ' + e.message;
+    }
+    btn.disabled = false; btn.textContent = 'Accès Admin';
+  } else {
+    errEl.textContent = '❌ Identifiant ou mot de passe incorrect.';
+  }
+});
 
-function showGateRegister() {
-  document.getElementById('gate-step-code').style.display = 'none';
-  document.getElementById('gate-step-register').style.display = 'block';
-  document.getElementById('gate-step-login').style.display = 'none';
-}
-
-// Verify code → show intro video → then register or login
+// ══ VERIFY CODE (nouveau client) ══
 document.getElementById('gate-verify-btn').addEventListener('click', async () => {
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
@@ -1200,14 +1274,12 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   if (!data) { errEl.textContent = '❌ Aucun code actif. Demandez-en un.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
   if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
 
-  // ✅ Code correct → jouer la vidéo intro
+  // ✅ Code correct → intro video → register
   document.getElementById('access-gate').classList.add('hidden');
   showIntroVideo(() => {
     document.getElementById('access-gate').classList.remove('hidden');
-    const session = getLocalSession();
-    if (session) showGateLogin(); else showGateRegister();
+    switchGateTab('register');
   });
-
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
@@ -1216,6 +1288,7 @@ document.getElementById('gate-request-btn').addEventListener('click', () => {
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
+// ══ REGISTER ══
 document.getElementById('reg-submit-btn').addEventListener('click', async () => {
   const name = document.getElementById('reg-name').value.trim();
   const username = document.getElementById('reg-username').value.trim().toLowerCase();
@@ -1241,6 +1314,7 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
   btn.disabled = false; btn.textContent = 'Créer mon compte';
 });
 
+// ══ LOGIN (gate) ══
 document.getElementById('login-submit-btn').addEventListener('click', async () => {
   const username = document.getElementById('login-user').value.trim().toLowerCase();
   const password = document.getElementById('login-pass').value;
@@ -1267,13 +1341,12 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
   btn.disabled = false; btn.textContent = 'Se connecter';
 });
 
-document.getElementById('gate-use-code-btn').addEventListener('click', () => { showGateCode(); });
-
-function launchApp() {
-  document.getElementById('access-gate').classList.add('hidden');
+// ══ SPLASH & LAUNCH ══
+function showSplashThenLaunch(openAdmin = false) {
   const splash = document.getElementById('splash-screen');
   splash.style.display = 'flex';
   const container = document.getElementById('splash-particles');
+  container.innerHTML = '';
   for (let i = 0; i < 24; i++) {
     const s = document.createElement('div'); s.className = 'spark';
     s.style.cssText = `left:${Math.random()*100}%;top:${35+Math.random()*45}%;--dur:${1.8+Math.random()*2.5}s;--delay:${Math.random()*2.2}s;width:${2+Math.random()*3}px;height:${2+Math.random()*3}px;`;
@@ -1287,12 +1360,23 @@ function launchApp() {
       populateFilters();
       renderProducts();
       updateBadge();
-      goToHome();
+      if (openAdmin) {
+        openAdminPage();
+      } else {
+        goToHome();
+      }
     }, 700);
   }, 2600);
 }
 
-// ── CLOUDINARY ────────────────────────────────────────────────────────────────
+function launchApp() {
+  document.getElementById('access-gate').classList.add('hidden');
+  showSplashThenLaunch(false);
+}
+
+// ══════════════════════════════════════════════════════════
+// CLOUDINARY
+// ══════════════════════════════════════════════════════════
 const CLOUDINARY_CLOUD = 'doc0z0zik';
 const CLOUDINARY_PRESET = 'ju1mk58m';
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/upload`;
@@ -1320,7 +1404,9 @@ async function uploadFiles(files,items,previewsId,delFn,pbId,sId,pwId){
   }
 }
 
-// ── PRODUITS ──────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// PRODUITS
+// ══════════════════════════════════════════════════════════
 let products = {};
 let newMediaItems=[], editMediaItems=[];
 
@@ -1371,15 +1457,51 @@ async function loadProductOverrides(){
   }catch(e){console.log('products_meta:',e);}
 }
 
-// ── ADMIN ─────────────────────────────────────────────────────────────────────
-let logoClickCount=0,logoClickTimer=null,adminAuthenticated=false;
+// ══════════════════════════════════════════════════════════
+// ADMIN
+// ══════════════════════════════════════════════════════════
+let adminAuthenticated=false;
+
+function openAdminPage(){
+  hideAllPages();
+  document.getElementById('admin-page').style.display='block';
+  if(!adminAuthenticated){
+    document.getElementById('admin-login').style.display='block';
+    document.getElementById('admin-panel').style.display='none';
+  } else {
+    renderAdminPanel();
+    loadAdminCodeDisplay();
+  }
+}
+
+// Admin page password input (in-app fallback)
+document.getElementById('admin-login-btn').addEventListener('click',()=>{
+  const pw=document.getElementById('admin-password-input').value;
+  if(pw===ADMIN_PASSWORD){
+    adminAuthenticated=true;
+    document.getElementById('admin-login').style.display='none';
+    document.getElementById('admin-panel').style.display='block';
+    document.getElementById('admin-password-input').value='';
+    document.getElementById('admin-error').textContent='';
+    renderAdminPanel();bindUploadInputs();loadAdminCodeDisplay();
+  } else document.getElementById('admin-error').textContent='Mot de passe incorrect ❌';
+});
+
+document.getElementById('admin-logout-btn').addEventListener('click',()=>{adminAuthenticated=false;document.getElementById('admin-panel').style.display='none';document.getElementById('admin-login').style.display='block';goToHome();});
+document.getElementById('admin-gen-code-btn').addEventListener('click', adminGenerateCode);
+
+// Logo click counter (keep as backup)
+let logoClickCount=0,logoClickTimer=null;
 function handleLogoClick(){logoClickCount++;clearTimeout(logoClickTimer);logoClickTimer=setTimeout(()=>{logoClickCount=0;},2000);if(logoClickCount>=5){logoClickCount=0;openAdminPage();}}
 document.querySelector('.header-brand').addEventListener('click',handleLogoClick);
 
-function openAdminPage(){hideAllPages();document.getElementById('admin-page').style.display='block';if(!adminAuthenticated){document.getElementById('admin-login').style.display='block';document.getElementById('admin-panel').style.display='none';}else{renderAdminPanel();loadAdminCodeDisplay();}}
-document.getElementById('admin-login-btn').addEventListener('click',()=>{const pw=document.getElementById('admin-password-input').value;if(pw===ADMIN_PASSWORD){adminAuthenticated=true;document.getElementById('admin-login').style.display='none';document.getElementById('admin-panel').style.display='block';document.getElementById('admin-password-input').value='';document.getElementById('admin-error').textContent='';renderAdminPanel();bindUploadInputs();loadAdminCodeDisplay();}else document.getElementById('admin-error').textContent='Mot de passe incorrect ❌';});
-document.getElementById('admin-logout-btn').addEventListener('click',()=>{adminAuthenticated=false;document.getElementById('admin-panel').style.display='none';document.getElementById('admin-login').style.display='block';goToHome();});
-document.getElementById('admin-gen-code-btn').addEventListener('click', adminGenerateCode);
+// If user logged in is admin, auto-authenticate admin panel
+function checkAdminSession() {
+  const session = getLocalSession();
+  if (session && session.username === ADMIN_USERNAME) {
+    adminAuthenticated = true;
+  }
+}
 
 function renderAdminPanel(){
   const list=document.getElementById('admin-products-list');
@@ -1436,7 +1558,9 @@ document.getElementById('save-new-product-btn').addEventListener('click',async()
   renderAdminPanel();renderProducts();alert('✅ Produit créé !');
 });
 
-// ── AUTH ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// AUTH (in-app modal)
+// ══════════════════════════════════════════════════════════
 window.switchAuthTab=(tab)=>{document.getElementById('tab-login').classList.toggle('active',tab==='login');document.getElementById('tab-register').classList.toggle('active',tab==='register');document.getElementById('auth-login-form').style.display=tab==='login'?'block':'none';document.getElementById('auth-register-form').style.display=tab==='register'?'block':'none';document.getElementById('auth-error').textContent='';};
 function openAuthModal(){document.getElementById('auth-modal').classList.add('open');}
 function closeAuthModal(){document.getElementById('auth-modal').classList.remove('open');}
@@ -1460,17 +1584,23 @@ window.doRegisterModal=async()=>{
 window.doLogout=async()=>{if(!confirm('Se déconnecter ?'))return;await signOut(_auth);clearLocalSession();renderProfilPage();};
 window.openAuthModal=openAuthModal;
 
-// ── PROFIL ────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// PROFIL
+// ══════════════════════════════════════════════════════════
 async function renderProfilPage(){
   const page=document.getElementById('profil-page'),user=_auth.currentUser;
   if(!user){page.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:18px;padding:20px;text-align:center"><div style="font-size:3rem">👤</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#fff">MON COMPTE</div><div style="color:#444;font-size:0.88rem;line-height:1.6">Connecte-toi pour accéder à ton profil.</div><button onclick="openAuthModal()" style="background:linear-gradient(135deg,var(--gold),#E09500);color:#000;border:none;padding:13px 30px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer">Se connecter</button></div>`;return;}
   const du=user.email?user.email.replace('@snowfall69.app','').replace('@bart76.app',''):'utilisateur';
-  page.innerHTML=`<div class="profil-header"><button class="profil-logout" onclick="doLogout()">Déconnexion</button><div class="profil-avatar">👤</div><div class="profil-name">${user.displayName||du}</div><div style="color:#444;font-size:0.78rem;margin-top:2px">@${du}</div></div><div class="profil-stats"><div class="profil-stats-icon">📦</div><div><div class="profil-stats-num" id="profil-cmd-count">—</div><div class="profil-stats-lbl">commande(s) passée(s)</div></div></div><div class="profil-section-title">Mes commandes</div><div id="profil-commandes"><p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Chargement...</p></div>`;
-  try{const q=query(collection(_db,'commandes'),where('uid','==',user.uid),orderBy('timestamp','desc'));const snap=await getDocs(q);document.getElementById('profil-cmd-count').textContent=snap.size;const ce=document.getElementById('profil-commandes');if(snap.empty){ce.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Aucune commande.</p>';return;}ce.innerHTML=snap.docs.map(d=>{const c=d.data();return `<div class="commande-card"><div class="commande-header"><span class="commande-date">${c.date}</span><span class="commande-total">${c.total}€</span></div><div class="commande-items">${c.items}</div><span class="commande-mode">${c.mode}</span></div>`;}).join('');}
-  catch(e){const cc=document.getElementById('profil-cmd-count');if(cc)cc.textContent='0';const cm=document.getElementById('profil-commandes');if(cm)cm.innerHTML='<p style="color:#444;text-align:center;padding:20px">Aucune commande.</p>';}
+  const isAdmin = du === ADMIN_USERNAME;
+  page.innerHTML=`<div class="profil-header"><button class="profil-logout" onclick="doLogout()">Déconnexion</button><div class="profil-avatar">${isAdmin?'🛡️':'👤'}</div><div class="profil-name">${user.displayName||du}</div><div style="color:#444;font-size:0.78rem;margin-top:2px">@${du}${isAdmin?' · <span style="color:var(--gold)">Admin</span>':''}</div></div>${isAdmin?`<div style="background:rgba(245,167,0,0.06);border:1.5px solid rgba(245,167,0,0.25);border-radius:16px;padding:16px;margin-bottom:16px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--gold);margin-bottom:8px">🛡️ ACCÈS ADMINISTRATEUR</div><button onclick="openAdminPage()" style="background:linear-gradient(135deg,var(--gold),#E09500);color:#000;border:none;padding:12px 26px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;cursor:pointer">Ouvrir le Panel Admin</button></div>`:'<div class="profil-stats"><div class="profil-stats-icon">📦</div><div><div class="profil-stats-num" id="profil-cmd-count">—</div><div class="profil-stats-lbl">commande(s) passée(s)</div></div></div><div class="profil-section-title">Mes commandes</div><div id="profil-commandes"><p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Chargement...</p></div>'}`;
+  if(!isAdmin){try{const q=query(collection(_db,'commandes'),where('uid','==',user.uid),orderBy('timestamp','desc'));const snap=await getDocs(q);document.getElementById('profil-cmd-count').textContent=snap.size;const ce=document.getElementById('profil-commandes');if(snap.empty){ce.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Aucune commande.</p>';return;}ce.innerHTML=snap.docs.map(d=>{const c=d.data();return `<div class="commande-card"><div class="commande-header"><span class="commande-date">${c.date}</span><span class="commande-total">${c.total}€</span></div><div class="commande-items">${c.items}</div><span class="commande-mode">${c.mode}</span></div>`;}).join('');}
+  catch(e){const cc=document.getElementById('profil-cmd-count');if(cc)cc.textContent='0';const cm=document.getElementById('profil-commandes');if(cm)cm.innerHTML='<p style="color:#444;text-align:center;padding:20px">Aucune commande.</p>';}}
 }
+window.openAdminPage = openAdminPage;
 
-// ── CHAT ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// CHAT
+// ══════════════════════════════════════════════════════════
 async function purgeOldMessages(){try{const c=Date.now()-24*60*60*1000;const q=query(collection(_db,'chat'),where('timestampMs','<',c));const snap=await getDocs(q);snap.docs.forEach(d=>deleteDoc(doc(_db,'chat',d.id)));}catch(e){}}
 function renderChatPage(){
   const body=document.getElementById('chat-body'),user=_auth.currentUser;
@@ -1493,12 +1623,16 @@ function renderChatPage(){
 }
 window.sendChatMsg=async()=>{const input=document.getElementById('chat-input'),text=input?.value.trim(),user=_auth.currentUser;if(!text||!user)return;input.value='';const now=Date.now();await addDoc(collection(_db,'chat'),{uid:user.uid,name:user.displayName||'User',text,time:new Date(now).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),timestampMs:now,timestamp:serverTimestamp()});};
 
-// ── PANIER ────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// PANIER
+// ══════════════════════════════════════════════════════════
 let cart=JSON.parse(localStorage.getItem('cart_snowfall69'))||[];
 function saveCart(){localStorage.setItem('cart_snowfall69',JSON.stringify(cart));updateBadge();}
 function updateBadge(){const b=document.getElementById('cart-badge');b.textContent=cart.length||'';b.style.display=cart.length>0?'inline-block':'none';}
 
-// ── FILTRES ───────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// FILTRES & PRODUITS
+// ══════════════════════════════════════════════════════════
 function populateFilters(){
   const all=Object.values(products),cats=[...new Set(all.map(p=>p.category))].sort(),farms=[...new Set(all.map(p=>p.farm))].sort();
   const cs=document.getElementById('category-filter'),fs=document.getElementById('farm-filter');
@@ -1509,7 +1643,6 @@ function populateFilters(){
 function filterProducts(){const cf=document.getElementById('category-filter').value,ff=document.getElementById('farm-filter').value;renderProducts(Object.values(products).filter(p=>(!cf||p.category===cf)&&(!ff||p.farm===ff)));}
 window.filterProducts=filterProducts;
 
-// ── RENDU PRODUITS ────────────────────────────────────────────────────────────
 function renderProducts(list){
   if(!list)list=Object.values(products);
   const grid=document.getElementById('products-grid');grid.innerHTML='';
@@ -1530,7 +1663,9 @@ function renderProducts(list){
   });
 }
 
-// ── NAVIGATION ────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════════
 function hideAllPages(){
   ['home-page','product-detail','cart-page','infos-page','reseaux-page','avis-page','profil-page','chat-page','admin-page'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
@@ -1540,7 +1675,9 @@ function hideAllPages(){
 function scrollToTop(){document.querySelector('.content').scrollTo({top:0,behavior:'instant'});}
 function goToHome(){hideAllPages();document.getElementById('home-page').style.display='block';document.getElementById('nav-home').classList.add('active');scrollToTop();}
 
-// ── SWIPER ────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// SWIPER
+// ══════════════════════════════════════════════════════════
 let swiperIndex=0,swiperItems=[];
 function buildDots(total){const de=document.getElementById('swiper-dots');de.innerHTML='';if(total<=1)return;for(let i=0;i<total;i++){const d=document.createElement('div');d.className='swiper-dot'+(i===0?' active':'');de.appendChild(d);}}
 function updateDots(){document.querySelectorAll('.swiper-dot').forEach((d,i)=>d.classList.toggle('active',i===swiperIndex));}
@@ -1568,7 +1705,9 @@ let touchStartX=0;
 document.getElementById('swiper-track').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
 document.getElementById('swiper-track').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchStartX;if(Math.abs(dx)>40){dx<0?swiperNext():swiperPrev();}},{passive:true});
 
-// ── DETAIL PRODUIT ────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// DETAIL PRODUIT
+// ══════════════════════════════════════════════════════════
 function openProductDetail(key){
   const p=products[key],isR=p.stock==='rupture';
   document.getElementById('swiper-title-h1').textContent=p.title;
@@ -1626,7 +1765,9 @@ document.getElementById('add-to-cart-btn').onclick=()=>{
   setTimeout(()=>{btn.innerHTML='🛒 Ajouter au Panier';},1400);
 };
 
-// ── NAV ───────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════════════════════
 document.getElementById('nav-home').onclick=goToHome;
 document.getElementById('nav-cart').onclick=()=>{hideAllPages();document.getElementById('cart-page').style.display='block';document.getElementById('nav-cart').classList.add('active');renderCart();scrollToTop();};
 document.getElementById('nav-infos').onclick=()=>{hideAllPages();document.getElementById('infos-page').style.display='block';document.getElementById('nav-infos').classList.add('active');scrollToTop();};
@@ -1635,7 +1776,9 @@ document.getElementById('nav-avis').onclick=()=>{hideAllPages();document.getElem
 document.getElementById('nav-profil').onclick=()=>{hideAllPages();document.getElementById('profil-page').style.display='block';document.getElementById('nav-profil').classList.add('active');renderProfilPage();scrollToTop();};
 document.getElementById('nav-chat').onclick=()=>{hideAllPages();const cp=document.getElementById('chat-page');cp.style.display='flex';cp.style.flexDirection='column';document.getElementById('nav-chat').classList.add('active');renderChatPage();};
 
-// ── AVIS ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// AVIS
+// ══════════════════════════════════════════════════════════
 let selectedStar=0,avisPhotoBase64=null;
 document.querySelectorAll('.star').forEach(star=>{star.addEventListener('click',()=>{selectedStar=parseInt(star.dataset.v);document.querySelectorAll('.star').forEach(s=>{s.classList.toggle('on',parseInt(s.dataset.v)<=selectedStar);});});});
 document.getElementById('avis-photo-input').addEventListener('change',function(){const f=this.files[0];if(!f)return;if(f.size>4*1024*1024){alert('Image trop grande (max 4 Mo)');return;}const r=new FileReader();r.onload=e=>{avisPhotoBase64=e.target.result;const prev=document.getElementById('avis-photo-preview');prev.src=avisPhotoBase64;prev.style.display='block';document.getElementById('photo-upload-text').textContent='Photo sélectionnée ✅';};r.readAsDataURL(f);});
@@ -1657,10 +1800,14 @@ window.openLightbox=(url)=>{document.getElementById('lb-img').src=url;document.g
 document.getElementById('lb-close').addEventListener('click',()=>{document.getElementById('photo-lightbox').classList.remove('open');document.getElementById('lb-img').src='';});
 document.getElementById('photo-lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('photo-lightbox'))document.getElementById('photo-lightbox').classList.remove('open');});
 
-// ── RÉSEAUX ───────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// RÉSEAUX
+// ══════════════════════════════════════════════════════════
 document.querySelectorAll('.reseau-item[data-link]').forEach(el=>{el.onclick=()=>window.open(el.getAttribute('data-link'),'_blank');});
 
-// ── PANIER RENDU ──────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// PANIER RENDU
+// ══════════════════════════════════════════════════════════
 function renderCart(){
   const c=document.getElementById('cart-items');c.innerHTML='';
   if(!cart.length){c.innerHTML='<p style="text-align:center;color:#444;padding:40px 0">Votre panier est vide</p>';document.getElementById('cart-total').textContent='';return;}
@@ -1685,8 +1832,11 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   window.open(`https://t.me/Snowfall692?text=${encodeURIComponent(message)}`,'_blank');
 };
 
-// ── INIT ──────────────────────────────────────────────────────────────────────
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
 onAuthStateChanged(_auth, () => {});
+checkAdminSession();
 initGate();
 </script>
 </body>
