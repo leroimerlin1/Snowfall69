@@ -106,7 +106,6 @@
       margin:16px auto; animation:fadeUp 0.6s 0.45s ease both;
     }
 
-    /* Gate tabs */
     .gate-tabs {
       display:flex; gap:0; width:100%;
       background:rgba(255,255,255,0.03);
@@ -208,7 +207,6 @@
       margin-bottom:6px; display:block;
     }
 
-    /* Admin gate badge */
     .admin-gate-hint {
       text-align:center; margin-top:16px;
       font-size:0.7rem; color:#2a2a2a;
@@ -592,7 +590,7 @@
 
 <!-- INTRO VIDEO SCREEN -->
 <div id="intro-video-screen">
-  <video id="intro-video-el" src="ae snow.mp4" autoplay playsinline muted preload="auto"></video>
+  <video id="intro-video-el" src="ae snow.mp4" autoplay playsinline preload="auto"></video>
   <button id="intro-skip-btn">Passer ›</button>
 </div>
 
@@ -604,13 +602,12 @@
     <div class="gate-logo-num">69</div>
     <div class="gate-line"></div>
 
-    <!-- TABS: Se connecter / Nouveau client -->
     <div class="gate-tabs">
       <div class="gate-tab active" id="gate-tab-login" onclick="switchGateTab('login')">🔑 Se connecter</div>
       <div class="gate-tab" id="gate-tab-code" onclick="switchGateTab('code')">🆕 Nouveau client</div>
     </div>
 
-    <!-- PANEL LOGIN (affiché par défaut) -->
+    <!-- PANEL LOGIN -->
     <div class="gate-panel" id="gate-step-login">
       <div class="gate-panel-title">👋 Bon retour</div>
       <div class="gate-panel-sub">Connectez-vous à votre compte.</div>
@@ -622,7 +619,7 @@
       <div class="gate-error" id="gate-login-error"></div>
     </div>
 
-    <!-- PANEL CODE (nouveau client) -->
+    <!-- PANEL CODE -->
     <div class="gate-panel" id="gate-step-code" style="display:none">
       <div class="gate-panel-title">🔐 Code d'accès</div>
       <div class="gate-panel-sub">Entrez le code reçu ou demandez-le à notre contact.</div>
@@ -634,7 +631,7 @@
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
     </div>
 
-    <!-- PANEL REGISTER (après code validé) -->
+    <!-- PANEL REGISTER -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
@@ -651,10 +648,9 @@
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
 
-    <!-- Lien discret admin -->
     <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
 
-    <!-- PANEL ADMIN LOGIN (caché) -->
+    <!-- PANEL ADMIN -->
     <div class="gate-panel" id="gate-step-admin" style="display:none">
       <div class="gate-panel-title">🛡️ Accès Administrateur</div>
       <div class="gate-panel-sub">Réservé à l'équipe Snowfall69.</div>
@@ -791,7 +787,7 @@
         </div>
         <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:12px 14px;text-align:center">
           <span style="color:#888;font-size:0.8rem;font-weight:600">Contact principal</span><br>
-          <a href="https://t.me/Snowfall692" target="_blank" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;text-decoration:none">@Snowfall692</a>
+          <a href="https://t.me/franklin69200" target="_blank" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;text-decoration:none">@franklin69200</a>
         </div>
         <div class="info-row" style="margin-top:14px">
           <span class="info-row-icon">ℹ️</span>
@@ -881,11 +877,11 @@
           <div class="reseau-text"><div class="reseau-name">Tous nos canaux</div><div class="reseau-sub">qrco.de/bfgCV3</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-        <div class="reseau-item" data-link="https://t.me/Snowfall692">
+        <div class="reseau-item" data-link="https://t.me/franklin69200">
           <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Contact">
           </div>
-          <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@Snowfall692 🥇</div></div>
+          <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@franklin69200 🥇</div></div>
           <div class="reseau-arrow">›</div>
         </div>
       </div>
@@ -1087,21 +1083,21 @@ window._firestoreExtra = { getDocs, collection, query, where, deleteDoc, doc, Ti
 
 let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
-// ══ COMPTE ADMIN DÉDIÉ ══
 const ADMIN_USERNAME = "snowfall_admin";
 const ADMIN_SECRET   = "Snowfall69Admin!";
-const TELEGRAM_CONTACT = "https://t.me/Snowfall692";
+
+// ══ CONTACT MIS À JOUR ══
+const TELEGRAM_CONTACT = "https://t.me/franklin69200";
+
 const CODE_DURATION_MS = 30 * 60 * 1000;
 
 // ══════════════════════════════════════════════════════════
 // GATE TABS
 // ══════════════════════════════════════════════════════════
 window.switchGateTab = (tab) => {
-  // Hide all panels
   ['gate-step-login','gate-step-code','gate-step-register','gate-step-admin'].forEach(id => {
     document.getElementById(id).style.display = 'none';
   });
-  // Update tab buttons (only login & code are visible tabs)
   document.getElementById('gate-tab-login').classList.toggle('active', tab === 'login');
   document.getElementById('gate-tab-code').classList.toggle('active', tab === 'code');
 
@@ -1111,7 +1107,6 @@ window.switchGateTab = (tab) => {
     document.getElementById('gate-step-code').style.display = 'block';
   } else if (tab === 'register') {
     document.getElementById('gate-step-register').style.display = 'block';
-    // keep tab-code highlighted
     document.getElementById('gate-tab-code').classList.add('active');
     document.getElementById('gate-tab-login').classList.remove('active');
   } else if (tab === 'admin') {
@@ -1122,16 +1117,31 @@ window.switchGateTab = (tab) => {
 };
 
 // ══════════════════════════════════════════════════════════
-// INTRO VIDEO
+// INTRO VIDEO — SON AUTOMATIQUE
 // ══════════════════════════════════════════════════════════
 function showIntroVideo(onFinish) {
-  const screen = document.getElementById('intro-video-screen');
-  const video  = document.getElementById('intro-video-el');
+  const screen  = document.getElementById('intro-video-screen');
+  const video   = document.getElementById('intro-video-el');
   const skipBtn = document.getElementById('intro-skip-btn');
+
   screen.classList.add('active');
   video.currentTime = 0;
-  video.play().catch(() => {});
-  const done = () => { screen.classList.remove('active'); onFinish(); };
+
+  // Tentative de lecture avec son
+  video.muted = false;
+  video.volume = 1;
+  video.play().catch(() => {
+    // Si le navigateur bloque le son, on passe en muet puis on relance
+    video.muted = true;
+    video.play().catch(() => {});
+  });
+
+  const done = () => {
+    video.pause();
+    screen.classList.remove('active');
+    onFinish();
+  };
+
   video.onended = done;
   skipBtn.onclick = done;
 }
@@ -1219,10 +1229,7 @@ function clearLocalSession() {
 }
 
 async function initGate() {
-  const session = getLocalSession();
-  // If session exists → show login tab by default (pre-filled from session not needed but show login)
   switchGateTab('login');
-  // Check code timer for "code" tab
   const codeData = await getActiveCode();
   if (codeData) startGateTimer(codeData.expiresAt);
 }
@@ -1235,24 +1242,20 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
   errEl.textContent = '';
 
   if (user === ADMIN_USERNAME && pass === ADMIN_SECRET) {
-    // Admin recognized: sign into Firebase with admin account
     const btn = document.getElementById('admin-gate-login-btn');
     btn.disabled = true; btn.textContent = 'Connexion...';
     try {
-      // Try Firebase login first, create if doesn't exist
       let cred;
       try {
         cred = await signInWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
       } catch(e) {
-        // Create admin account in Firebase if it doesn't exist
         cred = await createUserWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
         await updateProfile(cred.user, { displayName: 'Admin Snowfall69' });
         await setDoc(doc(_db, 'users', ADMIN_USERNAME), { uid: cred.user.uid, name: 'Admin Snowfall69', username: ADMIN_USERNAME, isAdmin: true });
       }
       saveLocalSession(cred.user.uid, 'Admin Snowfall69', ADMIN_USERNAME);
-      // Skip intro video for admin, go directly to admin panel
       document.getElementById('access-gate').classList.add('hidden');
-      showSplashThenLaunch(true); // true = openAdmin after
+      showSplashThenLaunch(true);
     } catch(e) {
       errEl.textContent = 'Erreur de connexion: ' + e.message;
     }
@@ -1262,7 +1265,7 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
   }
 });
 
-// ══ VERIFY CODE (nouveau client) ══
+// ══ VERIFY CODE ══
 document.getElementById('gate-verify-btn').addEventListener('click', async () => {
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
@@ -1274,7 +1277,6 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   if (!data) { errEl.textContent = '❌ Aucun code actif. Demandez-en un.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
   if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
 
-  // ✅ Code correct → intro video → register
   document.getElementById('access-gate').classList.add('hidden');
   showIntroVideo(() => {
     document.getElementById('access-gate').classList.remove('hidden');
@@ -1283,6 +1285,7 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
+// ══ DEMANDER LE CODE → franklin69200 ══
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1474,7 +1477,6 @@ function openAdminPage(){
   }
 }
 
-// Admin page password input (in-app fallback)
 document.getElementById('admin-login-btn').addEventListener('click',()=>{
   const pw=document.getElementById('admin-password-input').value;
   if(pw===ADMIN_PASSWORD){
@@ -1490,12 +1492,10 @@ document.getElementById('admin-login-btn').addEventListener('click',()=>{
 document.getElementById('admin-logout-btn').addEventListener('click',()=>{adminAuthenticated=false;document.getElementById('admin-panel').style.display='none';document.getElementById('admin-login').style.display='block';goToHome();});
 document.getElementById('admin-gen-code-btn').addEventListener('click', adminGenerateCode);
 
-// Logo click counter (keep as backup)
 let logoClickCount=0,logoClickTimer=null;
 function handleLogoClick(){logoClickCount++;clearTimeout(logoClickTimer);logoClickTimer=setTimeout(()=>{logoClickCount=0;},2000);if(logoClickCount>=5){logoClickCount=0;openAdminPage();}}
 document.querySelector('.header-brand').addEventListener('click',handleLogoClick);
 
-// If user logged in is admin, auto-authenticate admin panel
 function checkAdminSession() {
   const session = getLocalSession();
   if (session && session.username === ADMIN_USERNAME) {
@@ -1817,6 +1817,7 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
+// ══ COMMANDE → franklin69200 ══
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
@@ -1829,7 +1830,7 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
   if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
-  window.open(`https://t.me/Snowfall692?text=${encodeURIComponent(message)}`,'_blank');
+  window.open(`https://t.me/franklin69200?text=${encodeURIComponent(message)}`,'_blank');
 };
 
 // ══════════════════════════════════════════════════════════
