@@ -662,7 +662,10 @@
       width:42px; height:42px; border-radius:12px;
       background:rgba(255,255,255,0.15);
       display:flex; align-items:center; justify-content:center;
-      font-size:1.3rem; flex-shrink:0;
+      font-size:1.3rem; flex-shrink:0; overflow:hidden;
+    }
+    .contact-choice-btn-icon img {
+      width:28px; height:28px; object-fit:contain; border-radius:6px;
     }
     .contact-choice-btn-text { flex:1; }
     .contact-choice-btn-name {
@@ -723,7 +726,7 @@
     <div class="contact-choice-btns">
       <button class="contact-choice-btn contact-choice-btn-telegram" id="ccm-telegram">
         <div class="contact-choice-btn-icon">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" style="width:26px;height:26px;object-fit:contain" alt="Telegram">
+          <img src="logo.png" alt="Logo">
         </div>
         <div class="contact-choice-btn-text">
           <span class="contact-choice-btn-name">Telegram</span>
@@ -732,7 +735,9 @@
         <span class="contact-choice-btn-arrow">›</span>
       </button>
       <button class="contact-choice-btn contact-choice-btn-potato" id="ccm-potato">
-        <div class="contact-choice-btn-icon" style="background:rgba(0,0,0,0.12)">🍫</div>
+        <div class="contact-choice-btn-icon" style="background:rgba(0,0,0,0.12)">
+          <img src="logo.png" alt="Logo">
+        </div>
         <div class="contact-choice-btn-text">
           <span class="contact-choice-btn-name">Potato</span>
           <span class="contact-choice-btn-sub">@FranklinSaint69</span>
@@ -1010,8 +1015,8 @@
           <div class="reseau-arrow">›</div>
         </div>
         <div class="reseau-item" data-link="https://t.me/Sn6900">
-          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Telegram">
+          <div class="reseau-icon-wrap" style="background:rgba(245,167,0,0.08);border-color:rgba(245,167,0,0.25)">
+            <img src="logo.png" alt="Logo">
           </div>
           <div class="reseau-text"><div class="reseau-name">Canal Telegram ℹ️</div><div class="reseau-sub">@Sn6900</div></div>
           <div class="reseau-arrow">›</div>
@@ -1022,8 +1027,8 @@
           <div class="reseau-arrow">›</div>
         </div>
         <div class="reseau-item" data-link="https://pt.im/FranklinSaint69">
-          <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Contact">
+          <div class="reseau-icon-wrap" style="background:rgba(245,167,0,0.08);border-color:rgba(245,167,0,0.25)">
+            <img src="logo.png" alt="Logo">
           </div>
           <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@FranklinSaint69 🥇</div></div>
           <div class="reseau-arrow">›</div>
@@ -1206,9 +1211,6 @@ import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimest
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
-// ══════════════════════════════════════════════════════════
-// DÉTECTION IN-APP BROWSER
-// ══════════════════════════════════════════════════════════
 function isInAppBrowser() {
   const ua = navigator.userAgent || '';
   return (
@@ -1247,17 +1249,11 @@ if (isInAppBrowser()) {
   }, 500);
 }
 
-// ══════════════════════════════════════════════════════════
-// SAFE STORAGE
-// ══════════════════════════════════════════════════════════
 const _memStore = {};
 function safeStorageSet(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) { _memStore[key] = value; } }
 function safeStorageGet(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : (_memStore[key] || null); } catch(e) { return _memStore[key] || null; } }
 function safeStorageDel(key) { try { localStorage.removeItem(key); } catch(e) {} delete _memStore[key]; }
 
-// ══════════════════════════════════════════════════════════
-// FIREBASE INIT
-// ══════════════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyBtScxTiiatY2VkUWSjpYN5RsOF9aJByPk",
   authDomain: "snowfall69-6b718.firebaseapp.com",
@@ -1285,9 +1281,6 @@ const CONTACT_URL    = "https://pt.im/FranklinSaint69";
 const TELEGRAM_URL   = "https://t.me/franklin69200";
 const CODE_DURATION_MS = 30 * 60 * 1000;
 
-// ══════════════════════════════════════════════════════════
-// CONTACT CHOICE MODAL
-// ══════════════════════════════════════════════════════════
 let _ccmPendingMsg = '';
 
 window.showContactChoiceModal = function(msg) {
@@ -1316,9 +1309,6 @@ document.getElementById('contact-choice-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('contact-choice-modal')) closeContactChoiceModal();
 });
 
-// ══════════════════════════════════════════════════════════
-// GATE TABS
-// ══════════════════════════════════════════════════════════
 window.switchGateTab = (tab) => {
   ['gate-step-login','gate-step-code','gate-step-register','gate-step-admin'].forEach(id => {
     document.getElementById(id).style.display = 'none';
@@ -1331,9 +1321,6 @@ window.switchGateTab = (tab) => {
   else if (tab === 'admin') { document.getElementById('gate-step-admin').style.display = 'block'; document.getElementById('gate-tab-login').classList.remove('active'); document.getElementById('gate-tab-code').classList.remove('active'); }
 };
 
-// ══════════════════════════════════════════════════════════
-// INTRO VIDEO
-// ══════════════════════════════════════════════════════════
 function showIntroVideo(onFinish) {
   const screen  = document.getElementById('intro-video-screen');
   const video   = document.getElementById('intro-video-el');
@@ -1347,9 +1334,6 @@ function showIntroVideo(onFinish) {
   skipBtn.onclick = done;
 }
 
-// ══════════════════════════════════════════════════════════
-// ACCESS CODE SYSTEM
-// ══════════════════════════════════════════════════════════
 let codeTimerInterval = null;
 let adminCodeTimerInterval = null;
 
@@ -1421,7 +1405,6 @@ async function initGate() {
   try { const codeData = await getActiveCode(); if (codeData) startGateTimer(codeData.expiresAt); } catch(e) { console.warn('Impossible de charger le code:', e); }
 }
 
-// ══ ADMIN GATE LOGIN ══
 document.getElementById('admin-gate-login-btn').addEventListener('click', async () => {
   const user = document.getElementById('admin-login-user').value.trim().toLowerCase();
   const pass = document.getElementById('admin-login-pass').value;
@@ -1445,7 +1428,6 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
   } else { errEl.textContent = '❌ Identifiant ou mot de passe incorrect.'; }
 });
 
-// ══ VERIFY CODE ══
 document.getElementById('gate-verify-btn').addEventListener('click', async () => {
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
@@ -1471,13 +1453,11 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// ══ DEMANDER LE CODE → MODALE CHOIX CONTACT ══
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   showContactChoiceModal(msg);
 });
 
-// ══ REGISTER ══
 document.getElementById('reg-submit-btn').addEventListener('click', async () => {
   const name = document.getElementById('reg-name').value.trim();
   const username = document.getElementById('reg-username').value.trim().toLowerCase();
@@ -1504,7 +1484,6 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
   btn.disabled = false; btn.textContent = 'Créer mon compte';
 });
 
-// ══ LOGIN (gate) ══
 document.getElementById('login-submit-btn').addEventListener('click', async () => {
   const username = document.getElementById('login-user').value.trim().toLowerCase();
   const password = document.getElementById('login-pass').value;
@@ -1532,7 +1511,6 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
   btn.disabled = false; btn.textContent = 'Se connecter';
 });
 
-// ══ SPLASH & LAUNCH ══
 function showSplashThenLaunch(openAdmin = false) {
   const splash = document.getElementById('splash-screen');
   splash.style.display = 'flex';
@@ -1562,9 +1540,6 @@ function launchApp() {
   showSplashThenLaunch(false);
 }
 
-// ══════════════════════════════════════════════════════════
-// CLOUDINARY
-// ══════════════════════════════════════════════════════════
 const CLOUDINARY_CLOUD = 'doc0z0zik';
 const CLOUDINARY_PRESET = 'ju1mk58m';
 const CLOUDINARY_UPLOAD_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/upload`;
@@ -1593,9 +1568,6 @@ async function uploadFiles(files,items,previewsId,delFn,pbId,sId,pwId){
   }
 }
 
-// ══════════════════════════════════════════════════════════
-// PRODUITS
-// ══════════════════════════════════════════════════════════
 let products = {};
 let newMediaItems=[], editMediaItems=[];
 
@@ -1646,9 +1618,6 @@ async function loadProductOverrides(){
   }catch(e){console.log('products_meta:',e);}
 }
 
-// ══════════════════════════════════════════════════════════
-// ADMIN
-// ══════════════════════════════════════════════════════════
 let adminAuthenticated=false;
 
 function openAdminPage(){
@@ -1728,9 +1697,6 @@ document.getElementById('save-new-product-btn').addEventListener('click',async()
   renderAdminPanel();renderProducts();alert('✅ Produit créé !');
 });
 
-// ══════════════════════════════════════════════════════════
-// AUTH (in-app modal)
-// ══════════════════════════════════════════════════════════
 window.switchAuthTab=(tab)=>{document.getElementById('tab-login').classList.toggle('active',tab==='login');document.getElementById('tab-register').classList.toggle('active',tab==='register');document.getElementById('auth-login-form').style.display=tab==='login'?'block':'none';document.getElementById('auth-register-form').style.display=tab==='register'?'block':'none';document.getElementById('auth-error').textContent='';};
 function openAuthModal(){document.getElementById('auth-modal').classList.add('open');}
 function closeAuthModal(){document.getElementById('auth-modal').classList.remove('open');}
@@ -1754,9 +1720,6 @@ window.doRegisterModal=async()=>{
 window.doLogout=async()=>{if(!confirm('Se déconnecter ?'))return;await signOut(_auth);clearLocalSession();renderProfilPage();};
 window.openAuthModal=openAuthModal;
 
-// ══════════════════════════════════════════════════════════
-// PROFIL
-// ══════════════════════════════════════════════════════════
 async function renderProfilPage(){
   const page=document.getElementById('profil-page'),user=_auth.currentUser;
   if(!user){page.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:18px;padding:20px;text-align:center"><div style="font-size:3rem">👤</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#fff">MON COMPTE</div><div style="color:#444;font-size:0.88rem;line-height:1.6">Connecte-toi pour accéder à ton profil.</div><button onclick="openAuthModal()" style="background:linear-gradient(135deg,var(--gold),#E09500);color:#000;border:none;padding:13px 30px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer">Se connecter</button></div>`;return;}
@@ -1768,9 +1731,6 @@ async function renderProfilPage(){
 }
 window.openAdminPage = openAdminPage;
 
-// ══════════════════════════════════════════════════════════
-// CHAT
-// ══════════════════════════════════════════════════════════
 async function purgeOldMessages(){try{const c=Date.now()-24*60*60*1000;const q=query(collection(_db,'chat'),where('timestampMs','<',c));const snap=await getDocs(q);snap.docs.forEach(d=>deleteDoc(doc(_db,'chat',d.id)));}catch(e){}}
 function renderChatPage(){
   const body=document.getElementById('chat-body'),user=_auth.currentUser;
@@ -1793,17 +1753,11 @@ function renderChatPage(){
 }
 window.sendChatMsg=async()=>{const input=document.getElementById('chat-input'),text=input?.value.trim(),user=_auth.currentUser;if(!text||!user)return;input.value='';const now=Date.now();await addDoc(collection(_db,'chat'),{uid:user.uid,name:user.displayName||'User',text,time:new Date(now).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'}),timestampMs:now,timestamp:serverTimestamp()});};
 
-// ══════════════════════════════════════════════════════════
-// PANIER
-// ══════════════════════════════════════════════════════════
 let cart = [];
 try { cart = JSON.parse(localStorage.getItem('cart_snowfall69')) || []; } catch(e) { cart = _memStore['cart_snowfall69'] || []; }
 function saveCart(){ safeStorageSet('cart_snowfall69', cart); updateBadge(); }
 function updateBadge(){const b=document.getElementById('cart-badge');b.textContent=cart.length||'';b.style.display=cart.length>0?'inline-block':'none';}
 
-// ══════════════════════════════════════════════════════════
-// FILTRES & PRODUITS
-// ══════════════════════════════════════════════════════════
 function populateFilters(){
   const all=Object.values(products),cats=[...new Set(all.map(p=>p.category))].sort(),farms=[...new Set(all.map(p=>p.farm))].sort();
   const cs=document.getElementById('category-filter'),fs=document.getElementById('farm-filter');
@@ -1834,9 +1788,6 @@ function renderProducts(list){
   });
 }
 
-// ══════════════════════════════════════════════════════════
-// NAVIGATION
-// ══════════════════════════════════════════════════════════
 function hideAllPages(){
   ['home-page','product-detail','cart-page','infos-page','reseaux-page','avis-page','profil-page','chat-page','admin-page'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
@@ -1846,9 +1797,6 @@ function hideAllPages(){
 function scrollToTop(){document.querySelector('.content').scrollTo({top:0,behavior:'instant'});}
 function goToHome(){hideAllPages();document.getElementById('home-page').style.display='block';document.getElementById('nav-home').classList.add('active');scrollToTop();}
 
-// ══════════════════════════════════════════════════════════
-// SWIPER
-// ══════════════════════════════════════════════════════════
 let swiperIndex=0,swiperItems=[];
 function buildDots(total){const de=document.getElementById('swiper-dots');de.innerHTML='';if(total<=1)return;for(let i=0;i<total;i++){const d=document.createElement('div');d.className='swiper-dot'+(i===0?' active':'');de.appendChild(d);}}
 function updateDots(){document.querySelectorAll('.swiper-dot').forEach((d,i)=>d.classList.toggle('active',i===swiperIndex));}
@@ -1876,9 +1824,6 @@ let touchStartX=0;
 document.getElementById('swiper-track').addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
 document.getElementById('swiper-track').addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-touchStartX;if(Math.abs(dx)>40){dx<0?swiperNext():swiperPrev();}},{passive:true});
 
-// ══════════════════════════════════════════════════════════
-// DETAIL PRODUIT
-// ══════════════════════════════════════════════════════════
 function openProductDetail(key){
   const p=products[key],isR=p.stock==='rupture';
   document.getElementById('swiper-title-h1').textContent=p.title;
@@ -1936,9 +1881,6 @@ document.getElementById('add-to-cart-btn').onclick=()=>{
   setTimeout(()=>{btn.innerHTML='🛒 Ajouter au Panier';},1400);
 };
 
-// ══════════════════════════════════════════════════════════
-// NAV
-// ══════════════════════════════════════════════════════════
 document.getElementById('nav-home').onclick=goToHome;
 document.getElementById('nav-cart').onclick=()=>{hideAllPages();document.getElementById('cart-page').style.display='block';document.getElementById('nav-cart').classList.add('active');renderCart();scrollToTop();};
 document.getElementById('nav-infos').onclick=()=>{hideAllPages();document.getElementById('infos-page').style.display='block';document.getElementById('nav-infos').classList.add('active');scrollToTop();};
@@ -1947,9 +1889,6 @@ document.getElementById('nav-avis').onclick=()=>{hideAllPages();document.getElem
 document.getElementById('nav-profil').onclick=()=>{hideAllPages();document.getElementById('profil-page').style.display='block';document.getElementById('nav-profil').classList.add('active');renderProfilPage();scrollToTop();};
 document.getElementById('nav-chat').onclick=()=>{hideAllPages();const cp=document.getElementById('chat-page');cp.style.display='flex';cp.style.flexDirection='column';document.getElementById('nav-chat').classList.add('active');renderChatPage();};
 
-// ══════════════════════════════════════════════════════════
-// AVIS
-// ══════════════════════════════════════════════════════════
 let selectedStar=0,avisPhotoBase64=null;
 document.querySelectorAll('.star').forEach(star=>{star.addEventListener('click',()=>{selectedStar=parseInt(star.dataset.v);document.querySelectorAll('.star').forEach(s=>{s.classList.toggle('on',parseInt(s.dataset.v)<=selectedStar);});});});
 document.getElementById('avis-photo-input').addEventListener('change',function(){const f=this.files[0];if(!f)return;if(f.size>4*1024*1024){alert('Image trop grande (max 4 Mo)');return;}const r=new FileReader();r.onload=e=>{avisPhotoBase64=e.target.result;const prev=document.getElementById('avis-photo-preview');prev.src=avisPhotoBase64;prev.style.display='block';document.getElementById('photo-upload-text').textContent='Photo sélectionnée ✅';};r.readAsDataURL(f);});
@@ -1971,14 +1910,8 @@ window.openLightbox=(url)=>{document.getElementById('lb-img').src=url;document.g
 document.getElementById('lb-close').addEventListener('click',()=>{document.getElementById('photo-lightbox').classList.remove('open');document.getElementById('lb-img').src='';});
 document.getElementById('photo-lightbox').addEventListener('click',e=>{if(e.target===document.getElementById('photo-lightbox'))document.getElementById('photo-lightbox').classList.remove('open');});
 
-// ══════════════════════════════════════════════════════════
-// RÉSEAUX
-// ══════════════════════════════════════════════════════════
 document.querySelectorAll('.reseau-item[data-link]').forEach(el=>{el.onclick=()=>window.open(el.getAttribute('data-link'),'_blank');});
 
-// ══════════════════════════════════════════════════════════
-// PANIER RENDU
-// ══════════════════════════════════════════════════════════
 function renderCart(){
   const c=document.getElementById('cart-items');c.innerHTML='';
   if(!cart.length){c.innerHTML='<p style="text-align:center;color:#444;padding:40px 0">Votre panier est vide</p>';document.getElementById('cart-total').textContent='';return;}
@@ -1988,7 +1921,6 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ══ COMMANDER → MODALE CHOIX CONTACT ══
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
@@ -2004,9 +1936,6 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   showContactChoiceModal(message);
 };
 
-// ══════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════
 onAuthStateChanged(_auth, () => {});
 checkAdminSession();
 initGate();
