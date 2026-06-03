@@ -395,6 +395,28 @@
     input[type="time"], input[type="text"], textarea { width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:#e0e0e0; font-size:0.95rem; font-family:'Barlow', sans-serif; outline:none; }
     input[type="time"]:focus, input[type="text"]:focus, textarea:focus { border-color:rgba(245,167,0,0.4); }
     textarea { min-height:80px; resize:vertical; }
+    /* Fidelity banner */
+    .fidelity-banner {
+      background: rgba(245,167,0,0.07);
+      border: 1.5px solid rgba(245,167,0,0.3);
+      border-radius: 14px;
+      padding: 14px 14px;
+      margin-top: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .fidelity-banner-icon { font-size: 1.6rem; flex-shrink: 0; margin-top: 2px; }
+    .fidelity-banner-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.88rem; font-weight: 900;
+      color: var(--gold); letter-spacing: 1px;
+      text-transform: uppercase; margin-bottom: 5px;
+    }
+    .fidelity-banner-text {
+      font-size: 0.78rem; color: #888;
+      line-height: 1.6; font-weight: 500;
+    }
     #submit-order-btn { width:100%; padding:17px; background:linear-gradient(135deg, var(--gold), #E09500); color:#000; border:none; border-radius:14px; font-family:'Bebas Neue', sans-serif; font-size:1.3rem; letter-spacing:3px; margin-top:22px; cursor:pointer; box-shadow:0 0 18px rgba(245,167,0,0.3); }
     #infos-page { display:none; padding:14px 14px 110px; }
     .info-card { background:rgba(255,255,255,0.02); border:1px solid rgba(245,167,0,0.12); border-radius:18px; padding:18px 16px; margin-bottom:14px; }
@@ -486,7 +508,6 @@
     .chat-locked-text { font-size:0.85rem; color:#444; text-align:center; line-height:1.6; }
     .chat-locked-btn { background:linear-gradient(135deg, var(--gold), #E09500); color:#000; border:none; padding:13px 30px; border-radius:12px; font-family:'Bebas Neue', sans-serif; font-size:1rem; letter-spacing:2px; cursor:pointer; }
     .chat-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0.3; }
-    /* Chat warning banner */
     .chat-warn-banner {
       background:rgba(239,68,68,0.12);
       border:1.5px solid rgba(239,68,68,0.4);
@@ -856,27 +877,61 @@
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════ CART PAGE ═══════════════════════════════════════════ -->
     <div id="cart-page">
       <div class="page-title">Votre Panier</div>
       <div id="cart-items"></div>
       <div id="cart-total" class="cart-total"></div>
       <div class="questionnaire">
+
+        <!-- MODE DE RÉCUPÉRATION -->
         <div class="question">
           <span class="question-label">Mode de récupération</span>
           <button class="option-btn" data-type="pickup">Venir sur place</button>
           <button class="option-btn" data-type="delivery">Livraison</button>
         </div>
+
+        <!-- QUESTIONS PICKUP -->
         <div id="pickup-questions" style="display:none">
-          <div class="question"><span class="question-label">Pour quelle heure ?</span><input type="time" id="pickup-time"></div>
+          <div class="question">
+            <span class="question-label">Pour quelle heure ?</span>
+            <input type="time" id="pickup-time">
+          </div>
         </div>
+
+        <!-- QUESTIONS LIVRAISON -->
         <div id="delivery-questions" style="display:none">
           <div class="question"><span class="question-label">Heure souhaitée</span><input type="time" id="delivery-time"></div>
           <div class="question"><span class="question-label">Adresse complète</span><input type="text" id="delivery-address" placeholder="Rue, numéro, ville..."></div>
           <div class="question"><span class="question-label">Précisions</span><textarea id="delivery-details" placeholder="Interphone, digicode..."></textarea></div>
         </div>
+
+        <!-- CODE POSTAL -->
+        <div class="question">
+          <span class="question-label">📍 Code postal <span style="color:#ef4444">*</span></span>
+          <input type="text" id="order-postal" placeholder="Ex: 69001" maxlength="5" inputmode="numeric">
+        </div>
+
+        <!-- CONTACT SIGNAL & WHATSAPP -->
+        <div class="question">
+          <span class="question-label">📲 Contact Signal &amp; WhatsApp <span style="color:#ef4444">*</span></span>
+          <input type="text" id="order-contact" placeholder="@signal ou numéro WhatsApp (+33...)">
+          <div class="fidelity-banner">
+            <div class="fidelity-banner-icon">❄️</div>
+            <div>
+              <div class="fidelity-banner-title">Rejoins la Team Snowfall !</div>
+              <div class="fidelity-banner-text">
+                En partageant ton contact <strong style="color:#ccc">Signal et WhatsApp</strong>, tu rejoins la <strong style="color:var(--gold)">team des fidèles Snowfall69</strong> 🥇<br>
+                Tu seras <strong style="color:#4ade80">prioritaire sur toutes les prochaines commandes</strong> et profiteras des meilleures offres en avant-première ❄️🔥
+              </div>
+            </div>
+          </div>
+        </div>
+
         <button id="submit-order-btn">Commander</button>
       </div>
     </div>
+    <!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
 
     <div id="infos-page">
       <div class="page-title" style="padding-top:8px">Infos</div>
@@ -1686,19 +1741,13 @@ window.openAdminPage = openAdminPage;
 
 async function purgeOldMessages(){try{const c=Date.now()-24*60*60*1000;const q=query(collection(_db,'chat'),where('timestampMs','<',c));const snap=await getDocs(q);snap.docs.forEach(d=>deleteDoc(doc(_db,'chat',d.id)));}catch(e){}}
 
-// ═══════════════════════════════════════════════════
-// CHAT — filtre numéros & liens
-// ═══════════════════════════════════════════════════
 function containsPhoneOrLink(text) {
-  // Numéros de téléphone : 7+ chiffres consécutifs (avec espaces, tirets, points, parenthèses)
   const phoneRegex = /(\+?\d[\s.\-()]*){7,}/;
-  // Liens et domaines suspects
   const linkRegex = /(https?:\/\/|www\.|ftp:\/\/|\.com|\.fr|\.net|\.org|\.io|\.be|\.ch|\.co|t\.me\/|pt\.im\/|tato\.im\/|tatokdym\.|telegram\.me\/|wa\.me\/|discord\.gg\/|signal\.me|luffa\.im|qrco\.de)/i;
   return phoneRegex.test(text) || linkRegex.test(text);
 }
 
 function showChatWarning(msg) {
-  // Supprimer l'ancien warning s'il existe
   const old = document.getElementById('chat-warn-banner');
   if (old) old.remove();
   const banner = document.createElement('div');
@@ -1707,10 +1756,8 @@ function showChatWarning(msg) {
   banner.textContent = msg;
   const inputBar = document.querySelector('.chat-input-bar');
   if (inputBar) inputBar.parentNode.insertBefore(banner, inputBar);
-  // Flash rouge sur l'input
   const inp = document.getElementById('chat-input');
   if (inp) { inp.style.borderColor = '#ef4444'; setTimeout(() => { inp.style.borderColor = 'rgba(255,255,255,0.08)'; }, 2500); }
-  // Auto-disparition après 3 secondes
   setTimeout(() => { banner.remove(); }, 3500);
 }
 
@@ -1739,13 +1786,10 @@ window.sendChatMsg = async () => {
   const text = input?.value.trim();
   const user = _auth.currentUser;
   if (!text || !user) return;
-
-  // ── FILTRE : numéros & liens ──
   if (containsPhoneOrLink(text)) {
     showChatWarning('⛔ Interdit : partage de numéros de téléphone ou de liens.');
     return;
   }
-
   input.value = '';
   const now = Date.now();
   await addDoc(collection(_db, 'chat'), {
@@ -1926,18 +1970,66 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-document.getElementById('submit-order-btn').onclick=async()=>{
-  if(!cart.length)return alert('Votre panier est vide');
-  const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
-  const mode=modeBtn.dataset.type==='pickup'?'Venir sur place':'Livraison';
-  const user=_auth.currentUser;
-  let message=`❄️ *NOUVELLE COMMANDE SNOWFALL69* ❄️\n\n👤 ${user?.displayName||'Client'}\n📅 ${new Date().toLocaleString('fr-FR')}\n\n🛍️ *Articles :*\n`;
-  let total=0,itemsText='';
-  cart.forEach(item=>{total+=parseInt(item.price)||0;message+=`• ${item.title} — ${item.qty} (${item.price})\n`;itemsText+=`• ${item.title} ${item.qty} (${item.price})\n`;});
-  message+=`\n💰 *Total : ${total}€*\n\n📦 *Mode :* ${mode}\n`;
-  if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
-  else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
-  if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
+// ═══════════════════════════════════════════════════
+// SUBMIT ORDER — avec code postal + contact Signal & WhatsApp
+// ═══════════════════════════════════════════════════
+document.getElementById('submit-order-btn').onclick = async () => {
+  if (!cart.length) return alert('Votre panier est vide');
+
+  const modeBtn = document.querySelector('.option-btn.active');
+  if (!modeBtn) return alert('Choisissez un mode de récupération.');
+
+  const contact = document.getElementById('order-contact').value.trim();
+  const postal  = document.getElementById('order-postal').value.trim();
+
+  if (!postal)                    return alert('📍 Merci de renseigner votre code postal (obligatoire).');
+  if (!/^\d{5}$/.test(postal))    return alert('📍 Code postal invalide — 5 chiffres requis.');
+  if (!contact)                   return alert('📲 Merci de renseigner votre contact Signal et WhatsApp (obligatoire).');
+
+  const mode = modeBtn.dataset.type === 'pickup' ? 'Venir sur place' : 'Livraison';
+  const user = _auth.currentUser;
+
+  let message = `❄️ *NOUVELLE COMMANDE SNOWFALL69* ❄️\n\n👤 ${user?.displayName || 'Client'}\n📅 ${new Date().toLocaleString('fr-FR')}\n\n🛍️ *Articles :*\n`;
+  let total = 0, itemsText = '';
+
+  cart.forEach(item => {
+    total     += parseInt(item.price) || 0;
+    message   += `• ${item.title} — ${item.qty} (${item.price})\n`;
+    itemsText += `• ${item.title} ${item.qty} (${item.price})\n`;
+  });
+
+  message += `\n💰 *Total : ${total}€*\n\n`;
+  message += `📦 *Mode :* ${mode}\n`;
+  message += `📍 *Code postal :* ${postal}\n`;
+  message += `📲 *Contact Signal & WhatsApp :* ${contact}\n`;
+
+  if (modeBtn.dataset.type === 'pickup') {
+    const h = document.getElementById('pickup-time').value;
+    if (h) message += `🕐 *Heure :* ${h}\n`;
+  } else {
+    const h   = document.getElementById('delivery-time').value;
+    const a   = document.getElementById('delivery-address').value.trim();
+    const det = document.getElementById('delivery-details').value.trim();
+    if (h)   message += `🕐 *Heure :* ${h}\n`;
+    if (a)   message += `📍 *Adresse :* ${a}\n`;
+    if (det) message += `📝 *Précisions :* ${det}\n`;
+  }
+
+  if (user) {
+    try {
+      await addDoc(collection(_db, 'commandes'), {
+        uid: user.uid,
+        items: itemsText.trim(),
+        total,
+        mode,
+        postalCode: postal,
+        contact,
+        date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
+        timestamp: serverTimestamp()
+      });
+    } catch(e) {}
+  }
+
   showContactChoiceModal(message);
 };
 
