@@ -131,7 +131,6 @@
       background:linear-gradient(90deg, transparent, var(--gold), transparent);
       margin:16px auto; animation:fadeUp 0.6s 0.45s ease both;
     }
-
     .gate-tabs {
       display:flex; gap:0; width:100%;
       background:rgba(255,255,255,0.03);
@@ -150,7 +149,6 @@
       background:linear-gradient(135deg, var(--gold), #E09500);
       color:#000;
     }
-
     .gate-panel {
       width:100%;
       background:rgba(255,255,255,0.02);
@@ -232,7 +230,6 @@
       letter-spacing:1.5px; text-transform:uppercase;
       margin-bottom:6px; display:block;
     }
-
     .admin-gate-hint {
       text-align:center; margin-top:16px;
       font-size:0.7rem; color:#2a2a2a;
@@ -240,8 +237,6 @@
       cursor:pointer; user-select:none;
       animation:fadeUp 0.5s 1.2s ease both;
     }
-
-    /* ═══ OPEN IN BROWSER BUTTON (gate) ═══ */
     .gate-open-browser-btn {
       width:100%; padding:13px;
       background:rgba(239,68,68,0.12);
@@ -618,6 +613,83 @@
     .nav-emoji { font-size:1.1rem; line-height:1; display:block; transition:transform 0.2s; }
     .nav-item.active .nav-emoji { transform:scale(1.1); }
     #cart-badge { position:absolute; top:-2px; right:-2px; background:#ef4444; color:white; border-radius:50%; min-width:14px; height:14px; padding:0 3px; font-size:0.56rem; font-weight:bold; line-height:14px; box-shadow:0 0 6px rgba(239,68,68,0.6); display:none; z-index:2; text-align:center; }
+
+    /* ═══════════════ CONTACT CHOICE MODAL ═══════════════ */
+    #contact-choice-modal {
+      display:none; position:fixed; inset:0; z-index:12000;
+      background:rgba(0,0,0,0.88); backdrop-filter:blur(8px);
+      align-items:flex-end; justify-content:center;
+    }
+    #contact-choice-modal.open { display:flex; }
+    .contact-choice-sheet {
+      width:100%; background:#080808;
+      border-radius:24px 24px 0 0;
+      border-top:1.5px solid rgba(245,167,0,0.25);
+      padding:22px 18px 44px;
+      animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);
+    }
+    .contact-choice-handle {
+      width:38px; height:4px; background:rgba(255,255,255,0.1);
+      border-radius:999px; margin:0 auto 20px;
+    }
+    .contact-choice-title {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:1.25rem; letter-spacing:3px; color:var(--white);
+      text-align:center; margin-bottom:4px;
+    }
+    .contact-choice-sub {
+      font-size:0.8rem; color:#444; text-align:center;
+      margin-bottom:22px; font-weight:600; font-family:'Barlow', sans-serif;
+    }
+    .contact-choice-btns { display:flex; flex-direction:column; gap:12px; }
+    .contact-choice-btn {
+      width:100%; padding:16px 20px;
+      border-radius:14px; border:none; cursor:pointer;
+      display:flex; align-items:center; gap:14px;
+      transition:transform 0.18s, box-shadow 0.18s;
+      text-align:left;
+    }
+    .contact-choice-btn:active { transform:scale(0.97); }
+    .contact-choice-btn-telegram {
+      background:linear-gradient(135deg,#1a8fce,#1477b0);
+      box-shadow:0 4px 20px rgba(26,143,206,0.25);
+    }
+    .contact-choice-btn-potato {
+      background:linear-gradient(135deg,var(--gold),#E09500);
+      box-shadow:0 4px 20px rgba(245,167,0,0.25);
+    }
+    .contact-choice-btn-icon {
+      width:42px; height:42px; border-radius:12px;
+      background:rgba(255,255,255,0.15);
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.3rem; flex-shrink:0;
+    }
+    .contact-choice-btn-text { flex:1; }
+    .contact-choice-btn-name {
+      font-family:'Barlow Condensed', sans-serif;
+      font-size:1rem; font-weight:900; letter-spacing:1px;
+      text-transform:uppercase; display:block;
+    }
+    .contact-choice-btn-telegram .contact-choice-btn-name { color:#fff; }
+    .contact-choice-btn-potato .contact-choice-btn-name { color:#000; }
+    .contact-choice-btn-sub {
+      font-size:0.75rem; font-weight:600; display:block; margin-top:2px;
+    }
+    .contact-choice-btn-telegram .contact-choice-btn-sub { color:rgba(255,255,255,0.65); }
+    .contact-choice-btn-potato .contact-choice-btn-sub { color:rgba(0,0,0,0.55); }
+    .contact-choice-btn-arrow { font-size:1.4rem; flex-shrink:0; }
+    .contact-choice-btn-telegram .contact-choice-btn-arrow { color:rgba(255,255,255,0.5); }
+    .contact-choice-btn-potato .contact-choice-btn-arrow { color:rgba(0,0,0,0.35); }
+    .contact-choice-cancel {
+      width:100%; padding:13px; margin-top:12px;
+      background:transparent; border:1.5px solid rgba(255,255,255,0.07);
+      border-radius:12px; color:#333;
+      font-family:'Barlow Condensed', sans-serif;
+      font-size:0.9rem; font-weight:800; letter-spacing:1px;
+      text-transform:uppercase; cursor:pointer; transition:border-color 0.2s;
+      display:block;
+    }
+    .contact-choice-cancel:active { border-color:#444; color:#666; }
   </style>
 </head>
 <body>
@@ -642,6 +714,36 @@
   <button id="intro-skip-btn">Passer ›</button>
 </div>
 
+<!-- CONTACT CHOICE MODAL -->
+<div id="contact-choice-modal">
+  <div class="contact-choice-sheet">
+    <div class="contact-choice-handle"></div>
+    <div class="contact-choice-title">📩 Nous Contacter</div>
+    <div class="contact-choice-sub">Choisissez votre messagerie préférée</div>
+    <div class="contact-choice-btns">
+      <button class="contact-choice-btn contact-choice-btn-telegram" id="ccm-telegram">
+        <div class="contact-choice-btn-icon">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" style="width:26px;height:26px;object-fit:contain" alt="Telegram">
+        </div>
+        <div class="contact-choice-btn-text">
+          <span class="contact-choice-btn-name">Telegram</span>
+          <span class="contact-choice-btn-sub">@franklin69200</span>
+        </div>
+        <span class="contact-choice-btn-arrow">›</span>
+      </button>
+      <button class="contact-choice-btn contact-choice-btn-potato" id="ccm-potato">
+        <div class="contact-choice-btn-icon" style="background:rgba(0,0,0,0.12)">🍫</div>
+        <div class="contact-choice-btn-text">
+          <span class="contact-choice-btn-name">Potato</span>
+          <span class="contact-choice-btn-sub">@FranklinSaint69</span>
+        </div>
+        <span class="contact-choice-btn-arrow">›</span>
+      </button>
+    </div>
+    <button class="contact-choice-cancel" id="ccm-cancel">Annuler</button>
+  </div>
+</div>
+
 <!-- ACCESS GATE -->
 <div id="access-gate">
   <div class="gate-glow"></div>
@@ -649,13 +751,10 @@
     <div class="gate-logo-title">SNOWFALL</div>
     <div class="gate-logo-num">69</div>
     <div class="gate-line"></div>
-
     <div class="gate-tabs">
       <div class="gate-tab active" id="gate-tab-login" onclick="switchGateTab('login')">🔑 Se connecter</div>
       <div class="gate-tab" id="gate-tab-code" onclick="switchGateTab('code')">🆕 Nouveau client</div>
     </div>
-
-    <!-- PANEL LOGIN -->
     <div class="gate-panel" id="gate-step-login">
       <div class="gate-panel-title">👋 Bon retour</div>
       <div class="gate-panel-sub">Connectez-vous à votre compte.</div>
@@ -667,8 +766,6 @@
       <div class="gate-error" id="gate-login-error"></div>
       <button class="gate-open-browser-btn" id="login-browser-btn" onclick="openInRealBrowser()">📱 Problème de connexion ? Ouvrir dans Chrome/Safari</button>
     </div>
-
-    <!-- PANEL CODE -->
     <div class="gate-panel" id="gate-step-code" style="display:none">
       <div class="gate-panel-title">🔐 Code d'accès</div>
       <div class="gate-panel-sub">Entrez le code reçu ou demandez-le à notre contact.</div>
@@ -680,8 +777,6 @@
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
       <button class="gate-open-browser-btn" id="code-browser-btn" onclick="openInRealBrowser()">📱 Ça ne marche pas ? Ouvrir dans Chrome/Safari</button>
     </div>
-
-    <!-- PANEL REGISTER -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
@@ -697,10 +792,7 @@
       <button class="gate-btn" id="reg-submit-btn">Créer mon compte</button>
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
-
     <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
-
-    <!-- PANEL ADMIN -->
     <div class="gate-panel" id="gate-step-admin" style="display:none">
       <div class="gate-panel-title">🛡️ Accès Administrateur</div>
       <div class="gate-panel-sub">Réservé à l'équipe Snowfall69.</div>
@@ -835,7 +927,6 @@
           <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:var(--gold);margin-bottom:2px">RHÔNE-ALPES</div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
         </div>
-        <!-- ✅ PATCH 3 : Bouton contact stylisé → pt.im -->
         <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:16px 14px;text-align:center">
           <span style="color:#888;font-size:0.8rem;font-weight:600;display:block;margin-bottom:12px">Contact principal</span>
           <a href="https://pt.im/FranklinSaint69" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;background:linear-gradient(135deg,#F5A700,#E09500);color:#000;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;text-decoration:none;border-radius:12px;box-shadow:0 0 22px rgba(245,167,0,0.3),0 4px 16px rgba(0,0,0,0.4);font-weight:400;transition:transform 0.2s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
@@ -1190,9 +1281,40 @@ let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
 const ADMIN_USERNAME = "snowfall_admin";
 const ADMIN_SECRET   = "Snowfall69Admin!";
-// ✅ PATCH 1 & 2 : Lien de contact unifié
 const CONTACT_URL    = "https://pt.im/FranklinSaint69";
+const TELEGRAM_URL   = "https://t.me/franklin69200";
 const CODE_DURATION_MS = 30 * 60 * 1000;
+
+// ══════════════════════════════════════════════════════════
+// CONTACT CHOICE MODAL
+// ══════════════════════════════════════════════════════════
+let _ccmPendingMsg = '';
+
+window.showContactChoiceModal = function(msg) {
+  _ccmPendingMsg = msg;
+  document.getElementById('contact-choice-modal').classList.add('open');
+};
+
+function closeContactChoiceModal() {
+  document.getElementById('contact-choice-modal').classList.remove('open');
+  _ccmPendingMsg = '';
+}
+
+document.getElementById('ccm-telegram').addEventListener('click', () => {
+  if (_ccmPendingMsg) window.open(TELEGRAM_URL + '?text=' + encodeURIComponent(_ccmPendingMsg), '_blank');
+  closeContactChoiceModal();
+});
+
+document.getElementById('ccm-potato').addEventListener('click', () => {
+  if (_ccmPendingMsg) window.open(CONTACT_URL + '?text=' + encodeURIComponent(_ccmPendingMsg), '_blank');
+  closeContactChoiceModal();
+});
+
+document.getElementById('ccm-cancel').addEventListener('click', closeContactChoiceModal);
+
+document.getElementById('contact-choice-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('contact-choice-modal')) closeContactChoiceModal();
+});
 
 // ══════════════════════════════════════════════════════════
 // GATE TABS
@@ -1216,26 +1338,11 @@ function showIntroVideo(onFinish) {
   const screen  = document.getElementById('intro-video-screen');
   const video   = document.getElementById('intro-video-el');
   const skipBtn = document.getElementById('intro-skip-btn');
-
-  video.pause();
-  video.currentTime = 0;
-  video.muted = true;
-  video.volume = 1;
+  video.pause(); video.currentTime = 0; video.muted = true; video.volume = 1;
   screen.classList.add('active');
-
   const playPromise = video.play();
-  if (playPromise !== undefined) {
-    playPromise.then(() => { video.muted = false; }).catch(() => { video.muted = true; });
-  }
-
-  const done = () => {
-    video.muted = true;
-    video.pause();
-    video.currentTime = 0;
-    screen.classList.remove('active');
-    onFinish();
-  };
-
+  if (playPromise !== undefined) { playPromise.then(() => { video.muted = false; }).catch(() => { video.muted = true; }); }
+  const done = () => { video.muted = true; video.pause(); video.currentTime = 0; screen.classList.remove('active'); onFinish(); };
   video.onended = done;
   skipBtn.onclick = done;
 }
@@ -1364,10 +1471,10 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// ✅ PATCH 1 : Demander le code → pt.im/FranklinSaint69
+// ══ DEMANDER LE CODE → MODALE CHOIX CONTACT ══
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
-  window.open(`${CONTACT_URL}?text=${encodeURIComponent(msg)}`, '_blank');
+  showContactChoiceModal(msg);
 });
 
 // ══ REGISTER ══
@@ -1881,7 +1988,7 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ✅ PATCH 2 : Commande → pt.im/FranklinSaint69
+// ══ COMMANDER → MODALE CHOIX CONTACT ══
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
@@ -1894,7 +2001,7 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
   if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
-  window.open(`${CONTACT_URL}?text=${encodeURIComponent(message)}`,'_blank');
+  showContactChoiceModal(message);
 };
 
 // ══════════════════════════════════════════════════════════
