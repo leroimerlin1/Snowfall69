@@ -835,9 +835,12 @@
           <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:var(--gold);margin-bottom:2px">RHÔNE-ALPES</div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
         </div>
-        <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:12px 14px;text-align:center">
-          <span style="color:#888;font-size:0.8rem;font-weight:600">Contact principal</span><br>
-          <a href="https://t.me/franklin69200" target="_blank" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;text-decoration:none">@franklin69200</a>
+        <!-- ✅ PATCH 3 : Bouton contact stylisé → pt.im -->
+        <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:16px 14px;text-align:center">
+          <span style="color:#888;font-size:0.8rem;font-weight:600;display:block;margin-bottom:12px">Contact principal</span>
+          <a href="https://pt.im/FranklinSaint69" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;background:linear-gradient(135deg,#F5A700,#E09500);color:#000;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;text-decoration:none;border-radius:12px;box-shadow:0 0 22px rgba(245,167,0,0.3),0 4px 16px rgba(0,0,0,0.4);font-weight:400;transition:transform 0.2s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
+            <span style="font-size:1.2rem">📩</span> Contacter Franklin
+          </a>
         </div>
         <div class="info-row" style="margin-top:14px">
           <span class="info-row-icon">ℹ️</span>
@@ -927,11 +930,11 @@
           <div class="reseau-text"><div class="reseau-name">Tous nos canaux</div><div class="reseau-sub">qrco.de/bfgCV3</div></div>
           <div class="reseau-arrow">›</div>
         </div>
-        <div class="reseau-item" data-link="https://t.me/franklin69200">
+        <div class="reseau-item" data-link="https://pt.im/FranklinSaint69">
           <div class="reseau-icon-wrap" style="background:rgba(41,182,246,0.1);border-color:rgba(41,182,246,0.3)">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/512px-Telegram_logo.svg.png" alt="Contact">
           </div>
-          <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@franklin69200 🥇</div></div>
+          <div class="reseau-text"><div class="reseau-name">Contacte Potato</div><div class="reseau-sub">@FranklinSaint69 🥇</div></div>
           <div class="reseau-arrow">›</div>
         </div>
       </div>
@@ -1187,7 +1190,8 @@ let chatUnsub = null;
 const ADMIN_PASSWORD = "Snowfall69Admin!";
 const ADMIN_USERNAME = "snowfall_admin";
 const ADMIN_SECRET   = "Snowfall69Admin!";
-const TELEGRAM_CONTACT = "https://t.me/franklin69200";
+// ✅ PATCH 1 & 2 : Lien de contact unifié
+const CONTACT_URL    = "https://pt.im/FranklinSaint69";
 const CODE_DURATION_MS = 30 * 60 * 1000;
 
 // ══════════════════════════════════════════════════════════
@@ -1206,43 +1210,28 @@ window.switchGateTab = (tab) => {
 };
 
 // ══════════════════════════════════════════════════════════
-// INTRO VIDEO — SON UNIQUEMENT QUAND LA VIDÉO EST VISIBLE
+// INTRO VIDEO
 // ══════════════════════════════════════════════════════════
 function showIntroVideo(onFinish) {
   const screen  = document.getElementById('intro-video-screen');
   const video   = document.getElementById('intro-video-el');
   const skipBtn = document.getElementById('intro-skip-btn');
 
-  // Réinitialisation complète de la vidéo
   video.pause();
   video.currentTime = 0;
-
-  // TOUJOURS démarrer en muet pour éviter le blocage autoplay
   video.muted = true;
   video.volume = 1;
-
-  // Afficher l'écran
   screen.classList.add('active');
 
-  // Lancer la vidéo
   const playPromise = video.play();
-
   if (playPromise !== undefined) {
-    playPromise.then(() => {
-      // Vidéo en cours de lecture → activer le son maintenant
-      video.muted = false;
-    }).catch(() => {
-      // Autoplay bloqué par le navigateur, rester en muet
-      video.muted = true;
-    });
+    playPromise.then(() => { video.muted = false; }).catch(() => { video.muted = true; });
   }
 
   const done = () => {
-    // Couper le son ET mettre en pause AVANT de masquer l'écran
     video.muted = true;
     video.pause();
     video.currentTime = 0;
-    // Retirer l'écran
     screen.classList.remove('active');
     onFinish();
   };
@@ -1375,9 +1364,10 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
+// ✅ PATCH 1 : Demander le code → pt.im/FranklinSaint69
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
-  window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
+  window.open(`${CONTACT_URL}?text=${encodeURIComponent(msg)}`, '_blank');
 });
 
 // ══ REGISTER ══
@@ -1891,6 +1881,7 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
+// ✅ PATCH 2 : Commande → pt.im/FranklinSaint69
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
@@ -1903,7 +1894,7 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value,a=document.getElementById('delivery-address').value.trim(),det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
   if(user){try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}}
-  window.open(`https://t.me/franklin69200?text=${encodeURIComponent(message)}`,'_blank');
+  window.open(`${CONTACT_URL}?text=${encodeURIComponent(message)}`,'_blank');
 };
 
 // ══════════════════════════════════════════════════════════
