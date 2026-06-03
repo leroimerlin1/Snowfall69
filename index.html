@@ -638,7 +638,7 @@
 
 <!-- INTRO VIDEO SCREEN -->
 <div id="intro-video-screen">
-  <video id="intro-video-el" src="ae snow.mp4" autoplay playsinline preload="auto"></video>
+  <video id="intro-video-el" src="ae snow.mp4" playsinline preload="auto"></video>
   <button id="intro-skip-btn">Passer ›</button>
 </div>
 
@@ -665,7 +665,6 @@
       <input type="password" class="gate-input reg-input" id="login-pass" placeholder="Votre mot de passe" autocomplete="current-password">
       <button class="gate-btn" id="login-submit-btn">Se connecter</button>
       <div class="gate-error" id="gate-login-error"></div>
-      <!-- Bouton ouvrir dans browser si in-app -->
       <button class="gate-open-browser-btn" id="login-browser-btn" onclick="openInRealBrowser()">📱 Problème de connexion ? Ouvrir dans Chrome/Safari</button>
     </div>
 
@@ -679,7 +678,6 @@
       <div class="gate-error" id="gate-code-error"></div>
       <div class="gate-or">OU</div>
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
-      <!-- Bouton ouvrir dans browser si in-app -->
       <button class="gate-open-browser-btn" id="code-browser-btn" onclick="openInRealBrowser()">📱 Ça ne marche pas ? Ouvrir dans Chrome/Safari</button>
     </div>
 
@@ -1115,34 +1113,27 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, on
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 
 // ══════════════════════════════════════════════════════════
-// DÉTECTION IN-APP BROWSER — CORRECTION PRINCIPALE
+// DÉTECTION IN-APP BROWSER
 // ══════════════════════════════════════════════════════════
 function isInAppBrowser() {
   const ua = navigator.userAgent || '';
   return (
     /FBAN|FBAV|Instagram|Snapchat|Twitter\/|TikTok|Line\/|WhatsApp|MicroMessenger|GSA\//.test(ua) ||
-    // Telegram in-app browser sur Android
     /Telegram/.test(ua) ||
-    // Facebook/Instagram webview iOS
     (/iPhone|iPad/.test(ua) && !/Safari\//.test(ua) && /AppleWebKit/.test(ua)) ||
-    // Android generic webview (pas Chrome, pas Firefox)
     (/Android/.test(ua) && /wv/.test(ua))
   );
 }
 
 window.openInRealBrowser = function() {
   const url = window.location.href;
-  // iOS : tente de forcer l'ouverture dans Safari
-  // Android : tente d'ouvrir intent vers Chrome
   const ua = navigator.userAgent || '';
   if (/iPhone|iPad/.test(ua)) {
-    // Sur iOS, on peut utiliser un lien universel ou juste window.open
-    window.location.href = 'googlechrome://' + url.replace(/^https?:\/\//, 'https://leroimerlin1.github.io/Snowfall69/');
+    window.location.href = 'googlechrome://' + url.replace(/^https?:\/\//, '');
     setTimeout(() => { window.location.href = url; }, 300);
   } else {
     window.open(url, '_blank');
   }
-  // Fallback : copier l'URL dans le presse-papier avec instruction
   if (navigator.clipboard) {
     navigator.clipboard.writeText(url).then(() => {
       alert('📋 Lien copié !\nColle-le dans Chrome ou Safari pour accéder au site.');
@@ -1154,10 +1145,8 @@ window.openInRealBrowser = function() {
   }
 };
 
-// Afficher la bannière et les boutons si in-app
 if (isInAppBrowser()) {
   document.getElementById('inapp-banner').classList.add('show');
-  // Afficher les boutons "ouvrir dans le navigateur" sur les panels
   setTimeout(() => {
     document.getElementById('login-browser-btn')?.classList.add('show');
     document.getElementById('code-browser-btn')?.classList.add('show');
@@ -1165,31 +1154,12 @@ if (isInAppBrowser()) {
 }
 
 // ══════════════════════════════════════════════════════════
-// SAFE STORAGE — FALLBACK SI localStorage BLOQUÉ
+// SAFE STORAGE
 // ══════════════════════════════════════════════════════════
 const _memStore = {};
-
-function safeStorageSet(key, value) {
-  try {
-    localStorage.setItem(key, JSON.stringify(value));
-  } catch(e) {
-    _memStore[key] = value;
-  }
-}
-
-function safeStorageGet(key) {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? JSON.parse(v) : (_memStore[key] || null);
-  } catch(e) {
-    return _memStore[key] || null;
-  }
-}
-
-function safeStorageDel(key) {
-  try { localStorage.removeItem(key); } catch(e) {}
-  delete _memStore[key];
-}
+function safeStorageSet(key, value) { try { localStorage.setItem(key, JSON.stringify(value)); } catch(e) { _memStore[key] = value; } }
+function safeStorageGet(key) { try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : (_memStore[key] || null); } catch(e) { return _memStore[key] || null; } }
+function safeStorageDel(key) { try { localStorage.removeItem(key); } catch(e) {} delete _memStore[key]; }
 
 // ══════════════════════════════════════════════════════════
 // FIREBASE INIT
@@ -1229,42 +1199,50 @@ window.switchGateTab = (tab) => {
   });
   document.getElementById('gate-tab-login').classList.toggle('active', tab === 'login');
   document.getElementById('gate-tab-code').classList.toggle('active', tab === 'code');
-
-  if (tab === 'login') {
-    document.getElementById('gate-step-login').style.display = 'block';
-  } else if (tab === 'code') {
-    document.getElementById('gate-step-code').style.display = 'block';
-  } else if (tab === 'register') {
-    document.getElementById('gate-step-register').style.display = 'block';
-    document.getElementById('gate-tab-code').classList.add('active');
-    document.getElementById('gate-tab-login').classList.remove('active');
-  } else if (tab === 'admin') {
-    document.getElementById('gate-step-admin').style.display = 'block';
-    document.getElementById('gate-tab-login').classList.remove('active');
-    document.getElementById('gate-tab-code').classList.remove('active');
-  }
+  if (tab === 'login') document.getElementById('gate-step-login').style.display = 'block';
+  else if (tab === 'code') document.getElementById('gate-step-code').style.display = 'block';
+  else if (tab === 'register') { document.getElementById('gate-step-register').style.display = 'block'; document.getElementById('gate-tab-code').classList.add('active'); document.getElementById('gate-tab-login').classList.remove('active'); }
+  else if (tab === 'admin') { document.getElementById('gate-step-admin').style.display = 'block'; document.getElementById('gate-tab-login').classList.remove('active'); document.getElementById('gate-tab-code').classList.remove('active'); }
 };
 
 // ══════════════════════════════════════════════════════════
-// INTRO VIDEO
+// INTRO VIDEO — SON UNIQUEMENT QUAND LA VIDÉO EST VISIBLE
 // ══════════════════════════════════════════════════════════
 function showIntroVideo(onFinish) {
   const screen  = document.getElementById('intro-video-screen');
   const video   = document.getElementById('intro-video-el');
   const skipBtn = document.getElementById('intro-skip-btn');
 
-  screen.classList.add('active');
+  // Réinitialisation complète de la vidéo
+  video.pause();
   video.currentTime = 0;
 
-  video.muted = false;
+  // TOUJOURS démarrer en muet pour éviter le blocage autoplay
+  video.muted = true;
   video.volume = 1;
-  video.play().catch(() => {
-    video.muted = true;
-    video.play().catch(() => {});
-  });
+
+  // Afficher l'écran
+  screen.classList.add('active');
+
+  // Lancer la vidéo
+  const playPromise = video.play();
+
+  if (playPromise !== undefined) {
+    playPromise.then(() => {
+      // Vidéo en cours de lecture → activer le son maintenant
+      video.muted = false;
+    }).catch(() => {
+      // Autoplay bloqué par le navigateur, rester en muet
+      video.muted = true;
+    });
+  }
 
   const done = () => {
+    // Couper le son ET mettre en pause AVANT de masquer l'écran
+    video.muted = true;
     video.pause();
+    video.currentTime = 0;
+    // Retirer l'écran
     screen.classList.remove('active');
     onFinish();
   };
@@ -1279,9 +1257,7 @@ function showIntroVideo(onFinish) {
 let codeTimerInterval = null;
 let adminCodeTimerInterval = null;
 
-function generateAccessCode() {
-  return Math.floor(100000 + Math.random() * 900000).toString();
-}
+function generateAccessCode() { return Math.floor(100000 + Math.random() * 900000).toString(); }
 
 async function getActiveCode() {
   try {
@@ -1291,10 +1267,7 @@ async function getActiveCode() {
     if (!data.code || !data.expiresAt) return null;
     if (Date.now() > data.expiresAt) return null;
     return data;
-  } catch(e) {
-    console.warn('getActiveCode error:', e);
-    return null;
-  }
+  } catch(e) { console.warn('getActiveCode error:', e); return null; }
 }
 
 async function adminGenerateCode() {
@@ -1341,33 +1314,15 @@ function startGateTimer(expiresAt) {
   codeTimerInterval = setInterval(update, 1000);
 }
 
-// ══ SESSION (utilise safeStorage) ══
 function getLocalSession() {
-  try {
-    const s = safeStorageGet('sf69_session');
-    if (!s) return null;
-    if (Date.now() > s.expiresAt) { safeStorageDel('sf69_session'); return null; }
-    return s;
-  } catch(e) { return null; }
+  try { const s = safeStorageGet('sf69_session'); if (!s) return null; if (Date.now() > s.expiresAt) { safeStorageDel('sf69_session'); return null; } return s; } catch(e) { return null; }
 }
-
-function saveLocalSession(uid, displayName, username) {
-  safeStorageSet('sf69_session', { uid, displayName, username, expiresAt: Date.now() + 365*24*60*60*1000 });
-}
-
-function clearLocalSession() {
-  safeStorageDel('sf69_session');
-}
+function saveLocalSession(uid, displayName, username) { safeStorageSet('sf69_session', { uid, displayName, username, expiresAt: Date.now() + 365*24*60*60*1000 }); }
+function clearLocalSession() { safeStorageDel('sf69_session'); }
 
 async function initGate() {
   switchGateTab('login');
-  // Tentative de récupération du code — en in-app browser ça peut échouer
-  try {
-    const codeData = await getActiveCode();
-    if (codeData) startGateTimer(codeData.expiresAt);
-  } catch(e) {
-    console.warn('Impossible de charger le code (in-app browser?):', e);
-  }
+  try { const codeData = await getActiveCode(); if (codeData) startGateTimer(codeData.expiresAt); } catch(e) { console.warn('Impossible de charger le code:', e); }
 }
 
 // ══ ADMIN GATE LOGIN ══
@@ -1376,33 +1331,22 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
   const pass = document.getElementById('admin-login-pass').value;
   const errEl = document.getElementById('gate-admin-error');
   errEl.textContent = '';
-
   if (user === ADMIN_USERNAME && pass === ADMIN_SECRET) {
     const btn = document.getElementById('admin-gate-login-btn');
     btn.disabled = true; btn.textContent = 'Connexion...';
     try {
       let cred;
-      try {
-        cred = await signInWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
-      } catch(e) {
-        cred = await createUserWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET);
-        await updateProfile(cred.user, { displayName: 'Admin Snowfall69' });
-        await setDoc(doc(_db, 'users', ADMIN_USERNAME), { uid: cred.user.uid, name: 'Admin Snowfall69', username: ADMIN_USERNAME, isAdmin: true });
-      }
+      try { cred = await signInWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET); }
+      catch(e) { cred = await createUserWithEmailAndPassword(_auth, ADMIN_USERNAME + '@snowfall69.app', ADMIN_SECRET); await updateProfile(cred.user, { displayName: 'Admin Snowfall69' }); await setDoc(doc(_db, 'users', ADMIN_USERNAME), { uid: cred.user.uid, name: 'Admin Snowfall69', username: ADMIN_USERNAME, isAdmin: true }); }
       saveLocalSession(cred.user.uid, 'Admin Snowfall69', ADMIN_USERNAME);
       document.getElementById('access-gate').classList.add('hidden');
       showSplashThenLaunch(true);
     } catch(e) {
       errEl.textContent = 'Erreur de connexion: ' + e.message;
-      // In-app browser hint
-      if (isInAppBrowser()) {
-        errEl.innerHTML += '<br><small style="color:#888">💡 Ouvre ce site dans Chrome ou Safari pour une meilleure compatibilité.</small>';
-      }
+      if (isInAppBrowser()) errEl.innerHTML += '<br><small style="color:#888">💡 Ouvre ce site dans Chrome ou Safari.</small>';
     }
     btn.disabled = false; btn.textContent = 'Accès Admin';
-  } else {
-    errEl.textContent = '❌ Identifiant ou mot de passe incorrect.';
-  }
+  } else { errEl.textContent = '❌ Identifiant ou mot de passe incorrect.'; }
 });
 
 // ══ VERIFY CODE ══
@@ -1410,55 +1354,27 @@ document.getElementById('gate-verify-btn').addEventListener('click', async () =>
   const input = document.getElementById('gate-code-input').value.trim();
   const errEl = document.getElementById('gate-code-error');
   errEl.textContent = '';
-
-  if (!input || input.length < 6) {
-    errEl.textContent = 'Entrez un code à 6 chiffres.';
-    return;
-  }
-
+  if (!input || input.length < 6) { errEl.textContent = 'Entrez un code à 6 chiffres.'; return; }
   const btn = document.getElementById('gate-verify-btn');
   btn.disabled = true; btn.textContent = 'Vérification...';
-
   try {
     const data = await getActiveCode();
-
     if (!data) {
-      // Affiche un message adapté selon si c'est un in-app browser ou non
-      if (isInAppBrowser()) {
-        errEl.innerHTML = '⚠️ Connexion bloquée par le navigateur intégré.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
-      } else {
-        errEl.textContent = '❌ Aucun code actif. Demandez-en un nouveau.';
-      }
-      btn.disabled = false; btn.textContent = 'Vérifier le code';
-      return;
+      if (isInAppBrowser()) errEl.innerHTML = '⚠️ Connexion bloquée par le navigateur intégré.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+      else errEl.textContent = '❌ Aucun code actif. Demandez-en un nouveau.';
+      btn.disabled = false; btn.textContent = 'Vérifier le code'; return;
     }
-
-    if (data.code !== input) {
-      errEl.textContent = '❌ Code incorrect.';
-      btn.disabled = false; btn.textContent = 'Vérifier le code';
-      return;
-    }
-
-    // Code valide !
+    if (data.code !== input) { errEl.textContent = '❌ Code incorrect.'; btn.disabled = false; btn.textContent = 'Vérifier le code'; return; }
     document.getElementById('access-gate').classList.add('hidden');
-    showIntroVideo(() => {
-      document.getElementById('access-gate').classList.remove('hidden');
-      switchGateTab('register');
-    });
-
+    showIntroVideo(() => { document.getElementById('access-gate').classList.remove('hidden'); switchGateTab('register'); });
   } catch(e) {
     console.error('Verify code error:', e);
-    if (isInAppBrowser()) {
-      errEl.innerHTML = '⚠️ Ce navigateur bloque la vérification.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
-    } else {
-      errEl.textContent = '❌ Erreur réseau. Réessayez.';
-    }
+    if (isInAppBrowser()) errEl.innerHTML = '⚠️ Ce navigateur bloque la vérification.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+    else errEl.textContent = '❌ Erreur réseau. Réessayez.';
   }
-
   btn.disabled = false; btn.textContent = 'Vérifier le code';
 });
 
-// ══ DEMANDER LE CODE ══
 document.getElementById('gate-request-btn').addEventListener('click', () => {
   const msg = '🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏';
   window.open(`${TELEGRAM_CONTACT}?text=${encodeURIComponent(msg)}`, '_blank');
@@ -1485,11 +1401,8 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
     saveLocalSession(cred.user.uid, name, username);
     launchApp();
   } catch(e) {
-    if (isInAppBrowser()) {
-      errEl.innerHTML = '⚠️ Navigateur intégré incompatible.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
-    } else {
-      errEl.textContent = e.code === 'auth/email-already-in-use' ? 'Identifiant déjà utilisé.' : 'Erreur : ' + e.message;
-    }
+    if (isInAppBrowser()) errEl.innerHTML = '⚠️ Navigateur intégré incompatible.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
+    else errEl.textContent = e.code === 'auth/email-already-in-use' ? 'Identifiant déjà utilisé.' : 'Erreur : ' + e.message;
   }
   btn.disabled = false; btn.textContent = 'Créer mon compte';
 });
@@ -1515,12 +1428,8 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
       saveLocalSession(cred.user.uid, name, username);
       launchApp();
     } catch(e2) {
-      if (isInAppBrowser()) {
-        errEl.innerHTML = '⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>';
-        document.getElementById('login-browser-btn').classList.add('show');
-      } else {
-        errEl.textContent = 'Identifiant ou mot de passe incorrect.';
-      }
+      if (isInAppBrowser()) { errEl.innerHTML = '⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>'; document.getElementById('login-browser-btn').classList.add('show'); }
+      else errEl.textContent = 'Identifiant ou mot de passe incorrect.';
     }
   }
   btn.disabled = false; btn.textContent = 'Se connecter';
@@ -1545,11 +1454,8 @@ function showSplashThenLaunch(openAdmin = false) {
       populateFilters();
       renderProducts();
       updateBadge();
-      if (openAdmin) {
-        openAdminPage();
-      } else {
-        goToHome();
-      }
+      if (openAdmin) openAdminPage();
+      else goToHome();
     }, 700);
   }, 2600);
 }
@@ -1651,25 +1557,14 @@ let adminAuthenticated=false;
 function openAdminPage(){
   hideAllPages();
   document.getElementById('admin-page').style.display='block';
-  if(!adminAuthenticated){
-    document.getElementById('admin-login').style.display='block';
-    document.getElementById('admin-panel').style.display='none';
-  } else {
-    renderAdminPanel();
-    loadAdminCodeDisplay();
-  }
+  if(!adminAuthenticated){ document.getElementById('admin-login').style.display='block'; document.getElementById('admin-panel').style.display='none'; }
+  else { renderAdminPanel(); loadAdminCodeDisplay(); }
 }
 
 document.getElementById('admin-login-btn').addEventListener('click',()=>{
   const pw=document.getElementById('admin-password-input').value;
-  if(pw===ADMIN_PASSWORD){
-    adminAuthenticated=true;
-    document.getElementById('admin-login').style.display='none';
-    document.getElementById('admin-panel').style.display='block';
-    document.getElementById('admin-password-input').value='';
-    document.getElementById('admin-error').textContent='';
-    renderAdminPanel();bindUploadInputs();loadAdminCodeDisplay();
-  } else document.getElementById('admin-error').textContent='Mot de passe incorrect ❌';
+  if(pw===ADMIN_PASSWORD){ adminAuthenticated=true; document.getElementById('admin-login').style.display='none'; document.getElementById('admin-panel').style.display='block'; document.getElementById('admin-password-input').value=''; document.getElementById('admin-error').textContent=''; renderAdminPanel();bindUploadInputs();loadAdminCodeDisplay(); }
+  else document.getElementById('admin-error').textContent='Mot de passe incorrect ❌';
 });
 
 document.getElementById('admin-logout-btn').addEventListener('click',()=>{adminAuthenticated=false;document.getElementById('admin-panel').style.display='none';document.getElementById('admin-login').style.display='block';goToHome();});
@@ -1679,12 +1574,7 @@ let logoClickCount=0,logoClickTimer=null;
 function handleLogoClick(){logoClickCount++;clearTimeout(logoClickTimer);logoClickTimer=setTimeout(()=>{logoClickCount=0;},2000);if(logoClickCount>=5){logoClickCount=0;openAdminPage();}}
 document.querySelector('.header-brand').addEventListener('click',handleLogoClick);
 
-function checkAdminSession() {
-  const session = getLocalSession();
-  if (session && session.username === ADMIN_USERNAME) {
-    adminAuthenticated = true;
-  }
-}
+function checkAdminSession() { const session = getLocalSession(); if (session && session.username === ADMIN_USERNAME) adminAuthenticated = true; }
 
 function renderAdminPanel(){
   const list=document.getElementById('admin-products-list');
@@ -1811,11 +1701,7 @@ window.sendChatMsg=async()=>{const input=document.getElementById('chat-input'),t
 // ══════════════════════════════════════════════════════════
 let cart = [];
 try { cart = JSON.parse(localStorage.getItem('cart_snowfall69')) || []; } catch(e) { cart = _memStore['cart_snowfall69'] || []; }
-
-function saveCart(){
-  safeStorageSet('cart_snowfall69', cart);
-  updateBadge();
-}
+function saveCart(){ safeStorageSet('cart_snowfall69', cart); updateBadge(); }
 function updateBadge(){const b=document.getElementById('cart-badge');b.textContent=cart.length||'';b.style.display=cart.length>0?'inline-block':'none';}
 
 // ══════════════════════════════════════════════════════════
@@ -2005,7 +1891,6 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ══ COMMANDE ══
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
