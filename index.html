@@ -395,7 +395,6 @@
     input[type="time"], input[type="text"], textarea { width:100%; padding:12px 14px; border-radius:10px; border:1.5px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.04); color:#e0e0e0; font-size:0.95rem; font-family:'Barlow', sans-serif; outline:none; }
     input[type="time"]:focus, input[type="text"]:focus, textarea:focus { border-color:rgba(245,167,0,0.4); }
     textarea { min-height:80px; resize:vertical; }
-    /* Fidelity banner */
     .fidelity-banner {
       background: rgba(245,167,0,0.07);
       border: 1.5px solid rgba(245,167,0,0.3);
@@ -421,7 +420,8 @@
     #infos-page { display:none; padding:14px 14px 110px; }
     .info-card { background:rgba(255,255,255,0.02); border:1px solid rgba(245,167,0,0.12); border-radius:18px; padding:18px 16px; margin-bottom:14px; }
     .info-card-header { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-    .info-card-icon { width:46px; height:46px; background:rgba(245,167,0,0.1); border:1px solid rgba(245,167,0,0.2); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+    .info-card-icon { width:46px; height:46px; background:rgba(245,167,0,0.1); border:1px solid rgba(245,167,0,0.2); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; overflow:hidden; }
+    .info-card-icon img { width:100%; height:100%; object-fit:cover; border-radius:10px; }
     .info-card-title { font-family:'Bebas Neue', sans-serif; font-size:1.3rem; letter-spacing:2px; color:#fff; }
     .info-row { display:flex; align-items:flex-start; gap:10px; margin-bottom:12px; }
     .info-row-icon { font-size:1.1rem; margin-top:2px; flex-shrink:0; color:var(--gold); }
@@ -686,6 +686,28 @@
       display:block;
     }
     .contact-choice-cancel:active { border-color:#444; color:#666; }
+    /* Instructions steps */
+    .steps-container { display:flex; flex-direction:column; gap:12px; }
+    .step-item { display:flex; gap:12px; align-items:flex-start; }
+    .step-num { background:linear-gradient(135deg,var(--gold),#E09500); color:#000; font-family:'Bebas Neue',sans-serif; font-size:1rem; min-width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+    .step-text { color:#ccc; font-size:0.82rem; line-height:1.6; font-weight:600; }
+    .step-text strong { color:#ef4444; }
+    .step-text em { color:#4ade80; font-style:normal; font-weight:800; }
+    /* Horaires banner */
+    .horaires-banner { display:flex; gap:10px; margin-bottom:14px; }
+    .horaire-block { flex:1; border-radius:14px; padding:14px 10px; text-align:center; }
+    .horaire-block.livraison { background:rgba(74,222,128,0.06); border:1.5px solid rgba(74,222,128,0.3); }
+    .horaire-block.meetup { background:rgba(245,167,0,0.06); border:1.5px solid rgba(245,167,0,0.3); }
+    .horaire-emoji { font-size:1.3rem; margin-bottom:4px; }
+    .horaire-label { font-family:'Bebas Neue',sans-serif; font-size:0.82rem; letter-spacing:1.5px; margin-bottom:4px; }
+    .horaire-block.livraison .horaire-label { color:#4ade80; }
+    .horaire-block.meetup .horaire-label { color:var(--gold); }
+    .horaire-time { font-family:'Bebas Neue',sans-serif; font-size:1.05rem; color:#fff; letter-spacing:1px; }
+    /* dept rows */
+    .dept-row { display:flex; align-items:center; justify-content:space-between; background:rgba(255,255,255,0.03); border-radius:10px; padding:10px 12px; }
+    .dept-row-left { display:flex; align-items:center; gap:8px; }
+    .dept-row-name { color:#ccc; font-size:0.88rem; font-weight:600; }
+    .dept-row-val { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:var(--gold); }
   </style>
 </head>
 <body>
@@ -883,23 +905,17 @@
       <div id="cart-items"></div>
       <div id="cart-total" class="cart-total"></div>
       <div class="questionnaire">
-
-        <!-- MODE DE RÉCUPÉRATION -->
         <div class="question">
           <span class="question-label">Mode de récupération</span>
           <button class="option-btn" data-type="pickup">Venir sur place</button>
           <button class="option-btn" data-type="delivery">Livraison</button>
         </div>
-
-        <!-- QUESTIONS PICKUP -->
         <div id="pickup-questions" style="display:none">
           <div class="question">
             <span class="question-label">Pour quelle heure ?</span>
             <input type="time" id="pickup-time">
           </div>
         </div>
-
-        <!-- QUESTIONS LIVRAISON — code postal inclus ici -->
         <div id="delivery-questions" style="display:none">
           <div class="question"><span class="question-label">Heure souhaitée</span><input type="time" id="delivery-time"></div>
           <div class="question"><span class="question-label">Adresse complète</span><input type="text" id="delivery-address" placeholder="Rue, numéro, ville..."></div>
@@ -909,8 +925,6 @@
             <input type="text" id="order-postal" placeholder="Ex: 69001" maxlength="5" inputmode="numeric">
           </div>
         </div>
-
-        <!-- CONTACT SIGNAL & WHATSAPP -->
         <div class="question">
           <span class="question-label">📲 Contact Signal &amp; WhatsApp <span style="color:#ef4444">*</span></span>
           <input type="text" id="order-contact" placeholder="@signal ou numéro WhatsApp (+33...)">
@@ -925,16 +939,22 @@
             </div>
           </div>
         </div>
-
         <button id="submit-order-btn">Commander</button>
       </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- INFOS PAGE — VERSION MISE À JOUR            -->
+    <!-- ═══════════════════════════════════════════ -->
     <div id="infos-page">
       <div class="page-title" style="padding-top:8px">Infos</div>
+
+      <!-- BLOC PRINCIPAL SNOWFALL -->
       <div class="info-card">
         <div class="info-card-header">
-          <div class="info-card-icon">❄️</div>
+          <div class="info-card-icon">
+            <img src="logo.png" alt="Logo Snowfall">
+          </div>
           <div>
             <div class="info-card-title">SNOWFALL</div>
             <div style="font-size:0.72rem;color:var(--gold);font-family:'Barlow Condensed',sans-serif;font-weight:800;letter-spacing:1px;margin-top:2px">(69-42-38-01-74) 📍</div>
@@ -945,43 +965,125 @@
           <div style="font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:3px;color:var(--gold);margin-bottom:2px">RHÔNE-ALPES</div>
           <div style="font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;color:#4ade80">SÉANCE 2013 ✅</div>
         </div>
+        <!-- Bouton contact -->
         <div style="margin-top:14px;background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.2);border-radius:12px;padding:16px 14px;text-align:center">
           <span style="color:#888;font-size:0.8rem;font-weight:600;display:block;margin-bottom:12px">Contact principal</span>
           <a href="https://pt.im/FranklinSaint69" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:14px 20px;background:linear-gradient(135deg,#F5A700,#E09500);color:#000;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:2px;text-decoration:none;border-radius:12px;box-shadow:0 0 22px rgba(245,167,0,0.3),0 4px 16px rgba(0,0,0,0.4);font-weight:400;transition:transform 0.2s;" onmousedown="this.style.transform='scale(0.97)'" onmouseup="this.style.transform='scale(1)'" ontouchstart="this.style.transform='scale(0.97)'" ontouchend="this.style.transform='scale(1)'">
             <span style="font-size:1.2rem">📩</span> Contacter Franklin
           </a>
         </div>
-        <div class="info-row" style="margin-top:14px">
-          <span class="info-row-icon">ℹ️</span>
-          <span class="info-row-label">Pour toute commande, une carte d'identité 🪪 et une photo 📸 de vous sont nécessaires.</span>
+        <!-- Instructions commande -->
+        <div style="margin-top:14px;background:rgba(245,167,0,0.04);border:1px solid rgba(245,167,0,0.18);border-radius:12px;padding:16px 14px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.55);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;text-align:center;display:flex;align-items:center;gap:8px;justify-content:center">
+            <span style="flex:1;height:1px;background:rgba(245,167,0,0.15)"></span>
+            📋 COMMENT ÇA MARCHE
+            <span style="flex:1;height:1px;background:rgba(245,167,0,0.15)"></span>
+          </div>
+          <div class="steps-container">
+            <div class="step-item">
+              <div class="step-num">1</div>
+              <div class="step-text">APRÈS AVOIR ÉTÉ INSCRIT ET REMPLI VOTRE PANIER<br><strong>N'ATTENDEZ PAS UNE RÉPONSE DE NOTRE PART</strong>, POUR VALIDER VOTRE COMMANDE</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">2</div>
+              <div class="step-text">APRÈS AVOIR ENVOYÉ VOTRE COMMANDE DIRECTEMENT ON VOUS INDIQUERA LA PRÉPARATION DE VOTRE COMMANDE</div>
+            </div>
+            <div class="step-item">
+              <div class="step-num">3</div>
+              <div class="step-text">QUE CE SOIT POUR NOUS, OU POUR VOUS !!!<br>
+                <span style="color:var(--gold);font-size:1rem">⬇️⬇️⬇️</span><br>
+                VOUS RECEVREZ UNE <em>INDICATION GPS PAR IMAGE</em> QUI VOUS PERMETTRA D'ÊTRE PRÊT À RÉCEPTIONNER L'ARRIVÉE DE VOTRE COMMANDE
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- HORAIRES -->
+      <div class="horaires-banner">
+        <div class="horaire-block livraison">
+          <div class="horaire-emoji">🚚</div>
+          <div class="horaire-label">LIVRAISON</div>
+          <div class="horaire-time">10H00 – 03H00</div>
+        </div>
+        <div class="horaire-block meetup">
+          <div class="horaire-emoji">📍</div>
+          <div class="horaire-label">MEET-UP</div>
+          <div class="horaire-time">10H00 – 00H00</div>
+        </div>
+      </div>
+
+      <!-- LIVRAISON -->
       <div class="info-card">
-        <div class="info-card-header"><div class="info-card-icon">🚚</div><div class="info-card-title">Livraison</div></div>
-        <div class="info-row" style="margin-bottom:10px">
-          <span class="info-row-icon">📍</span>
-          <div><div class="info-row-label">Départements desservis</div>
-          <div class="dept-badges"><span class="dept-badge">69</span><span class="dept-badge">42</span><span class="dept-badge">38</span><span class="dept-badge">01</span><span class="dept-badge">74</span></div></div>
+        <div class="info-card-header">
+          <div class="info-card-icon">🚚</div>
+          <div class="info-card-title">Livraison</div>
         </div>
-        <div class="price-table">
-          <div class="price-table-label">Tarifs</div>
-          <div class="price-row"><span class="price-row-label">Sur Lyon</span><span class="price-row-val">70€</span></div>
-          <div class="price-row"><span class="price-row-label">Moins de 10 km</span><span class="price-row-val">100€</span></div>
-          <div class="price-row"><span class="price-row-label">Supérieur à 10 km</span><span class="price-row-val">150€</span></div>
-          <div class="price-row"><span class="price-row-label">Supérieur à 25 km</span><span class="price-row-val">270€</span></div>
+        <!-- Badge minimum -->
+        <div style="background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.25);border-radius:10px;padding:8px 12px;margin-bottom:14px;text-align:center">
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;font-weight:800;color:#4ade80;letter-spacing:1px">MINIMUM COMMANDE 40€ · DISPONIBLE 10H00 – 03H00</span>
         </div>
-        <div class="minimum-label"><span>Minimum 70€</span></div>
+
+        <!-- DÉPARTEMENT 69 avec tableau km -->
+        <div style="margin-bottom:14px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <span class="dept-badge">69</span>
+            <span style="color:#888;font-size:0.78rem;font-weight:700;letter-spacing:0.5px">Frais min. 10€</span>
+          </div>
+          <div class="price-table" style="margin-bottom:0">
+            <div class="price-row"><span class="price-row-label">Moins de 10 km</span><span class="price-row-val">10€</span></div>
+            <div class="price-row"><span class="price-row-label">Plus de 10 km</span><span class="price-row-val">20€</span></div>
+            <div class="price-row"><span class="price-row-label">Plus de 20 km</span><span class="price-row-val">30€</span></div>
+            <div class="price-row"><span class="price-row-label">Plus de 30 km</span><span class="price-row-val">40€</span></div>
+            <div class="price-row"><span class="price-row-label">Plus de 40 km</span><span class="price-row-val">50€</span></div>
+          </div>
+        </div>
+
+        <!-- Autres départements -->
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="dept-row">
+            <div class="dept-row-left"><span class="dept-badge">42</span><span class="dept-row-name">Loire</span></div>
+            <span class="dept-row-val">Min. 40€</span>
+          </div>
+          <div class="dept-row">
+            <div class="dept-row-left"><span class="dept-badge">38</span><span class="dept-row-name">Isère</span></div>
+            <span class="dept-row-val">Min. 60€</span>
+          </div>
+          <div class="dept-row">
+            <div class="dept-row-left"><span class="dept-badge">01</span><span class="dept-row-name">Ain</span></div>
+            <span class="dept-row-val">Min. 60€</span>
+          </div>
+          <div class="dept-row">
+            <div class="dept-row-left"><span class="dept-badge">74</span><span class="dept-row-name">Haute-Savoie</span></div>
+            <span class="dept-row-val">Min. 90€</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;text-align:right">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:0.9rem;color:var(--gold);letter-spacing:1px">Minimum commande 40€</span>
+        </div>
       </div>
+
+      <!-- MEET-UP -->
       <div class="info-card">
         <div class="info-card-header"><div class="info-card-icon">📍</div><div class="info-card-title">Meet-up</div></div>
         <div class="meetup-row">
           <div style="display:flex;align-items:center;gap:10px"><span style="color:var(--gold)">📍</span><span class="meetup-name">Lyon Centre</span></div>
           <div class="disponible-badge">Disponible</div>
         </div>
-        <div class="meetup-horaires" style="margin-bottom:10px"><span style="color:var(--gold)">🕐</span><span>Horaires : 12h – 23h</span></div>
-        <div class="minimum-label"><span>Minimum 50€</span></div>
+        <div class="meetup-horaires" style="margin-bottom:14px"><span style="color:var(--gold)">🕐</span><span>10H00 – 00H00</span></div>
+        <div style="display:flex;gap:10px">
+          <div style="flex:1;background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.2);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:#4ade80">0€</div>
+            <div style="font-size:0.65rem;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Frais</div>
+          </div>
+          <div style="flex:1;background:rgba(245,167,0,0.06);border:1px solid rgba(245,167,0,0.2);border-radius:10px;padding:12px;text-align:center">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;color:var(--gold)">0€</div>
+            <div style="font-size:0.65rem;color:#555;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-top:2px">Minimum</div>
+          </div>
+        </div>
       </div>
     </div>
+    <!-- FIN INFOS PAGE -->
 
     <div id="reseaux-page">
       <div class="page-title" style="padding-top:8px">Nos Réseaux</div>
@@ -1021,7 +1123,6 @@
           </div>
         </div>
         <div style="height:12px"></div>
-        <!-- CANAL TCHAT TEAM — privé, membres de confiance uniquement -->
         <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px">
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL TCHAT TEAM 🔒</div>
           <div style="background:rgba(245,167,0,0.06);border:1px solid rgba(245,167,0,0.2);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:0.72rem;color:rgba(245,167,0,0.7);font-family:'Barlow',sans-serif;font-weight:600;line-height:1.5">
@@ -1985,42 +2086,30 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ═══════════════════════════════════════════════════
-// SUBMIT ORDER — code postal uniquement pour livraison
-// ═══════════════════════════════════════════════════
 document.getElementById('submit-order-btn').onclick = async () => {
   if (!cart.length) return alert('Votre panier est vide');
-
   const modeBtn = document.querySelector('.option-btn.active');
   if (!modeBtn) return alert('Choisissez un mode de récupération.');
-
   const contact = document.getElementById('order-contact').value.trim();
   const postal  = document.getElementById('order-postal')?.value.trim() || '';
-
   if (modeBtn.dataset.type === 'delivery') {
     if (!postal)                  return alert('📍 Merci de renseigner votre code postal (obligatoire).');
     if (!/^\d{5}$/.test(postal)) return alert('📍 Code postal invalide — 5 chiffres requis.');
   }
-
   if (!contact) return alert('📲 Merci de renseigner votre contact Signal et WhatsApp (obligatoire).');
-
   const mode = modeBtn.dataset.type === 'pickup' ? 'Venir sur place' : 'Livraison';
   const user = _auth.currentUser;
-
   let message = `❄️ *NOUVELLE COMMANDE SNOWFALL69* ❄️\n\n👤 ${user?.displayName || 'Client'}\n📅 ${new Date().toLocaleString('fr-FR')}\n\n🛍️ *Articles :*\n`;
   let total = 0, itemsText = '';
-
   cart.forEach(item => {
     total     += parseInt(item.price) || 0;
     message   += `• ${item.title} — ${item.qty} (${item.price})\n`;
     itemsText += `• ${item.title} ${item.qty} (${item.price})\n`;
   });
-
   message += `\n💰 *Total : ${total}€*\n\n`;
   message += `📦 *Mode :* ${mode}\n`;
   if (postal) message += `📍 *Code postal :* ${postal}\n`;
   message += `📲 *Contact Signal & WhatsApp :* ${contact}\n`;
-
   if (modeBtn.dataset.type === 'pickup') {
     const h = document.getElementById('pickup-time').value;
     if (h) message += `🕐 *Heure :* ${h}\n`;
@@ -2032,22 +2121,16 @@ document.getElementById('submit-order-btn').onclick = async () => {
     if (a)   message += `📍 *Adresse :* ${a}\n`;
     if (det) message += `📝 *Précisions :* ${det}\n`;
   }
-
   if (user) {
     try {
       await addDoc(collection(_db, 'commandes'), {
-        uid: user.uid,
-        items: itemsText.trim(),
-        total,
-        mode,
-        postalCode: postal || null,
-        contact,
+        uid: user.uid, items: itemsText.trim(), total, mode,
+        postalCode: postal || null, contact,
         date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
         timestamp: serverTimestamp()
       });
     } catch(e) {}
   }
-
   showContactChoiceModal(message);
 };
 
