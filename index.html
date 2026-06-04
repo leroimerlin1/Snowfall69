@@ -877,7 +877,7 @@
       </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════ CART PAGE ═══════════════════════════════════════════ -->
+    <!-- CART PAGE -->
     <div id="cart-page">
       <div class="page-title">Votre Panier</div>
       <div id="cart-items"></div>
@@ -899,17 +899,15 @@
           </div>
         </div>
 
-        <!-- QUESTIONS LIVRAISON -->
+        <!-- QUESTIONS LIVRAISON — code postal inclus ici -->
         <div id="delivery-questions" style="display:none">
           <div class="question"><span class="question-label">Heure souhaitée</span><input type="time" id="delivery-time"></div>
           <div class="question"><span class="question-label">Adresse complète</span><input type="text" id="delivery-address" placeholder="Rue, numéro, ville..."></div>
           <div class="question"><span class="question-label">Précisions</span><textarea id="delivery-details" placeholder="Interphone, digicode..."></textarea></div>
-        </div>
-
-        <!-- CODE POSTAL -->
-        <div class="question">
-          <span class="question-label">📍 Code postal <span style="color:#ef4444">*</span></span>
-          <input type="text" id="order-postal" placeholder="Ex: 69001" maxlength="5" inputmode="numeric">
+          <div class="question">
+            <span class="question-label">📍 Code postal <span style="color:#ef4444">*</span></span>
+            <input type="text" id="order-postal" placeholder="Ex: 69001" maxlength="5" inputmode="numeric">
+          </div>
         </div>
 
         <!-- CONTACT SIGNAL & WHATSAPP -->
@@ -917,7 +915,7 @@
           <span class="question-label">📲 Contact Signal &amp; WhatsApp <span style="color:#ef4444">*</span></span>
           <input type="text" id="order-contact" placeholder="@signal ou numéro WhatsApp (+33...)">
           <div class="fidelity-banner">
-            <div class="fidelity-banner-icon">❄️</div>
+            <div class="fidelity-banner-icon">🍫</div>
             <div>
               <div class="fidelity-banner-title">Rejoins la Team Snowfall !</div>
               <div class="fidelity-banner-text">
@@ -931,7 +929,6 @@
         <button id="submit-order-btn">Commander</button>
       </div>
     </div>
-    <!-- ═══════════════════════════════════════════════════════════════════════════════════════════════ -->
 
     <div id="infos-page">
       <div class="page-title" style="padding-top:8px">Infos</div>
@@ -1020,6 +1017,24 @@
           <div class="reseau-item" style="border-radius:12px" data-link="https://tato.im/Snowfall_6900">
             <div class="reseau-icon-wrap" style="font-size:1.3rem">❄️</div>
             <div class="reseau-text"><div class="reseau-name">tato.im</div><div class="reseau-sub">Snowfall_6900</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+        </div>
+        <div style="height:12px"></div>
+        <!-- CANAL TCHAT TEAM — privé, membres de confiance uniquement -->
+        <div style="background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.15);border-radius:14px;padding:12px 14px">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:rgba(245,167,0,0.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px">CANAL TCHAT TEAM 🔒</div>
+          <div style="background:rgba(245,167,0,0.06);border:1px solid rgba(245,167,0,0.2);border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:0.72rem;color:rgba(245,167,0,0.7);font-family:'Barlow',sans-serif;font-weight:600;line-height:1.5">
+            🔐 Canal privé réservé à la <strong style="color:var(--gold)">Team Snowfall</strong> — Avis, discussions et infos exclusives entre membres de confiance.
+          </div>
+          <div class="reseau-item" style="margin-bottom:8px;border-radius:12px" data-link="https://tatokdym.org/joinchat/LXv0xg3yVvg9R51UAsKWfg">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫</div>
+            <div class="reseau-text"><div class="reseau-name">Potato Tchat</div><div class="reseau-sub">tatokdym.org · Team Snowfall</div></div>
+            <div class="reseau-arrow">›</div>
+          </div>
+          <div class="reseau-item" style="border-radius:12px" data-link="https://tato.im/joinchat/LXv0xg3yVvg9R51UAsKWfg">
+            <div class="reseau-icon-wrap" style="font-size:1.3rem">🍫</div>
+            <div class="reseau-text"><div class="reseau-name">Tatoo Talk</div><div class="reseau-sub">tato.im · Team Snowfall</div></div>
             <div class="reseau-arrow">›</div>
           </div>
         </div>
@@ -1971,7 +1986,7 @@ document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.cl
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
 // ═══════════════════════════════════════════════════
-// SUBMIT ORDER — avec code postal + contact Signal & WhatsApp
+// SUBMIT ORDER — code postal uniquement pour livraison
 // ═══════════════════════════════════════════════════
 document.getElementById('submit-order-btn').onclick = async () => {
   if (!cart.length) return alert('Votre panier est vide');
@@ -1980,11 +1995,14 @@ document.getElementById('submit-order-btn').onclick = async () => {
   if (!modeBtn) return alert('Choisissez un mode de récupération.');
 
   const contact = document.getElementById('order-contact').value.trim();
-  const postal  = document.getElementById('order-postal').value.trim();
+  const postal  = document.getElementById('order-postal')?.value.trim() || '';
 
-  if (!postal)                    return alert('📍 Merci de renseigner votre code postal (obligatoire).');
-  if (!/^\d{5}$/.test(postal))    return alert('📍 Code postal invalide — 5 chiffres requis.');
-  if (!contact)                   return alert('📲 Merci de renseigner votre contact Signal et WhatsApp (obligatoire).');
+  if (modeBtn.dataset.type === 'delivery') {
+    if (!postal)                  return alert('📍 Merci de renseigner votre code postal (obligatoire).');
+    if (!/^\d{5}$/.test(postal)) return alert('📍 Code postal invalide — 5 chiffres requis.');
+  }
+
+  if (!contact) return alert('📲 Merci de renseigner votre contact Signal et WhatsApp (obligatoire).');
 
   const mode = modeBtn.dataset.type === 'pickup' ? 'Venir sur place' : 'Livraison';
   const user = _auth.currentUser;
@@ -2000,7 +2018,7 @@ document.getElementById('submit-order-btn').onclick = async () => {
 
   message += `\n💰 *Total : ${total}€*\n\n`;
   message += `📦 *Mode :* ${mode}\n`;
-  message += `📍 *Code postal :* ${postal}\n`;
+  if (postal) message += `📍 *Code postal :* ${postal}\n`;
   message += `📲 *Contact Signal & WhatsApp :* ${contact}\n`;
 
   if (modeBtn.dataset.type === 'pickup') {
@@ -2022,7 +2040,7 @@ document.getElementById('submit-order-btn').onclick = async () => {
         items: itemsText.trim(),
         total,
         mode,
-        postalCode: postal,
+        postalCode: postal || null,
         contact,
         date: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' }),
         timestamp: serverTimestamp()
