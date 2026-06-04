@@ -288,7 +288,7 @@
     .content::-webkit-scrollbar { display:none; }
 
     /* ═══════════════════════════════════════════ */
-    /* HEADER — LOGO CENTRÉ AGRANDI               */
+    /* HEADER — LOGO À GAUCHE DU TITRE (3× PLUS GRAND) */
     /* ═══════════════════════════════════════════ */
     .site-header {
       position:sticky; top:0; z-index:100;
@@ -296,24 +296,33 @@
       border-bottom:1px solid rgba(245,167,0,0.15);
       padding:6px 16px;
       display:flex; align-items:center; justify-content:space-between;
-      position:relative;
-      min-height:68px;
+      min-height:84px;
     }
-    .header-brand { display:flex; align-items:baseline; gap:4px; }
-    .header-brand-name { font-family:'Bebas Neue', sans-serif; font-size:2rem; letter-spacing:3px; background:linear-gradient(180deg, #fff 0%, var(--gold) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
-    .header-brand-num { font-family:'Bebas Neue', sans-serif; font-size:1.3rem; color:var(--gold); letter-spacing:2px; line-height:1; }
-    .header-logo-center {
-      position:absolute; left:50%; top:50%;
-      transform:translate(-50%, -50%);
-      display:flex; align-items:center; justify-content:center;
-      pointer-events:none;
+    .header-brand {
+      display:flex; align-items:center; gap:12px;
     }
-    .header-logo-center img {
-      width:64px;
-      height:64px;
+    .header-brand-logo {
+      width:72px;
+      height:72px;
       object-fit:contain;
-      border-radius:12px;
-      filter:drop-shadow(0 0 10px rgba(245,167,0,0.5));
+      border-radius:14px;
+      filter:drop-shadow(0 0 14px rgba(245,167,0,0.6));
+      flex-shrink:0;
+    }
+    .header-brand-text {
+      display:flex; flex-direction:column; line-height:1;
+    }
+    .header-brand-name {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:2rem; letter-spacing:3px;
+      background:linear-gradient(180deg, #fff 0%, var(--gold) 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; line-height:1;
+    }
+    .header-brand-num {
+      font-family:'Bebas Neue', sans-serif;
+      font-size:1.3rem; color:var(--gold);
+      letter-spacing:2px; line-height:1;
     }
     .header-right { display:flex; align-items:center; gap:10px; }
 
@@ -862,14 +871,14 @@
 <div class="container">
   <div class="content">
 
-    <!-- HEADER AVEC LOGO CENTRÉ AGRANDI -->
+    <!-- HEADER — LOGO À GAUCHE DU TITRE, 3× PLUS GRAND -->
     <div class="site-header" id="site-header">
       <div class="header-brand">
-        <span class="header-brand-name">SNOWFALL</span>
-        <span class="header-brand-num">69</span>
-      </div>
-      <div class="header-logo-center">
-        <img src="logo.png" alt="Logo Snowfall69">
+        <img src="logo.png" alt="Logo Snowfall69" class="header-brand-logo">
+        <div class="header-brand-text">
+          <span class="header-brand-name">SNOWFALL</span>
+          <span class="header-brand-num">69</span>
+        </div>
       </div>
       <div class="header-right" id="header-right"></div>
     </div>
