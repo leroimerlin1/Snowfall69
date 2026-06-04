@@ -288,15 +288,16 @@
     .content::-webkit-scrollbar { display:none; }
 
     /* ═══════════════════════════════════════════ */
-    /* HEADER MODIFIÉ — LOGO CENTRÉ               */
+    /* HEADER — LOGO CENTRÉ AGRANDI               */
     /* ═══════════════════════════════════════════ */
     .site-header {
       position:sticky; top:0; z-index:100;
       background:rgba(0,0,0,0.9); backdrop-filter:blur(12px);
       border-bottom:1px solid rgba(245,167,0,0.15);
-      padding:10px 16px;
+      padding:6px 16px;
       display:flex; align-items:center; justify-content:space-between;
       position:relative;
+      min-height:68px;
     }
     .header-brand { display:flex; align-items:baseline; gap:4px; }
     .header-brand-name { font-family:'Bebas Neue', sans-serif; font-size:2rem; letter-spacing:3px; background:linear-gradient(180deg, #fff 0%, var(--gold) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; line-height:1; }
@@ -308,10 +309,11 @@
       pointer-events:none;
     }
     .header-logo-center img {
-      width:44px; height:44px;
+      width:64px;
+      height:64px;
       object-fit:contain;
-      border-radius:10px;
-      filter:drop-shadow(0 0 8px rgba(245,167,0,0.4));
+      border-radius:12px;
+      filter:drop-shadow(0 0 10px rgba(245,167,0,0.5));
     }
     .header-right { display:flex; align-items:center; gap:10px; }
 
@@ -860,9 +862,7 @@
 <div class="container">
   <div class="content">
 
-    <!-- ═══════════════════════════════════════════ -->
-    <!-- HEADER AVEC LOGO CENTRÉ                     -->
-    <!-- ═══════════════════════════════════════════ -->
+    <!-- HEADER AVEC LOGO CENTRÉ AGRANDI -->
     <div class="site-header" id="site-header">
       <div class="header-brand">
         <span class="header-brand-name">SNOWFALL</span>
