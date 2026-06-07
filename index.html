@@ -511,7 +511,6 @@
     .chat-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; opacity:0.3; }
     .chat-warn-banner { background:rgba(239,68,68,0.12); border:1.5px solid rgba(239,68,68,0.4); border-radius:10px; color:#ef4444; font-size:0.78rem; font-weight:700; padding:8px 14px; text-align:center; margin:0 12px 6px; animation:bubblePop 0.2s ease; letter-spacing:0.3px; }
     #admin-page { display:none; padding:14px 14px 110px; }
-    /* ── SÉCURISÉ : le panneau admin ne montre plus de formulaire mot de passe en dur ── */
     #admin-login { background:rgba(255,255,255,0.02); border:1.5px solid rgba(245,167,0,0.2); border-radius:20px; padding:32px 22px; margin-top:40px; text-align:center; }
     #admin-login h2 { font-family:'Bebas Neue', sans-serif; letter-spacing:3px; color:var(--gold); font-size:1.5rem; margin-bottom:8px; }
     #admin-login p { color:#444; font-size:0.85rem; margin-bottom:22px; }
@@ -564,6 +563,71 @@
     .admin-code-info { font-size:0.75rem; color:#555; text-align:center; line-height:1.5; }
     .admin-code-timer { font-family:'Barlow Condensed', sans-serif; font-size:0.85rem; font-weight:800; color:rgba(245,167,0,0.6); text-align:center; margin-top:8px; letter-spacing:1px; }
     .admin-gen-btn { width:100%; padding:12px; background:linear-gradient(135deg, var(--gold), #E09500); color:#000; border:none; border-radius:10px; font-family:'Bebas Neue', sans-serif; font-size:1rem; letter-spacing:2px; cursor:pointer; margin-top:8px; }
+
+    /* ── STATS ADMIN ── */
+    .admin-stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+    .stat-card {
+      border-radius:16px; padding:16px 12px; text-align:center;
+      position:relative; overflow:hidden;
+      transition: transform 0.2s;
+    }
+    .stat-card:active { transform:scale(0.97); }
+    .stat-card-visitors { background:rgba(245,167,0,0.06); border:1.5px solid rgba(245,167,0,0.25); }
+    .stat-card-orders   { background:rgba(74,222,128,0.06); border:1.5px solid rgba(74,222,128,0.25); }
+    .stat-card-conv     { background:rgba(96,165,250,0.06); border:1.5px solid rgba(96,165,250,0.25); }
+    .stat-card-revenue  { background:rgba(167,139,250,0.06); border:1.5px solid rgba(167,139,250,0.25); }
+    .stat-card-emoji { font-size:1.4rem; margin-bottom:6px; display:block; }
+    .stat-card-num {
+      font-family:'Bebas Neue', sans-serif; font-size:2.2rem; line-height:1;
+      letter-spacing:1px; display:block;
+    }
+    .stat-card-visitors .stat-card-num { color:var(--gold); text-shadow:0 0 14px rgba(245,167,0,0.3); }
+    .stat-card-orders   .stat-card-num { color:#4ade80; text-shadow:0 0 14px rgba(74,222,128,0.3); }
+    .stat-card-conv     .stat-card-num { color:#60a5fa; text-shadow:0 0 14px rgba(96,165,250,0.3); }
+    .stat-card-revenue  .stat-card-num { color:#a78bfa; text-shadow:0 0 14px rgba(167,139,250,0.3); }
+    .stat-card-lbl {
+      font-size:0.6rem; font-weight:800; letter-spacing:1.5px;
+      text-transform:uppercase; margin-top:5px; display:block; color:#555;
+    }
+    .stat-card-sub {
+      font-size:0.58rem; color:#333; font-weight:700;
+      margin-top:3px; display:block; letter-spacing:0.5px;
+    }
+    .stats-footer {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-top:4px; padding:0 2px;
+    }
+    .stats-updated { font-size:0.6rem; color:#2a2a2a; font-weight:700; letter-spacing:0.5px; }
+    .stats-refresh-btn {
+      background:rgba(245,167,0,0.08); border:1px solid rgba(245,167,0,0.2);
+      color:rgba(245,167,0,0.6); font-size:0.62rem; font-weight:800;
+      padding:4px 12px; border-radius:8px; cursor:pointer;
+      font-family:'Barlow Condensed', sans-serif; letter-spacing:1px; text-transform:uppercase;
+      transition:all 0.2s;
+    }
+    .stats-refresh-btn:active { background:rgba(245,167,0,0.15); color:var(--gold); }
+    .stats-loading {
+      text-align:center; padding:28px 0;
+      font-family:'Barlow Condensed', sans-serif;
+      font-size:0.85rem; color:#333; letter-spacing:2px;
+      text-transform:uppercase; font-weight:800;
+    }
+    /* ── Stats : mini historique commandes ── */
+    .stat-recent-title {
+      font-family:'Barlow Condensed', sans-serif;
+      font-size:0.68rem; font-weight:800; color:#444;
+      letter-spacing:2px; text-transform:uppercase;
+      margin:14px 0 8px;
+    }
+    .stat-recent-item {
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05);
+      border-radius:10px; padding:10px 12px; margin-bottom:6px;
+    }
+    .stat-recent-name { font-family:'Barlow Condensed', sans-serif; font-size:0.85rem; font-weight:800; color:#ccc; text-transform:uppercase; }
+    .stat-recent-date { font-size:0.65rem; color:#444; font-weight:600; margin-top:2px; }
+    .stat-recent-total { font-family:'Bebas Neue', sans-serif; font-size:1rem; color:var(--gold); letter-spacing:1px; }
+
     #edit-modal { display:none; position:fixed; inset:0; z-index:8500; background:rgba(0,0,0,0.9); backdrop-filter:blur(6px); align-items:flex-end; justify-content:center; }
     #edit-modal.open { display:flex; }
     .edit-sheet { width:100%; background:#080808; border-radius:24px 24px 0 0; border-top:1.5px solid rgba(245,167,0,0.2); padding:18px 16px 40px; max-height:90dvh; overflow-y:auto; animation:slideUp 0.35s ease; }
@@ -737,7 +801,6 @@
       <button class="gate-btn" id="reg-submit-btn">Créer mon compte</button>
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
-    <!-- ── SÉCURISÉ : hint admin invisible, accès uniquement via Firebase Auth ── -->
     <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
     <div class="gate-panel" id="gate-step-admin" style="display:none">
       <div class="gate-panel-title">🛡️ Accès Administrateur</div>
@@ -1030,6 +1093,13 @@
       </div>
       <div id="admin-panel">
         <div class="admin-header"><h2>🛠️ Admin Panel</h2><button id="admin-logout-btn">Déconnexion</button></div>
+
+        <!-- ══ STATS BLOCK ══ -->
+        <div class="admin-section-title">📊 Statistiques du site</div>
+        <div id="admin-stats-block">
+          <div class="stats-loading">⏳ Chargement des stats...</div>
+        </div>
+
         <div class="admin-section-title">🔐 Code d'accès client</div>
         <div class="admin-code-panel">
           <div class="admin-code-info">Code actuel (visible uniquement par l'admin) :</div>
@@ -1195,17 +1265,12 @@ window._auth      = _auth;
 window._firestore = { addDoc, collection, getDocs, query, orderBy, serverTimestamp, where, onSnapshot, doc, setDoc, deleteDoc, getDoc, updateDoc };
 window._firestoreExtra = { getDocs, collection, query, where, deleteDoc, doc, Timestamp, getDoc, updateDoc };
 
-// ─── SÉCURITÉ : identifiant admin uniquement (pas de mot de passe en dur) ─────
-// Le mot de passe admin n'est JAMAIS stocké dans le code.
-// L'authentification se fait entièrement via Firebase Auth.
-// La vérification admin se fait via l'email Firebase : snowfall_admin@snowfall69.app
 const ADMIN_EMAIL_DOMAIN = '@snowfall69.app';
-const ADMIN_USERNAME     = 'snowfall_admin'; // utilisé uniquement pour identifier le compte, pas pour auth
+const ADMIN_USERNAME     = 'snowfall_admin';
 const CONTACT_URL        = 'https://pt.im/FranklinSaint69';
 const TELEGRAM_URL       = 'https://t.me/franklin69200';
 const CODE_DURATION_MS   = 90 * 60 * 1000;
 
-// Vérifie si l'utilisateur connecté est admin via son email Firebase
 function isAdminUser(user) {
   if (!user) return false;
   return user.email === ADMIN_USERNAME + ADMIN_EMAIL_DOMAIN;
@@ -1334,10 +1399,7 @@ async function initGate() {
   try { const codeData = await getActiveCode(); if (codeData) startGateTimer(codeData.expiresAt); } catch(e) { console.warn('Impossible de charger le code:', e); }
 }
 
-// ─── SÉCURISÉ : Admin gate login via Firebase Auth uniquement ────────────────
-// Plus de mot de passe en dur dans le code.
-// Firebase Auth vérifie le mot de passe côté serveur.
-// Les règles Firestore vérifient que l'email est bien celui de l'admin.
+// ─── Admin gate login ─────────────────────────────────────────────────────────
 document.getElementById('admin-gate-login-btn').addEventListener('click', async () => {
   const username = document.getElementById('admin-login-user').value.trim().toLowerCase();
   const pass     = document.getElementById('admin-login-pass').value;
@@ -1347,9 +1409,7 @@ document.getElementById('admin-gate-login-btn').addEventListener('click', async 
   const btn = document.getElementById('admin-gate-login-btn');
   btn.disabled = true; btn.textContent = 'Connexion...';
   try {
-    // Authentification 100% Firebase — le mot de passe n'est jamais comparé côté client
     const cred = await signInWithEmailAndPassword(_auth, username + ADMIN_EMAIL_DOMAIN, pass);
-    // Vérification que c'est bien le compte admin via l'email Firebase
     if (!isAdminUser(cred.user)) {
       await signOut(_auth);
       errEl.textContent = '❌ Accès refusé.';
@@ -1414,7 +1474,6 @@ document.getElementById('reg-submit-btn').addEventListener('click', async () => 
   if (password.length < 6) { errEl.textContent = 'Mot de passe trop court (min. 6 caractères).'; return; }
   if (password !== password2) { errEl.textContent = 'Les mots de passe ne correspondent pas.'; return; }
   if (!/^[a-z0-9_]+$/.test(username)) { errEl.textContent = 'Identifiant invalide (lettres, chiffres, _ uniquement).'; return; }
-  // Bloquer la création d'un compte avec l'identifiant admin
   if (username === ADMIN_USERNAME) { errEl.textContent = '❌ Identifiant non disponible.'; return; }
   const btn = document.getElementById('reg-submit-btn');
   btn.disabled = true; btn.textContent = 'Création...';
@@ -1444,17 +1503,15 @@ document.getElementById('login-submit-btn').addEventListener('click', async () =
     const cred = await signInWithEmailAndPassword(_auth, username + ADMIN_EMAIL_DOMAIN, password);
     const name = cred.user.displayName || username;
     saveLocalSession(cred.user.uid, name, username);
-    // Si c'est l'admin qui se connecte via le login normal, on lance l'app normalement
     launchApp();
   } catch(e) {
     try {
-      // Tentative avec l'ancien domaine pour compatibilité
       const cred = await signInWithEmailAndPassword(_auth, username + '@bart76.app', password);
       const name = cred.user.displayName || username;
       saveLocalSession(cred.user.uid, name, username);
       launchApp();
     } catch(e2) {
-      if (isInAppBrowser()) { errEl.innerHTML = '⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir dans Chrome/Safari</button>'; document.getElementById('login-browser-btn').classList.add('show'); }
+      if (isInAppBrowser()) { errEl.innerHTML = '⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-family:Barlow,sans-serif">📱 Ouvrir</button>'; document.getElementById('login-browser-btn').classList.add('show'); }
       else errEl.textContent = 'Identifiant ou mot de passe incorrect.';
     }
   }
@@ -1487,9 +1544,138 @@ function showSplashThenLaunch(openAdmin = false) {
 }
 
 function launchApp() {
+  // ─── Enregistrement de la visite ──────────────────────────────────────────
+  const user = _auth.currentUser;
+  if (user) recordVisit(user.uid);
   document.getElementById('access-gate').classList.add('hidden');
   showSplashThenLaunch(false);
 }
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ─── STATS VISITEURS & COMMANDES (ADMIN ONLY) ─────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+
+/**
+ * Enregistre une visite unique par UID dans stats/visits.
+ * Incrémente aussi un compteur de sessions (total_sessions).
+ */
+async function recordVisit(uid) {
+  try {
+    const ref = doc(_db, 'stats', 'visits');
+    let snap;
+    try { snap = await getDoc(ref); } catch(e) { return; }
+    const data = snap.exists() ? snap.data() : { uids: [], total: 0, total_sessions: 0 };
+    const uids = data.uids || [];
+    const isNew = !uids.includes(uid);
+    const newData = {
+      uids: isNew ? [...uids, uid] : uids,
+      total: isNew ? (uids.length + 1) : uids.length,
+      total_sessions: (data.total_sessions || 0) + 1,
+      lastUpdated: Date.now()
+    };
+    await setDoc(ref, newData);
+  } catch(e) { console.warn('recordVisit:', e); }
+}
+
+/**
+ * Charge et affiche les stats dans le panel admin.
+ * Uniquement appelé si adminAuthenticated === true.
+ */
+async function loadAdminStats() {
+  const el = document.getElementById('admin-stats-block');
+  if (!el) return;
+  el.innerHTML = '<div class="stats-loading">⏳ Chargement...</div>';
+
+  try {
+    // 1. Visiteurs
+    let uniqueVisitors = 0, totalSessions = 0;
+    try {
+      const visitSnap = await getDoc(doc(_db, 'stats', 'visits'));
+      if (visitSnap.exists()) {
+        const vd = visitSnap.data();
+        uniqueVisitors = vd.total || (vd.uids ? vd.uids.length : 0);
+        totalSessions  = vd.total_sessions || 0;
+      }
+    } catch(e) { console.warn('stats/visits:', e); }
+
+    // 2. Commandes
+    let totalOrders = 0, totalRevenue = 0;
+    let recentOrders = [];
+    try {
+      const cmdSnap = await getDocs(query(collection(_db, 'commandes'), orderBy('timestamp', 'desc')));
+      totalOrders = cmdSnap.size;
+      cmdSnap.forEach(d => {
+        const cd = d.data();
+        totalRevenue += cd.total || 0;
+        if (recentOrders.length < 5) recentOrders.push(cd);
+      });
+    } catch(e) { console.warn('commandes stats:', e); }
+
+    // 3. Calculs
+    const convRate = uniqueVisitors > 0 ? ((totalOrders / uniqueVisitors) * 100).toFixed(1) : '0.0';
+    const avgOrder = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
+    const now = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
+
+    // 4. HTML des 4 cartes stats
+    let statsHTML = `
+      <div class="admin-stats-grid">
+        <div class="stat-card stat-card-visitors">
+          <span class="stat-card-emoji">👥</span>
+          <span class="stat-card-num">${uniqueVisitors}</span>
+          <span class="stat-card-lbl">Visiteurs uniques</span>
+          <span class="stat-card-sub">${totalSessions} sessions total</span>
+        </div>
+        <div class="stat-card stat-card-orders">
+          <span class="stat-card-emoji">📦</span>
+          <span class="stat-card-num">${totalOrders}</span>
+          <span class="stat-card-lbl">Commandes</span>
+          <span class="stat-card-sub">Moy. ${avgOrder}€ / cmd</span>
+        </div>
+        <div class="stat-card stat-card-conv">
+          <span class="stat-card-emoji">📈</span>
+          <span class="stat-card-num">${convRate}%</span>
+          <span class="stat-card-lbl">Taux conversion</span>
+          <span class="stat-card-sub">Visiteurs → commandes</span>
+        </div>
+        <div class="stat-card stat-card-revenue">
+          <span class="stat-card-emoji">💰</span>
+          <span class="stat-card-num">${totalRevenue}€</span>
+          <span class="stat-card-lbl">CA estimé</span>
+          <span class="stat-card-sub">Hors frais livraison</span>
+        </div>
+      </div>
+      <div class="stats-footer">
+        <span class="stats-updated">Mis à jour à ${now}</span>
+        <button class="stats-refresh-btn" id="stats-refresh-btn">↻ Actualiser</button>
+      </div>`;
+
+    // 5. Dernières commandes (mini liste)
+    if (recentOrders.length > 0) {
+      statsHTML += `<div class="stat-recent-title">🕐 Dernières commandes</div>`;
+      recentOrders.forEach(c => {
+        statsHTML += `
+          <div class="stat-recent-item">
+            <div>
+              <div class="stat-recent-name">${c.contact ? c.contact.substring(0,18) : (c.uid ? c.uid.substring(0,12) : '—')}</div>
+              <div class="stat-recent-date">${c.date || '—'} · ${c.mode || '—'}</div>
+            </div>
+            <div class="stat-recent-total">${c.total || 0}€</div>
+          </div>`;
+      });
+    }
+
+    el.innerHTML = statsHTML;
+
+    // Bouton rafraîchir
+    document.getElementById('stats-refresh-btn')?.addEventListener('click', () => loadAdminStats());
+
+  } catch(e) {
+    el.innerHTML = `<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.82rem">❌ Erreur chargement stats</div>`;
+    console.error('loadAdminStats:', e);
+  }
+}
+
+// ──────────────────────────────────────────────────────────────────────────────
 
 // ─── Cloudinary ───────────────────────────────────────────────────────────────
 const CLOUDINARY_CLOUD      = 'doc0z0zik';
@@ -1571,23 +1757,22 @@ async function loadProductOverrides(){
   }catch(e){console.log('products_meta:',e);}
 }
 
-// ─── SÉCURISÉ : Admin panel — accès uniquement si Firebase Auth confirme l'admin
+// ─── Admin panel ──────────────────────────────────────────────────────────────
 let adminAuthenticated = false;
 
 function openAdminPage(){
   hideAllPages();
   document.getElementById('admin-page').style.display='block';
-  // Vérifie l'authentification Firebase, pas un mot de passe local
   if(!adminAuthenticated){
     document.getElementById('admin-login').style.display='block';
     document.getElementById('admin-panel').style.display='none';
   } else {
     renderAdminPanel();
     loadAdminCodeDisplay();
+    loadAdminStats(); // ← charge les stats à chaque ouverture
   }
 }
 
-// SÉCURISÉ : le bouton admin-login utilise Firebase Auth, pas une comparaison locale
 document.getElementById('admin-login-btn').addEventListener('click', async () => {
   const pw  = document.getElementById('admin-password-input').value;
   const btn = document.getElementById('admin-login-btn');
@@ -1596,17 +1781,15 @@ document.getElementById('admin-login-btn').addEventListener('click', async () =>
   if (!pw) { errEl.textContent = 'Entrez votre mot de passe.'; return; }
   btn.disabled = true; btn.textContent = 'Vérification...';
   try {
-    // Utilise l'utilisateur Firebase déjà connecté (depuis la gate)
     const user = _auth.currentUser;
     if (user && isAdminUser(user)) {
-      // Déjà connecté en tant qu'admin Firebase
       adminAuthenticated = true;
       document.getElementById('admin-login').style.display = 'none';
       document.getElementById('admin-panel').style.display = 'block';
       document.getElementById('admin-password-input').value = '';
       renderAdminPanel(); bindUploadInputs(); loadAdminCodeDisplay();
+      loadAdminStats(); // ← stats
     } else {
-      // Tentative de reconnexion Firebase avec le mot de passe saisi
       const cred = await signInWithEmailAndPassword(_auth, ADMIN_USERNAME + ADMIN_EMAIL_DOMAIN, pw);
       if (isAdminUser(cred.user)) {
         adminAuthenticated = true;
@@ -1614,6 +1797,7 @@ document.getElementById('admin-login-btn').addEventListener('click', async () =>
         document.getElementById('admin-panel').style.display = 'block';
         document.getElementById('admin-password-input').value = '';
         renderAdminPanel(); bindUploadInputs(); loadAdminCodeDisplay();
+        loadAdminStats(); // ← stats
       } else {
         await signOut(_auth);
         errEl.textContent = '❌ Accès refusé.';
@@ -1637,7 +1821,6 @@ let logoClickCount=0,logoClickTimer=null;
 function handleLogoClick(){logoClickCount++;clearTimeout(logoClickTimer);logoClickTimer=setTimeout(()=>{logoClickCount=0;},2000);if(logoClickCount>=5){logoClickCount=0;openAdminPage();}}
 document.querySelector('.header-brand').addEventListener('click',handleLogoClick);
 
-// SÉCURISÉ : vérifie le statut admin via Firebase, pas via une variable locale non sécurisée
 function checkAdminSession() {
   const user = _auth.currentUser;
   if (user && isAdminUser(user)) adminAuthenticated = true;
@@ -1747,7 +1930,6 @@ async function renderProfilPage(){
   const page=document.getElementById('profil-page'),user=_auth.currentUser;
   if(!user){page.innerHTML=`<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:18px;padding:20px;text-align:center"><div style="font-size:3rem">👤</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:3px;color:#fff">MON COMPTE</div><div style="color:#444;font-size:0.88rem;line-height:1.6">Connecte-toi pour accéder à ton profil.</div><button onclick="openAuthModal()" style="background:linear-gradient(135deg,var(--gold),#E09500);color:#000;border:none;padding:13px 30px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;cursor:pointer">Se connecter</button></div>`;return;}
   const du=user.email?user.email.replace(ADMIN_EMAIL_DOMAIN,'').replace('@bart76.app',''):'utilisateur';
-  // SÉCURISÉ : vérification admin via Firebase Auth, pas via constante en dur
   const isAdmin = isAdminUser(user);
   page.innerHTML=`<div class="profil-header"><button class="profil-logout" onclick="doLogout()">Déconnexion</button><div class="profil-avatar">${isAdmin?'🛡️':'👤'}</div><div class="profil-name">${user.displayName||du}</div><div style="color:#444;font-size:0.78rem;margin-top:2px">@${du}${isAdmin?' · <span style="color:var(--gold)">Admin</span>':''}</div></div>${isAdmin?`<div style="background:rgba(245,167,0,0.06);border:1.5px solid rgba(245,167,0,0.25);border-radius:16px;padding:16px;margin-bottom:16px;text-align:center"><div style="font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:2px;color:var(--gold);margin-bottom:8px">🛡️ ACCÈS ADMINISTRATEUR</div><button onclick="openAdminPage()" style="background:linear-gradient(135deg,var(--gold),#E09500);color:#000;border:none;padding:12px 26px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:2px;cursor:pointer">Ouvrir le Panel Admin</button></div>`:'<div class="profil-stats"><div class="profil-stats-icon">📦</div><div><div class="profil-stats-num" id="profil-cmd-count">—</div><div class="profil-stats-lbl">commande(s) passée(s)</div></div></div><div class="profil-section-title">Mes commandes</div><div id="profil-commandes"><p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Chargement...</p></div>'}`;
   if(!isAdmin){try{const q=query(collection(_db,'commandes'),where('uid','==',user.uid),orderBy('timestamp','desc'));const snap=await getDocs(q);document.getElementById('profil-cmd-count').textContent=snap.size;const ce=document.getElementById('profil-commandes');if(snap.empty){ce.innerHTML='<p style="color:#444;text-align:center;padding:20px;font-size:0.88rem">Aucune commande.</p>';return;}ce.innerHTML=snap.docs.map(d=>{const c=d.data();return `<div class="commande-card"><div class="commande-header"><span class="commande-date">${c.date}</span><span class="commande-total">${c.total}€</span></div><div class="commande-items">${c.items}</div><span class="commande-mode">${c.mode}</span></div>`;}).join('');}
@@ -2139,7 +2321,6 @@ document.getElementById('submit-order-btn').onclick = async () => {
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 onAuthStateChanged(_auth, (user) => {
-  // Mise à jour automatique du statut admin quand Firebase Auth change
   if (user && isAdminUser(user)) {
     adminAuthenticated = true;
   } else if (!user) {
