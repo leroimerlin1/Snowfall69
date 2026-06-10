@@ -1037,7 +1037,8 @@
           <div class="chat-header-title">Support Client</div>
           <div style="display:flex;align-items:center;margin-top:2px"><span class="chat-status-dot"></span><span class="chat-status-text">En ligne</span></div>
         </div>
-        <div class="chat-header-timer">⏱ 24h</div>
+        <!-- MODIF 4 : 24h → 2 semaines -->
+        <div class="chat-header-timer">⏱ 2 semaines</div>
       </div>
       <div id="chat-body" style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;"></div>
     </div>
@@ -1064,7 +1065,8 @@
           <div class="admin-code-info">Code actuel (visible uniquement par l'admin) :</div>
           <div class="admin-code-display" id="admin-code-display">——————</div>
           <div class="admin-code-timer" id="admin-code-timer">Aucun code actif</div>
-          <button class="admin-gen-btn" id="admin-gen-code-btn">🔄 Générer un nouveau code (30 min)</button>
+          <!-- MODIF 1 : 30 min → 90 min -->
+          <button class="admin-gen-btn" id="admin-gen-code-btn">🔄 Générer un nouveau code (90 min)</button>
         </div>
         <div class="admin-section-title">📦 Stock & Badges</div>
         <div id="admin-products-list"></div>
@@ -1513,10 +1515,6 @@ function launchApp() {
 // ─── STATS (ADMIN) ────────────────────────────────────────────────────────────
 // ══════════════════════════════════════════════════════════════════════════════
 
-/**
- * Enregistre les sessions (non utilisé pour le comptage inscrits,
- * mais on conserve total_sessions pour info).
- */
 async function recordVisit(uid) {
   try {
     const ref = doc(_db, 'stats', 'visits');
@@ -1530,31 +1528,22 @@ async function recordVisit(uid) {
   } catch(e) { console.warn('recordVisit:', e); }
 }
 
-/**
- * Charge et affiche les stats dans le panel admin.
- * Membres inscrits = nombre de documents dans la collection "users".
- */
 async function loadAdminStats() {
   const el = document.getElementById('admin-stats-block');
   if (!el) return;
   el.innerHTML = '<div class="stats-loading">⏳ Chargement...</div>';
 
   try {
-    // ── 1. Membres inscrits = nb documents dans "users" ──────────────────────
     let totalMembers = 0, totalSessions = 0;
     try {
-      // Compte tous les inscrits (1 doc par utilisateur créé)
       const usersSnap = await getDocs(collection(_db, 'users'));
       totalMembers = usersSnap.size;
-
-      // Sessions depuis stats/visits (pour info uniquement)
       const visitSnap = await getDoc(doc(_db, 'stats', 'visits'));
       if (visitSnap.exists()) {
         totalSessions = visitSnap.data().total_sessions || 0;
       }
     } catch(e) { console.warn('stats/users:', e); }
 
-    // ── 2. Commandes ──────────────────────────────────────────────────────────
     let totalOrders = 0, totalRevenue = 0;
     let recentOrders = [];
     try {
@@ -1567,12 +1556,10 @@ async function loadAdminStats() {
       });
     } catch(e) { console.warn('commandes stats:', e); }
 
-    // ── 3. Calculs ────────────────────────────────────────────────────────────
     const convRate = totalMembers > 0 ? ((totalOrders / totalMembers) * 100).toFixed(1) : '0.0';
     const avgOrder = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
     const now = new Date().toLocaleTimeString('fr-FR', { hour:'2-digit', minute:'2-digit' });
 
-    // ── 4. Rendu HTML ─────────────────────────────────────────────────────────
     let statsHTML = `
       <div class="admin-stats-grid">
         <div class="stat-card stat-card-members">
@@ -1605,7 +1592,6 @@ async function loadAdminStats() {
         <button class="stats-refresh-btn" id="stats-refresh-btn">↻ Actualiser</button>
       </div>`;
 
-    // ── 5. Dernières commandes ─────────────────────────────────────────────────
     if (recentOrders.length > 0) {
       statsHTML += `<div class="stat-recent-title">🕐 Dernières commandes</div>`;
       recentOrders.forEach(c => {
@@ -1628,8 +1614,6 @@ async function loadAdminStats() {
     console.error('loadAdminStats:', e);
   }
 }
-
-// ──────────────────────────────────────────────────────────────────────────────
 
 // ─── Cloudinary ───────────────────────────────────────────────────────────────
 const CLOUDINARY_CLOUD      = 'doc0z0zik';
@@ -1893,7 +1877,9 @@ window.openAdminPage = openAdminPage;
 
 // ─── Chat ─────────────────────────────────────────────────────────────────────
 let chatUnsub = null;
-async function purgeOldMessages(){try{const c=Date.now()-24*60*60*1000;const q=query(collection(_db,'chat'),where('timestampMs','<',c));const snap=await getDocs(q);snap.docs.forEach(d=>deleteDoc(doc(_db,'chat',d.id)));}catch(e){}}
+
+// MODIF 2 : purge des messages éphémères — 24h → 2 semaines (14 jours)
+async function purgeOldMessages(){try{const c=Date.now()-14*24*60*60*1000;const q=query(collection(_db,'chat'),where('timestampMs','<',c));const snap=await getDocs(q);snap.docs.forEach(d=>deleteDoc(doc(_db,'chat',d.id)));}catch(e){}}
 
 function containsPhoneOrLink(text) {
   const phoneRegex = /(\+?\d[\s.\-()]*){7,}/;
@@ -1925,7 +1911,8 @@ function renderChatPage(){
   const q=query(collection(_db,'chat'),orderBy('timestampMs','asc'));
   chatUnsub=onSnapshot(q,snap=>{
     const msgs=document.getElementById('chat-messages'),empty=document.getElementById('chat-empty');if(!msgs)return;
-    const cutoff=Date.now()-24*60*60*1000,valid=snap.docs.filter(d=>{const ms=d.data().timestampMs;return ms&&ms>cutoff;});
+    // MODIF 3 : affichage des messages — 24h → 2 semaines (14 jours)
+    const cutoff=Date.now()-14*24*60*60*1000,valid=snap.docs.filter(d=>{const ms=d.data().timestampMs;return ms&&ms>cutoff;});
     if(!valid.length){if(empty)empty.style.display='flex';msgs.querySelectorAll('.chat-msg-group,.chat-date-sep').forEach(el=>el.remove());return;}
     if(empty)empty.style.display='none';
     let lastDate='',html='';
