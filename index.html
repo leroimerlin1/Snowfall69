@@ -340,6 +340,9 @@
     .stat-card-revenue .stat-card-num{color:#a78bfa;text-shadow:0 0 14px rgba(167,139,250,0.3);}
     .stat-card-lbl{font-size:0.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-top:5px;display:block;color:#555;}
     .stat-card-sub{font-size:0.58rem;color:#333;font-weight:700;margin-top:3px;display:block;letter-spacing:0.5px;}
+    .stat-card-clickable{cursor:pointer;}
+    .stat-card-clickable:hover{opacity:0.85;}
+    .stat-card-tap-hint{font-size:0.52rem;color:rgba(245,167,0,0.35);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:5px;display:block;}
     .stats-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;padding:0 2px;}
     .stats-updated{font-size:0.6rem;color:#2a2a2a;font-weight:700;letter-spacing:0.5px;}
     .stats-refresh-btn{background:rgba(245,167,0,0.08);border:1px solid rgba(245,167,0,0.2);color:rgba(245,167,0,0.6);font-size:0.62rem;font-weight:800;padding:4px 12px;border-radius:8px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;}
@@ -408,7 +411,6 @@
     .contact-choice-btn-telegram .contact-choice-btn-arrow{color:rgba(255,255,255,0.5);}
     .contact-choice-btn-potato .contact-choice-btn-arrow{color:rgba(0,0,0,0.35);}
     .contact-choice-cancel{width:100%;padding:13px;margin-top:12px;background:transparent;border:1.5px solid rgba(255,255,255,0.07);border-radius:12px;color:#333;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;display:block;}
-    /* ═══ MODALE COPIER COMMANDE POTATO ═══ */
     #copy-order-modal{display:none;position:fixed;inset:0;z-index:13000;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
     #copy-order-modal.open{display:flex;}
     .copy-order-sheet{width:100%;background:#080808;border-radius:24px 24px 0 0;border-top:1.5px solid rgba(245,167,0,0.25);padding:22px 18px 44px;max-height:88dvh;overflow-y:auto;animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);}
@@ -441,6 +443,27 @@
     .dept-row-left{display:flex;align-items:center;gap:8px;}
     .dept-row-name{color:#ccc;font-size:0.88rem;font-weight:600;}
     .dept-row-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--gold);}
+    /* ═══ MODALE DÉTAILS ADMIN ═══ */
+    #admin-detail-modal{display:none;position:fixed;inset:0;z-index:14000;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
+    #admin-detail-modal.open{display:flex;}
+    .admin-detail-sheet{width:100%;background:#080808;border-radius:24px 24px 0 0;border-top:1.5px solid rgba(245,167,0,0.25);padding:22px 18px 44px;max-height:88dvh;overflow-y:auto;animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);}
+    .admin-detail-handle{width:38px;height:4px;background:rgba(255,255,255,0.1);border-radius:999px;margin:0 auto 20px;}
+    .admin-detail-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;color:#fff;text-align:center;margin-bottom:18px;}
+    .admin-member-item{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+    .admin-member-avatar{width:36px;height:36px;background:rgba(245,167,0,0.1);border:1.5px solid rgba(245,167,0,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
+    .admin-member-name{font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:0.5px;}
+    .admin-member-username{font-size:0.72rem;color:#555;margin-top:2px;}
+    .admin-member-num{font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:rgba(245,167,0,0.35);letter-spacing:1px;}
+    .admin-order-item{background:rgba(255,255,255,0.02);border:1px solid rgba(74,222,128,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+    .admin-order-contact{font-family:'Barlow Condensed',sans-serif;font-size:0.92rem;font-weight:800;color:#4ade80;text-transform:uppercase;margin-bottom:4px;}
+    .admin-order-meta{font-size:0.72rem;color:#444;margin-bottom:6px;font-weight:600;}
+    .admin-order-items{font-size:0.78rem;color:#777;line-height:1.6;}
+    .admin-order-total{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--gold);letter-spacing:1px;float:right;margin-top:-22px;}
+    .admin-detail-close-btn{width:100%;padding:13px;margin-top:14px;background:transparent;border:1.5px solid rgba(255,255,255,0.07);border-radius:12px;color:#333;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+    .admin-detail-search{width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(245,167,0,0.2);border-radius:12px;color:#fff;font-size:0.9rem;font-family:'Barlow',sans-serif;outline:none;margin-bottom:14px;}
+    .admin-detail-search:focus{border-color:rgba(245,167,0,0.5);}
+    .admin-detail-search::placeholder{color:#333;}
+    .admin-detail-count{font-family:'Barlow Condensed',sans-serif;font-size:0.7rem;font-weight:800;color:#444;letter-spacing:1.5px;text-transform:uppercase;text-align:center;margin-bottom:12px;}
   </style>
 </head>
 <body>
@@ -484,7 +507,7 @@
   </div>
 </div>
 
-<!-- ═══ MODALE COPIER COMMANDE POTATO (NOUVEAU) ═══ -->
+<!-- MODALE COPIER COMMANDE POTATO -->
 <div id="copy-order-modal">
   <div class="copy-order-sheet">
     <div class="copy-order-handle"></div>
@@ -494,6 +517,18 @@
     <button id="copy-order-btn">📋 Copier le message</button>
     <a id="copy-order-potato-link" href="https://pt.im/FranklinSaint69" target="_blank">🍫 Ouvrir Potato — @FranklinSaint69</a>
     <button id="copy-order-close-btn">Fermer</button>
+  </div>
+</div>
+
+<!-- ═══ MODALE DÉTAILS ADMIN (MEMBRES / COMMANDES) ═══ -->
+<div id="admin-detail-modal">
+  <div class="admin-detail-sheet">
+    <div class="admin-detail-handle"></div>
+    <div class="admin-detail-title" id="admin-detail-title">—</div>
+    <input class="admin-detail-search" id="admin-detail-search" placeholder="🔍 Rechercher..." oninput="filterAdminDetail()">
+    <div class="admin-detail-count" id="admin-detail-count"></div>
+    <div id="admin-detail-list"></div>
+    <button class="admin-detail-close-btn" id="admin-detail-close-btn">Fermer</button>
   </div>
 </div>
 
@@ -972,7 +1007,6 @@ function closeContactChoiceModal(){
   _ccmIsOrder=false;
 }
 
-// Ouvre la modale Copier pour Potato
 function openCopyOrderModal(msg){
   const clean=msg.replace(/\*/g,'');
   document.getElementById('copy-order-text').textContent=clean;
@@ -984,7 +1018,6 @@ window.closeCopyOrderModal=function(){
 document.getElementById('copy-order-close-btn').addEventListener('click',()=>window.closeCopyOrderModal());
 document.getElementById('copy-order-modal').addEventListener('click',e=>{if(e.target===document.getElementById('copy-order-modal'))window.closeCopyOrderModal();});
 
-// Bouton Copier
 document.getElementById('copy-order-btn').addEventListener('click',()=>{
   const text=document.getElementById('copy-order-text').textContent;
   const btn=document.getElementById('copy-order-btn');
@@ -1004,14 +1037,12 @@ document.getElementById('copy-order-btn').addEventListener('click',()=>{
   if(navigator.clipboard?.writeText){navigator.clipboard.writeText(text).then(onOk).catch(onFail);}else{onFail();}
 });
 
-// Telegram → ouvre directement avec le message
 document.getElementById('ccm-telegram').addEventListener('click',()=>{
   const msg=_ccmPendingMsg;
   closeContactChoiceModal();
   if(msg)window.open(TELEGRAM_URL+'?text='+encodeURIComponent(msg),'_blank');
 });
 
-// Potato → modale copier si commande, sinon ouvre directement
 document.getElementById('ccm-potato').addEventListener('click',()=>{
   const msg=_ccmPendingMsg;
   const isOrder=_ccmIsOrder;
@@ -1022,6 +1053,99 @@ document.getElementById('ccm-potato').addEventListener('click',()=>{
 
 document.getElementById('ccm-cancel').addEventListener('click',closeContactChoiceModal);
 document.getElementById('contact-choice-modal').addEventListener('click',e=>{if(e.target===document.getElementById('contact-choice-modal'))closeContactChoiceModal();});
+
+// ══════════════════════════════════════════════════════════════════════════════
+// ── MODALE DÉTAILS ADMIN (MEMBRES / COMMANDES) ────────────────────────────────
+// ══════════════════════════════════════════════════════════════════════════════
+let _adminDetailMode=''; // 'members' ou 'orders'
+
+function openAdminDetailModal(mode){
+  _adminDetailMode=mode;
+  const modal=document.getElementById('admin-detail-modal');
+  const titleEl=document.getElementById('admin-detail-title');
+  const listEl=document.getElementById('admin-detail-list');
+  const countEl=document.getElementById('admin-detail-count');
+  const searchEl=document.getElementById('admin-detail-search');
+  searchEl.value='';
+
+  if(mode==='members'){
+    const members=window._adminMembersList||[];
+    titleEl.textContent='👥 MEMBRES INSCRITS ('+members.length+')';
+    countEl.textContent=members.length+' membre'+(members.length>1?'s':'');
+    renderAdminDetailMembers(members);
+  } else {
+    const orders=window._adminAllOrders||[];
+    titleEl.textContent='📦 TOUTES LES COMMANDES ('+orders.length+')';
+    countEl.textContent=orders.length+' commande'+(orders.length>1?'s':'');
+    renderAdminDetailOrders(orders);
+  }
+  modal.classList.add('open');
+}
+
+function renderAdminDetailMembers(list){
+  const listEl=document.getElementById('admin-detail-list');
+  if(!list.length){
+    listEl.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucun membre inscrit.</p>';
+    return;
+  }
+  listEl.innerHTML=list.map((m,i)=>`
+    <div class="admin-member-item">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+        <div class="admin-member-avatar">👤</div>
+        <div style="min-width:0;">
+          <div class="admin-member-name">${m.name||'—'}</div>
+          <div class="admin-member-username">@${m.username||'—'}</div>
+          ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:2px;">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
+        </div>
+      </div>
+      <div class="admin-member-num">#${i+1}</div>
+    </div>`).join('');
+}
+
+function renderAdminDetailOrders(list){
+  const listEl=document.getElementById('admin-detail-list');
+  if(!list.length){
+    listEl.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucune commande.</p>';
+    return;
+  }
+  listEl.innerHTML=list.map((c,i)=>`
+    <div class="admin-order-item">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;">
+        <div class="admin-order-contact">📲 ${c.contact?c.contact.substring(0,24):'—'}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--gold);letter-spacing:1px;flex-shrink:0;margin-left:8px;">${c.total||0}€</div>
+      </div>
+      <div class="admin-order-meta">
+        📅 ${c.date||'—'} &nbsp;·&nbsp; 
+        ${c.mode==='Livraison'?'🚚':'📍'} ${c.mode||'—'}
+        ${c.postalCode?'&nbsp;·&nbsp; 📮 '+c.postalCode:''}
+      </div>
+      <div class="admin-order-items">${(c.items||'').replace(/\n/g,'<br>')}</div>
+    </div>`).join('');
+}
+
+window.filterAdminDetail=function(){
+  const q=document.getElementById('admin-detail-search').value.toLowerCase().trim();
+  const countEl=document.getElementById('admin-detail-count');
+  if(_adminDetailMode==='members'){
+    const all=window._adminMembersList||[];
+    const filtered=q?all.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.username||'').toLowerCase().includes(q)):all;
+    countEl.textContent=filtered.length+' membre'+(filtered.length>1?'s':'');
+    renderAdminDetailMembers(filtered);
+  } else {
+    const all=window._adminAllOrders||[];
+    const filtered=q?all.filter(c=>(c.contact||'').toLowerCase().includes(q)||(c.items||'').toLowerCase().includes(q)||(c.date||'').toLowerCase().includes(q)||(c.postalCode||'').toLowerCase().includes(q)):all;
+    countEl.textContent=filtered.length+' commande'+(filtered.length>1?'s':'');
+    renderAdminDetailOrders(filtered);
+  }
+};
+
+document.getElementById('admin-detail-close-btn').addEventListener('click',()=>{
+  document.getElementById('admin-detail-modal').classList.remove('open');
+});
+document.getElementById('admin-detail-modal').addEventListener('click',e=>{
+  if(e.target===document.getElementById('admin-detail-modal'))
+    document.getElementById('admin-detail-modal').classList.remove('open');
+});
 
 // ── Gate tabs ──────────────────────────────────────────────────────────────────
 window.switchGateTab=(tab)=>{
@@ -1215,32 +1339,96 @@ async function recordVisit(uid){
   }catch(e){console.warn('recordVisit:',e);}
 }
 
+// ── loadAdminStats MODIFIÉE — cartes membres et commandes cliquables ────────────
 async function loadAdminStats(){
   const el=document.getElementById('admin-stats-block');if(!el)return;
   el.innerHTML='<div class="stats-loading">⏳ Chargement...</div>';
   try{
-    let totalMembers=0,totalSessions=0;
-    try{const us=await getDocs(collection(_db,'users'));totalMembers=us.size;const vs=await getDoc(doc(_db,'stats','visits'));if(vs.exists())totalSessions=vs.data().total_sessions||0;}catch(e){console.warn(e);}
-    let totalOrders=0,totalRevenue=0,recentOrders=[];
-    try{const cs=await getDocs(query(collection(_db,'commandes'),orderBy('timestamp','desc')));totalOrders=cs.size;cs.forEach(d=>{const cd=d.data();totalRevenue+=cd.total||0;if(recentOrders.length<5)recentOrders.push(cd);});}catch(e){console.warn(e);}
+    let totalMembers=0,totalSessions=0,membersList=[];
+    try{
+      const us=await getDocs(collection(_db,'users'));
+      totalMembers=us.size;
+      us.forEach(d=>{const data=d.data();membersList.push(data);});
+      const vs=await getDoc(doc(_db,'stats','visits'));
+      if(vs.exists())totalSessions=vs.data().total_sessions||0;
+    }catch(e){console.warn(e);}
+
+    let totalOrders=0,totalRevenue=0,recentOrders=[],allOrders=[];
+    try{
+      const cs=await getDocs(query(collection(_db,'commandes'),orderBy('timestamp','desc')));
+      totalOrders=cs.size;
+      cs.forEach(d=>{
+        const cd=d.data();
+        totalRevenue+=cd.total||0;
+        allOrders.push(cd);
+        if(recentOrders.length<5)recentOrders.push(cd);
+      });
+    }catch(e){console.warn(e);}
+
+    // Stocker pour usage dans les modales
+    window._adminMembersList=membersList;
+    window._adminAllOrders=allOrders;
+
     const convRate=totalMembers>0?((totalOrders/totalMembers)*100).toFixed(1):'0.0';
     const avgOrder=totalOrders>0?Math.round(totalRevenue/totalOrders):0;
     const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+
     let html=`<div class="admin-stats-grid">
-      <div class="stat-card stat-card-members"><span class="stat-card-emoji">👥</span><span class="stat-card-num">${totalMembers}</span><span class="stat-card-lbl">Membres inscrits</span><span class="stat-card-sub">${totalSessions} connexions total</span></div>
-      <div class="stat-card stat-card-orders"><span class="stat-card-emoji">📦</span><span class="stat-card-num">${totalOrders}</span><span class="stat-card-lbl">Commandes</span><span class="stat-card-sub">Moy. ${avgOrder}€ / cmd</span></div>
-      <div class="stat-card stat-card-conv"><span class="stat-card-emoji">📈</span><span class="stat-card-num">${convRate}%</span><span class="stat-card-lbl">Taux conversion</span><span class="stat-card-sub">Membres → commandes</span></div>
-      <div class="stat-card stat-card-revenue"><span class="stat-card-emoji">💰</span><span class="stat-card-num">${totalRevenue}€</span><span class="stat-card-lbl">CA estimé</span><span class="stat-card-sub">Hors frais livraison</span></div>
+      <div class="stat-card stat-card-members stat-card-clickable" onclick="openAdminDetailModal('members')" title="Voir tous les membres">
+        <span class="stat-card-emoji">👥</span>
+        <span class="stat-card-num">${totalMembers}</span>
+        <span class="stat-card-lbl">Membres inscrits</span>
+        <span class="stat-card-sub">${totalSessions} connexions total</span>
+        <span class="stat-card-tap-hint">👆 APPUYER POUR VOIR LA LISTE</span>
+      </div>
+      <div class="stat-card stat-card-orders stat-card-clickable" onclick="openAdminDetailModal('orders')" title="Voir toutes les commandes">
+        <span class="stat-card-emoji">📦</span>
+        <span class="stat-card-num">${totalOrders}</span>
+        <span class="stat-card-lbl">Commandes</span>
+        <span class="stat-card-sub">Moy. ${avgOrder}€ / cmd</span>
+        <span class="stat-card-tap-hint">👆 APPUYER POUR VOIR LA LISTE</span>
+      </div>
+      <div class="stat-card stat-card-conv">
+        <span class="stat-card-emoji">📈</span>
+        <span class="stat-card-num">${convRate}%</span>
+        <span class="stat-card-lbl">Taux conversion</span>
+        <span class="stat-card-sub">Membres → commandes</span>
+      </div>
+      <div class="stat-card stat-card-revenue">
+        <span class="stat-card-emoji">💰</span>
+        <span class="stat-card-num">${totalRevenue}€</span>
+        <span class="stat-card-lbl">CA estimé</span>
+        <span class="stat-card-sub">Hors frais livraison</span>
+      </div>
     </div>
-    <div class="stats-footer"><span class="stats-updated">Mis à jour à ${now}</span><button class="stats-refresh-btn" id="stats-refresh-btn">↻ Actualiser</button></div>`;
+    <div class="stats-footer">
+      <span class="stats-updated">Mis à jour à ${now}</span>
+      <button class="stats-refresh-btn" id="stats-refresh-btn">↻ Actualiser</button>
+    </div>`;
+
     if(recentOrders.length>0){
       html+=`<div class="stat-recent-title">🕐 Dernières commandes</div>`;
-      recentOrders.forEach(c=>{html+=`<div class="stat-recent-item"><div><div class="stat-recent-name">${c.contact?c.contact.substring(0,18):(c.uid?c.uid.substring(0,12):'—')}</div><div class="stat-recent-date">${c.date||'—'} · ${c.mode||'—'}</div></div><div class="stat-recent-total">${c.total||0}€</div></div>`;});
+      recentOrders.forEach(c=>{
+        html+=`<div class="stat-recent-item">
+          <div>
+            <div class="stat-recent-name">${c.contact?c.contact.substring(0,18):(c.uid?c.uid.substring(0,12):'—')}</div>
+            <div class="stat-recent-date">${c.date||'—'} · ${c.mode||'—'}</div>
+          </div>
+          <div class="stat-recent-total">${c.total||0}€</div>
+        </div>`;
+      });
     }
+
     el.innerHTML=html;
     document.getElementById('stats-refresh-btn')?.addEventListener('click',()=>loadAdminStats());
-  }catch(e){el.innerHTML=`<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.82rem">❌ Erreur chargement stats</div>`;console.error(e);}
+  }catch(e){
+    el.innerHTML=`<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.82rem">❌ Erreur chargement stats</div>`;
+    console.error(e);
+  }
 }
+
+// Exposer la fonction openAdminDetailModal globalement
+window.openAdminDetailModal=openAdminDetailModal;
 
 // ── Cloudinary ─────────────────────────────────────────────────────────────────
 const CLOUDINARY_CLOUD='doc0z0zik';
@@ -1724,7 +1912,6 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(user){
     try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,postalCode:postal||null,contact,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}
   }
-  // ← isOrder=true : active la modale copier pour Potato
   showContactChoiceModal(message,true);
 };
 
