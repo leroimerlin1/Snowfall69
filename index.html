@@ -51,6 +51,10 @@
     .admin-gate-hint{text-align:center;margin-top:16px;font-size:0.7rem;color:#2a2a2a;font-weight:700;letter-spacing:1px;cursor:pointer;user-select:none;animation:fadeUp 0.5s 1.2s ease both;}
     .gate-open-browser-btn{width:100%;padding:13px;background:rgba(239,68,68,0.12);border:1.5px solid rgba(239,68,68,0.4);color:#ef4444;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:10px;display:none;}
     .gate-open-browser-btn.show{display:block;}
+    /* Contact separator in register form */
+    .reg-contact-sep{display:flex;align-items:center;gap:10px;margin:8px 0;color:#333;font-size:0.7rem;font-weight:800;letter-spacing:2px;}
+    .reg-contact-sep::before,.reg-contact-sep::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
+    .reg-contact-note{background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.15);border-radius:10px;padding:9px 12px;font-size:0.73rem;color:#666;font-weight:600;text-align:center;line-height:1.5;margin:8px 0 12px;}
     .splash{position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:opacity 0.8s ease;}
     .splash.hidden{opacity:0;pointer-events:none;}
     .splash-inner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;}
@@ -181,23 +185,6 @@
     input[type="time"],input[type="text"],textarea{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#e0e0e0;font-size:0.95rem;font-family:'Barlow',sans-serif;outline:none;}
     input[type="time"]:focus,input[type="text"]:focus,textarea:focus{border-color:rgba(245,167,0,0.4);}
     textarea{min-height:80px;resize:vertical;}
-    /* ═══ CONTACT FIELDS STYLES ═══ */
-    .contact-fields-wrap{display:flex;flex-direction:column;gap:12px;margin-bottom:6px;}
-    .contact-field-row{display:flex;flex-direction:column;gap:6px;}
-    .contact-field-header{display:flex;align-items:center;justify-content:space-between;}
-    .contact-field-label-text{font-size:0.75rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
-    .contact-field-label-text.signal{color:#3a9fd5;}
-    .contact-field-label-text.whatsapp{color:#25d366;}
-    .contact-field-optional{font-size:0.62rem;font-weight:600;color:#444;letter-spacing:0.5px;}
-    .contact-input{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#e0e0e0;font-size:0.95rem;font-family:'Barlow',sans-serif;outline:none;transition:border-color 0.2s,background 0.2s;}
-    .contact-input.signal-input:focus{border-color:rgba(58,159,213,0.6);background:rgba(58,159,213,0.04);}
-    .contact-input.whatsapp-input:focus{border-color:rgba(37,211,102,0.6);background:rgba(37,211,102,0.04);}
-    .contact-input.filled-signal{border-color:rgba(58,159,213,0.5);background:rgba(58,159,213,0.05);}
-    .contact-input.filled-whatsapp{border-color:rgba(37,211,102,0.5);background:rgba(37,211,102,0.05);}
-    .contact-separator{display:flex;align-items:center;gap:10px;color:#333;font-size:0.72rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;}
-    .contact-separator::before,.contact-separator::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
-    .contact-required-note{background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.15);border-radius:10px;padding:8px 12px;font-size:0.72rem;color:#666;font-weight:600;text-align:center;line-height:1.5;margin-top:6px;}
-    .contact-required-note strong{color:var(--gold);}
     .fidelity-banner{background:rgba(245,167,0,0.07);border:1.5px solid rgba(245,167,0,0.3);border-radius:14px;padding:14px;margin-top:12px;display:flex;align-items:flex-start;gap:12px;}
     .fidelity-banner-icon{font-size:1.6rem;flex-shrink:0;margin-top:2px;}
     .fidelity-banner-title{font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:900;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
@@ -357,7 +344,6 @@
     .stat-card-lbl{font-size:0.6rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;margin-top:5px;display:block;color:#555;}
     .stat-card-sub{font-size:0.58rem;color:#333;font-weight:700;margin-top:3px;display:block;letter-spacing:0.5px;}
     .stat-card-clickable{cursor:pointer;}
-    .stat-card-clickable:hover{opacity:0.85;}
     .stat-card-tap-hint{font-size:0.52rem;color:rgba(245,167,0,0.35);font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-top:5px;display:block;}
     .stats-footer{display:flex;align-items:center;justify-content:space-between;margin-top:4px;padding:0 2px;}
     .stats-updated{font-size:0.6rem;color:#2a2a2a;font-weight:700;letter-spacing:0.5px;}
@@ -459,7 +445,6 @@
     .dept-row-left{display:flex;align-items:center;gap:8px;}
     .dept-row-name{color:#ccc;font-size:0.88rem;font-weight:600;}
     .dept-row-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--gold);}
-    /* ADMIN DETAIL MODAL */
     #admin-detail-modal{display:none;position:fixed;inset:0;z-index:14000;background:rgba(0,0,0,0.92);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
     #admin-detail-modal.open{display:flex;}
     .admin-detail-sheet{width:100%;background:#080808;border-radius:24px 24px 0 0;border-top:1.5px solid rgba(245,167,0,0.25);padding:22px 18px 44px;max-height:88dvh;overflow-y:auto;animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);}
@@ -535,6 +520,7 @@
   </div>
 </div>
 
+<!-- ═══ ACCESS GATE ═══ -->
 <div id="access-gate">
   <div class="gate-glow"></div>
   <div class="gate-wrap">
@@ -545,6 +531,8 @@
       <div class="gate-tab active" id="gate-tab-login" onclick="switchGateTab('login')">🔑 Se connecter</div>
       <div class="gate-tab" id="gate-tab-code" onclick="switchGateTab('code')">🆕 Nouveau client</div>
     </div>
+
+    <!-- LOGIN -->
     <div class="gate-panel" id="gate-step-login">
       <div class="gate-panel-title">👋 Bon retour</div>
       <div class="gate-panel-sub">Connectez-vous à votre compte.</div>
@@ -556,6 +544,8 @@
       <div class="gate-error" id="gate-login-error"></div>
       <button class="gate-open-browser-btn" id="login-browser-btn" onclick="openInRealBrowser()">📱 Problème ? Ouvrir dans Chrome/Safari</button>
     </div>
+
+    <!-- CODE -->
     <div class="gate-panel" id="gate-step-code" style="display:none">
       <div class="gate-panel-title">🔐 Code d'accès</div>
       <div class="gate-panel-sub">Entrez le code reçu ou demandez-le à notre contact.</div>
@@ -567,22 +557,49 @@
       <button class="gate-btn-outline" id="gate-request-btn">📩 Demander le code</button>
       <button class="gate-open-browser-btn" id="code-browser-btn" onclick="openInRealBrowser()">📱 Ça ne marche pas ? Ouvrir dans Chrome/Safari</button>
     </div>
+
+    <!-- REGISTER — avec Signal/WhatsApp obligatoires -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
       <div class="reg-warning">⚠️ Retenez bien votre identifiant et mot de passe.</div>
+
       <label class="gate-field-label">Prénom</label>
       <input type="text" class="gate-input reg-input" id="reg-name" placeholder="Votre prénom">
+
       <label class="gate-field-label">Identifiant</label>
       <input type="text" class="gate-input reg-input" id="reg-username" placeholder="Ex: john_doe" autocomplete="username">
+
       <label class="gate-field-label">Mot de passe</label>
       <input type="password" class="gate-input reg-input" id="reg-password" placeholder="Minimum 6 caractères" autocomplete="new-password">
+
       <label class="gate-field-label">Confirmer le mot de passe</label>
       <input type="password" class="gate-input reg-input" id="reg-password2" placeholder="Répétez le mot de passe" autocomplete="new-password">
+
+      <!-- Signal -->
+      <label class="gate-field-label" style="margin-top:6px;color:#3a9fd5;">💬 Signal <span style="color:#ef4444">*</span></label>
+      <input type="text" class="gate-input reg-input" id="reg-signal" placeholder="@votre_identifiant_signal" autocomplete="off" style="border-color:rgba(58,159,213,0.25);">
+
+      <!-- Séparateur OU -->
+      <div class="reg-contact-sep">OU</div>
+
+      <!-- WhatsApp -->
+      <label class="gate-field-label" style="color:#25d366;">📱 WhatsApp <span style="color:#ef4444">*</span></label>
+      <input type="text" class="gate-input reg-input" id="reg-whatsapp" placeholder="+33 6 XX XX XX XX" inputmode="tel" autocomplete="off" style="border-color:rgba(37,211,102,0.25);">
+
+      <!-- Note obligatoire -->
+      <div class="reg-contact-note">
+        ⚠️ <strong style="color:var(--gold)">Au moins Signal ou WhatsApp est obligatoire</strong><br>
+        <span style="font-size:0.68rem;color:#444;">Pour la confirmation et le suivi de votre commande</span>
+      </div>
+
       <button class="gate-btn" id="reg-submit-btn">Créer mon compte</button>
       <div class="gate-error" id="gate-reg-error"></div>
     </div>
+
     <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
+
+    <!-- ADMIN GATE -->
     <div class="gate-panel" id="gate-step-admin" style="display:none">
       <div class="gate-panel-title">🛡️ Accès Administrateur</div>
       <div class="gate-panel-sub">Réservé à l'équipe Snowfall69.</div>
@@ -677,23 +694,20 @@
       </div>
     </div>
 
-    <!-- ═══ PANIER ═══ -->
+    <!-- PANIER -->
     <div id="cart-page">
       <div class="page-title">Votre Panier</div>
       <div id="cart-items"></div>
       <div id="cart-total" class="cart-total"></div>
       <div class="questionnaire">
-
         <div class="question">
           <span class="question-label">Mode de récupération</span>
           <button class="option-btn" data-type="pickup">Venir sur place</button>
           <button class="option-btn" data-type="delivery">Livraison</button>
         </div>
-
         <div id="pickup-questions" style="display:none">
           <div class="question"><span class="question-label">Pour quelle heure ?</span><input type="time" id="pickup-time"></div>
         </div>
-
         <div id="delivery-questions" style="display:none">
           <div class="question"><span class="question-label">Heure souhaitée</span><input type="time" id="delivery-time"></div>
           <div class="question"><span class="question-label">Adresse complète</span><input type="text" id="delivery-address" placeholder="Rue, numéro, ville..."></div>
@@ -703,58 +717,33 @@
             <input type="text" id="order-postal" placeholder="Ex: 69001" maxlength="5" inputmode="numeric">
           </div>
         </div>
-
-        <!-- ═══ CONTACTS SIGNAL & WHATSAPP SÉPARÉS ═══ -->
         <div class="question">
           <span class="question-label">📲 Contact <span style="color:#ef4444">*</span></span>
-
           <div style="font-size:0.8rem;color:#555;margin-bottom:14px;line-height:1.6;font-weight:500;">
             Renseignez <strong style="color:var(--gold)">au moins un</strong> de vos contacts pour la confirmation et le suivi de votre commande.
           </div>
-
-          <!-- Signal -->
           <div style="margin-bottom:10px;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;">
               <span style="font-size:1.1rem;">💬</span>
               <span style="font-size:0.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#3a9fd5;">Signal</span>
               <span style="font-size:0.62rem;color:#444;font-weight:600;margin-left:auto;">optionnel si WhatsApp renseigné</span>
             </div>
-            <input type="text"
-              id="order-signal"
-              placeholder="@votre_identifiant_signal"
-              autocomplete="off"
-              style="border-color:rgba(255,255,255,0.1);"
-              oninput="handleContactInput('signal')">
+            <input type="text" id="order-signal" placeholder="@votre_identifiant_signal" autocomplete="off" style="border-color:rgba(255,255,255,0.1);" oninput="handleContactInput('signal')">
           </div>
-
-          <!-- Séparateur OU -->
           <div style="display:flex;align-items:center;gap:10px;margin:12px 0;color:#333;font-size:0.7rem;font-weight:800;letter-spacing:2px;text-transform:uppercase;">
-            <span style="flex:1;height:1px;background:rgba(255,255,255,0.06);display:block;"></span>
-            OU
-            <span style="flex:1;height:1px;background:rgba(255,255,255,0.06);display:block;"></span>
+            <span style="flex:1;height:1px;background:rgba(255,255,255,0.06);display:block;"></span>OU<span style="flex:1;height:1px;background:rgba(255,255,255,0.06);display:block;"></span>
           </div>
-
-          <!-- WhatsApp -->
           <div style="margin-bottom:10px;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:7px;">
               <span style="font-size:1.1rem;">📱</span>
               <span style="font-size:0.72rem;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#25d366;">WhatsApp</span>
               <span style="font-size:0.62rem;color:#444;font-weight:600;margin-left:auto;">optionnel si Signal renseigné</span>
             </div>
-            <input type="text"
-              id="order-whatsapp"
-              placeholder="+33 6 XX XX XX XX"
-              inputmode="tel"
-              autocomplete="off"
-              style="border-color:rgba(255,255,255,0.1);"
-              oninput="handleContactInput('whatsapp')">
+            <input type="text" id="order-whatsapp" placeholder="+33 6 XX XX XX XX" inputmode="tel" autocomplete="off" style="border-color:rgba(255,255,255,0.1);" oninput="handleContactInput('whatsapp')">
           </div>
-
-          <!-- Note obligatoire -->
           <div style="background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.15);border-radius:10px;padding:9px 12px;font-size:0.73rem;color:#666;font-weight:600;text-align:center;line-height:1.5;margin-top:4px;">
             ⚠️ <strong style="color:var(--gold)">Au moins Signal ou WhatsApp est obligatoire</strong> pour valider la commande
           </div>
-
           <div class="fidelity-banner">
             <div class="fidelity-banner-icon">🥇</div>
             <div>
@@ -763,7 +752,6 @@
             </div>
           </div>
         </div>
-
         <button id="submit-order-btn">Commander</button>
       </div>
     </div>
@@ -1033,7 +1021,7 @@ const TELEGRAM_URL='https://t.me/franklin69200';
 const CODE_DURATION_MS=90*60*1000;
 function isAdminUser(u){return u?.email===ADMIN_USERNAME+ADMIN_EMAIL_DOMAIN;}
 
-// ── Champs contact Signal / WhatsApp ─────────────────────────────────────────
+// ── Champs contact Signal / WhatsApp (panier) ─────────────────────────────────
 window.handleContactInput=function(type){
   const signalEl=document.getElementById('order-signal');
   const waEl=document.getElementById('order-whatsapp');
@@ -1087,11 +1075,32 @@ function openAdminDetailModal(mode){
   }
   modal.classList.add('open');
 }
+
+// ── Affichage membres avec Signal/WhatsApp ─────────────────────────────────────
 function renderAdminDetailMembers(list){
   const el=document.getElementById('admin-detail-list');
   if(!list.length){el.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucun membre inscrit.</p>';return;}
-  el.innerHTML=list.map((m,i)=>`<div class="admin-member-item"><div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;"><div class="admin-member-avatar">👤</div><div style="min-width:0;"><div class="admin-member-name">${m.name||'—'}</div><div class="admin-member-username">@${m.username||'—'}</div>${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:2px;">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}</div></div><div class="admin-member-num">#${i+1}</div></div>`).join('');
+  el.innerHTML=list.map((m,i)=>{
+    const signalBadge=m.signal?`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(58,159,213,0.12);border:1px solid rgba(58,159,213,0.4);border-radius:6px;padding:3px 9px;font-size:0.68rem;font-weight:800;color:#3a9fd5;letter-spacing:0.5px;">💬 ${m.signal}</span>`:'';
+    const whatsappBadge=m.whatsapp?`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.4);border-radius:6px;padding:3px 9px;font-size:0.68rem;font-weight:800;color:#25d366;letter-spacing:0.5px;">📱 ${m.whatsapp}</span>`:'';
+    const contactBadges=[signalBadge,whatsappBadge].filter(Boolean).join('');
+    return `<div class="admin-member-item" style="flex-direction:column;align-items:flex-start;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;width:100%;">
+        <div class="admin-member-avatar">👤</div>
+        <div style="flex:1;min-width:0;">
+          <div class="admin-member-name">${m.name||'—'}</div>
+          <div class="admin-member-username">@${m.username||'—'}</div>
+          ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:2px;">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
+        </div>
+        <div class="admin-member-num">#${i+1}</div>
+      </div>
+      <div style="padding-left:46px;display:flex;flex-wrap:wrap;gap:6px;">
+        ${contactBadges||'<span style="font-size:0.68rem;color:#333;font-style:italic;">Aucun contact renseigné</span>'}
+      </div>
+    </div>`;
+  }).join('');
 }
+
 function renderAdminDetailOrders(list){
   const el=document.getElementById('admin-detail-list');
   if(!list.length){el.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucune commande.</p>';return;}
@@ -1102,7 +1111,7 @@ window.filterAdminDetail=function(){
   const countEl=document.getElementById('admin-detail-count');
   if(_adminDetailMode==='members'){
     const all=window._adminMembersList||[];
-    const filtered=q?all.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.username||'').toLowerCase().includes(q)):all;
+    const filtered=q?all.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.username||'').toLowerCase().includes(q)||(m.signal||'').toLowerCase().includes(q)||(m.whatsapp||'').toLowerCase().includes(q)):all;
     countEl.textContent=filtered.length+' membre'+(filtered.length>1?'s':'');
     renderAdminDetailMembers(filtered);
   }else{
@@ -1166,26 +1175,52 @@ document.getElementById('gate-verify-btn').addEventListener('click',async()=>{
 
 document.getElementById('gate-request-btn').addEventListener('click',()=>{showContactChoiceModal('🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏',false);});
 
+// ── INSCRIPTION avec Signal/WhatsApp obligatoires ─────────────────────────────
 document.getElementById('reg-submit-btn').addEventListener('click',async()=>{
-  const name=document.getElementById('reg-name').value.trim(),username=document.getElementById('reg-username').value.trim().toLowerCase(),password=document.getElementById('reg-password').value,password2=document.getElementById('reg-password2').value,errEl=document.getElementById('gate-reg-error');errEl.textContent='';
-  if(!name||!username||!password){errEl.textContent='Remplissez tous les champs.';return;}
+  const name=document.getElementById('reg-name').value.trim(),
+    username=document.getElementById('reg-username').value.trim().toLowerCase(),
+    password=document.getElementById('reg-password').value,
+    password2=document.getElementById('reg-password2').value,
+    signal=document.getElementById('reg-signal').value.trim(),
+    whatsapp=document.getElementById('reg-whatsapp').value.trim(),
+    errEl=document.getElementById('gate-reg-error');
+  errEl.textContent='';
+
+  if(!name||!username||!password){errEl.textContent='Remplissez tous les champs obligatoires.';return;}
   if(password.length<6){errEl.textContent='Mot de passe trop court (min. 6 caractères).';return;}
   if(password!==password2){errEl.textContent='Les mots de passe ne correspondent pas.';return;}
   if(!/^[a-z0-9_]+$/.test(username)){errEl.textContent='Identifiant invalide (lettres, chiffres, _ uniquement).';return;}
   if(username===ADMIN_USERNAME){errEl.textContent='❌ Identifiant non disponible.';return;}
-  const btn=document.getElementById('reg-submit-btn');btn.disabled=true;btn.textContent='Création...';
-  try{const cred=await createUserWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,password);await updateProfile(cred.user,{displayName:name});await setDoc(doc(_db,'users',username),{uid:cred.user.uid,name,username,createdAt:Date.now()});saveLocalSession(cred.user.uid,name,username);launchApp();}
-  catch(e){if(isInAppBrowser())errEl.innerHTML='⚠️ Navigateur intégré incompatible.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;">📱 Ouvrir</button>';else errEl.textContent=e.code==='auth/email-already-in-use'?'Identifiant déjà utilisé.':'Erreur : '+e.message;}
-  btn.disabled=false;btn.textContent='Créer mon compte';
-});
 
-document.getElementById('login-submit-btn').addEventListener('click',async()=>{
-  const username=document.getElementById('login-user').value.trim().toLowerCase(),password=document.getElementById('login-pass').value,errEl=document.getElementById('gate-login-error');errEl.textContent='';
-  if(!username||!password){errEl.textContent='Remplissez tous les champs.';return;}
-  const btn=document.getElementById('login-submit-btn');btn.disabled=true;btn.textContent='Connexion...';
-  try{const cred=await signInWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,password);saveLocalSession(cred.user.uid,cred.user.displayName||username,username);launchApp();}
-  catch(e){try{const cred=await signInWithEmailAndPassword(_auth,username+'@bart76.app',password);saveLocalSession(cred.user.uid,cred.user.displayName||username,username);launchApp();}catch(e2){if(isInAppBrowser()){errEl.innerHTML='⚠️ Connexion impossible depuis ce navigateur.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;">📱 Ouvrir</button>';document.getElementById('login-browser-btn').classList.add('show');}else errEl.textContent='Identifiant ou mot de passe incorrect.';}}
-  btn.disabled=false;btn.textContent='Se connecter';
+  // Validation contact obligatoire
+  if(!signal&&!whatsapp){
+    errEl.textContent='📲 Renseignez au moins Signal ou WhatsApp pour continuer.';
+    const sEl=document.getElementById('reg-signal'),wEl=document.getElementById('reg-whatsapp');
+    sEl.style.borderColor='#ef4444';wEl.style.borderColor='#ef4444';
+    setTimeout(()=>{sEl.style.borderColor='rgba(58,159,213,0.25)';wEl.style.borderColor='rgba(37,211,102,0.25)';},2500);
+    return;
+  }
+
+  const btn=document.getElementById('reg-submit-btn');btn.disabled=true;btn.textContent='Création...';
+  try{
+    const cred=await createUserWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,password);
+    await updateProfile(cred.user,{displayName:name});
+    // Sauvegarde Signal et WhatsApp dans Firestore
+    await setDoc(doc(_db,'users',username),{
+      uid:cred.user.uid,
+      name,
+      username,
+      signal:signal||null,
+      whatsapp:whatsapp||null,
+      createdAt:Date.now()
+    });
+    saveLocalSession(cred.user.uid,name,username);
+    launchApp();
+  }catch(e){
+    if(isInAppBrowser())errEl.innerHTML='⚠️ Navigateur intégré incompatible.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;">📱 Ouvrir</button>';
+    else errEl.textContent=e.code==='auth/email-already-in-use'?'Identifiant déjà utilisé.':'Erreur : '+e.message;
+  }
+  btn.disabled=false;btn.textContent='Créer mon compte';
 });
 
 function showSplashThenLaunch(openAdmin=false){
@@ -1198,7 +1233,7 @@ function launchApp(){const user=_auth.currentUser;if(user)recordVisit(user.uid);
 
 async function recordVisit(uid){try{const ref=doc(_db,'stats','visits');let snap;try{snap=await getDoc(ref);}catch(e){return;}const data=snap.exists()?snap.data():{total_sessions:0};await setDoc(ref,{total_sessions:(data.total_sessions||0)+1,lastUpdated:Date.now()},{merge:true});}catch(e){console.warn('recordVisit:',e);}}
 
-// ── Stats Admin avec cartes cliquables ────────────────────────────────────────
+// ── Stats Admin ────────────────────────────────────────────────────────────────
 async function loadAdminStats(){
   const el=document.getElementById('admin-stats-block');if(!el)return;
   el.innerHTML='<div class="stats-loading">⏳ Chargement...</div>';
@@ -1443,7 +1478,7 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ── Commande avec Signal + WhatsApp séparés ───────────────────────────────────
+// ── Commande avec Signal + WhatsApp ───────────────────────────────────────────
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
@@ -1451,9 +1486,7 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   const signal=document.getElementById('order-signal').value.trim();
   const whatsapp=document.getElementById('order-whatsapp').value.trim();
 
-  // Validation : au moins Signal ou WhatsApp obligatoire
   if(!signal&&!whatsapp){
-    // Highlight des deux champs
     const sEl=document.getElementById('order-signal'),wEl=document.getElementById('order-whatsapp');
     sEl.style.borderColor='#ef4444';wEl.style.borderColor='#ef4444';
     setTimeout(()=>{sEl.style.borderColor='rgba(255,255,255,0.1)';wEl.style.borderColor='rgba(255,255,255,0.1)';},2500);
@@ -1468,7 +1501,6 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   const mode=modeBtn.dataset.type==='pickup'?'Venir sur place':'Livraison';
   const user=_auth.currentUser;
 
-  // Construire le message de commande
   let message=`❄️ *NOUVELLE COMMANDE SNOWFALL69* ❄️\n\n👤 ${user?.displayName||'Client'}\n📅 ${new Date().toLocaleString('fr-FR')}\n\n🛍️ *Articles :*\n`;
   let total=0,itemsText='';
   cart.forEach(item=>{total+=parseInt(item.price)||0;message+=`• ${item.title} — ${item.qty} (${item.price})\n`;itemsText+=`• ${item.title} ${item.qty} (${item.price})\n`;});
@@ -1481,7 +1513,6 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value;const a=document.getElementById('delivery-address').value.trim();const det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
 
-  // Contact résumé pour Firestore
   const contactSummary=[signal?`Signal: ${signal}`:'',whatsapp?`WhatsApp: ${whatsapp}`:''].filter(Boolean).join(' | ');
 
   if(user){
