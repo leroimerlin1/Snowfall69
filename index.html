@@ -51,7 +51,6 @@
     .admin-gate-hint{text-align:center;margin-top:16px;font-size:0.7rem;color:#2a2a2a;font-weight:700;letter-spacing:1px;cursor:pointer;user-select:none;animation:fadeUp 0.5s 1.2s ease both;}
     .gate-open-browser-btn{width:100%;padding:13px;background:rgba(239,68,68,0.12);border:1.5px solid rgba(239,68,68,0.4);color:#ef4444;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:800;letter-spacing:1px;cursor:pointer;margin-top:10px;display:none;}
     .gate-open-browser-btn.show{display:block;}
-    /* Contact separator in register form */
     .reg-contact-sep{display:flex;align-items:center;gap:10px;margin:8px 0;color:#333;font-size:0.7rem;font-weight:800;letter-spacing:2px;}
     .reg-contact-sep::before,.reg-contact-sep::after{content:'';flex:1;height:1px;background:rgba(255,255,255,0.06);}
     .reg-contact-note{background:rgba(245,167,0,0.05);border:1px solid rgba(245,167,0,0.15);border-radius:10px;padding:9px 12px;font-size:0.73rem;color:#666;font-weight:600;text-align:center;line-height:1.5;margin:8px 0 12px;}
@@ -532,7 +531,6 @@
       <div class="gate-tab" id="gate-tab-code" onclick="switchGateTab('code')">🆕 Nouveau client</div>
     </div>
 
-    <!-- LOGIN -->
     <div class="gate-panel" id="gate-step-login">
       <div class="gate-panel-title">👋 Bon retour</div>
       <div class="gate-panel-sub">Connectez-vous à votre compte.</div>
@@ -545,7 +543,6 @@
       <button class="gate-open-browser-btn" id="login-browser-btn" onclick="openInRealBrowser()">📱 Problème ? Ouvrir dans Chrome/Safari</button>
     </div>
 
-    <!-- CODE -->
     <div class="gate-panel" id="gate-step-code" style="display:none">
       <div class="gate-panel-title">🔐 Code d'accès</div>
       <div class="gate-panel-sub">Entrez le code reçu ou demandez-le à notre contact.</div>
@@ -558,7 +555,6 @@
       <button class="gate-open-browser-btn" id="code-browser-btn" onclick="openInRealBrowser()">📱 Ça ne marche pas ? Ouvrir dans Chrome/Safari</button>
     </div>
 
-    <!-- REGISTER — avec Signal/WhatsApp obligatoires -->
     <div class="gate-panel" id="gate-step-register" style="display:none">
       <div class="gate-panel-title">👤 Créer votre compte</div>
       <div class="gate-panel-sub">Code validé ✅</div>
@@ -576,18 +572,14 @@
       <label class="gate-field-label">Confirmer le mot de passe</label>
       <input type="password" class="gate-input reg-input" id="reg-password2" placeholder="Répétez le mot de passe" autocomplete="new-password">
 
-      <!-- Signal -->
       <label class="gate-field-label" style="margin-top:6px;color:#3a9fd5;">💬 Signal <span style="color:#ef4444">*</span></label>
       <input type="text" class="gate-input reg-input" id="reg-signal" placeholder="@votre_identifiant_signal" autocomplete="off" style="border-color:rgba(58,159,213,0.25);">
 
-      <!-- Séparateur OU -->
       <div class="reg-contact-sep">OU</div>
 
-      <!-- WhatsApp -->
       <label class="gate-field-label" style="color:#25d366;">📱 WhatsApp <span style="color:#ef4444">*</span></label>
       <input type="text" class="gate-input reg-input" id="reg-whatsapp" placeholder="+33 6 XX XX XX XX" inputmode="tel" autocomplete="off" style="border-color:rgba(37,211,102,0.25);">
 
-      <!-- Note obligatoire -->
       <div class="reg-contact-note">
         ⚠️ <strong style="color:var(--gold)">Au moins Signal ou WhatsApp est obligatoire</strong><br>
         <span style="font-size:0.68rem;color:#444;">Pour la confirmation et le suivi de votre commande</span>
@@ -599,7 +591,6 @@
 
     <div class="admin-gate-hint" id="admin-gate-hint" onclick="switchGateTab('admin')">· · ·</div>
 
-    <!-- ADMIN GATE -->
     <div class="gate-panel" id="gate-step-admin" style="display:none">
       <div class="gate-panel-title">🛡️ Accès Administrateur</div>
       <div class="gate-panel-sub">Réservé à l'équipe Snowfall69.</div>
@@ -694,7 +685,6 @@
       </div>
     </div>
 
-    <!-- PANIER -->
     <div id="cart-page">
       <div class="page-title">Votre Panier</div>
       <div id="cart-items"></div>
@@ -1021,7 +1011,6 @@ const TELEGRAM_URL='https://t.me/franklin69200';
 const CODE_DURATION_MS=90*60*1000;
 function isAdminUser(u){return u?.email===ADMIN_USERNAME+ADMIN_EMAIL_DOMAIN;}
 
-// ── Champs contact Signal / WhatsApp (panier) ─────────────────────────────────
 window.handleContactInput=function(type){
   const signalEl=document.getElementById('order-signal');
   const waEl=document.getElementById('order-whatsapp');
@@ -1034,7 +1023,6 @@ window.handleContactInput=function(type){
   waEl.style.background=hasWa?'rgba(37,211,102,0.05)':'rgba(255,255,255,0.04)';
 };
 
-// ── Contact / Potato modales ──────────────────────────────────────────────────
 let _ccmPendingMsg='',_ccmIsOrder=false;
 window.showContactChoiceModal=function(msg,isOrder=false){_ccmPendingMsg=msg;_ccmIsOrder=isOrder;document.getElementById('contact-choice-modal').classList.add('open');};
 function closeContactChoiceModal(){document.getElementById('contact-choice-modal').classList.remove('open');_ccmPendingMsg='';_ccmIsOrder=false;}
@@ -1076,27 +1064,37 @@ function openAdminDetailModal(mode){
   modal.classList.add('open');
 }
 
-// ── Affichage membres avec Signal/WhatsApp ─────────────────────────────────────
+// ── FONCTION MEMBRES MODIFIÉE : Signal + WhatsApp affichés sous le nom ─────────
 function renderAdminDetailMembers(list){
   const el=document.getElementById('admin-detail-list');
   if(!list.length){el.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucun membre inscrit.</p>';return;}
   el.innerHTML=list.map((m,i)=>{
-    const signalBadge=m.signal?`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(58,159,213,0.12);border:1px solid rgba(58,159,213,0.4);border-radius:6px;padding:3px 9px;font-size:0.68rem;font-weight:800;color:#3a9fd5;letter-spacing:0.5px;">💬 ${m.signal}</span>`:'';
-    const whatsappBadge=m.whatsapp?`<span style="display:inline-flex;align-items:center;gap:4px;background:rgba(37,211,102,0.12);border:1px solid rgba(37,211,102,0.4);border-radius:6px;padding:3px 9px;font-size:0.68rem;font-weight:800;color:#25d366;letter-spacing:0.5px;">📱 ${m.whatsapp}</span>`:'';
-    const contactBadges=[signalBadge,whatsappBadge].filter(Boolean).join('');
-    return `<div class="admin-member-item" style="flex-direction:column;align-items:flex-start;gap:8px;">
-      <div style="display:flex;align-items:center;gap:10px;width:100%;">
-        <div class="admin-member-avatar">👤</div>
-        <div style="flex:1;min-width:0;">
-          <div class="admin-member-name">${m.name||'—'}</div>
-          <div class="admin-member-username">@${m.username||'—'}</div>
-          ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:2px;">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
-        </div>
-        <div class="admin-member-num">#${i+1}</div>
+    const signal=m.signal
+      ?`<div style="display:flex;align-items:center;gap:5px;margin-top:3px">
+          <span style="font-size:0.85rem">💬</span>
+          <span style="font-size:0.62rem;font-weight:800;color:#3a9fd5;letter-spacing:0.5px;text-transform:uppercase">Signal :</span>
+          <span style="font-size:0.75rem;color:#3a9fd5;font-weight:700">${m.signal}</span>
+        </div>`
+      :'';
+    const whatsapp=m.whatsapp
+      ?`<div style="display:flex;align-items:center;gap:5px;margin-top:2px">
+          <span style="font-size:0.85rem">📱</span>
+          <span style="font-size:0.62rem;font-weight:800;color:#25d366;letter-spacing:0.5px;text-transform:uppercase">WhatsApp :</span>
+          <span style="font-size:0.75rem;color:#25d366;font-weight:700">${m.whatsapp}</span>
+        </div>`
+      :'';
+    const noContact=!m.signal&&!m.whatsapp
+      ?`<div style="margin-top:3px;font-size:0.7rem;color:#333;font-style:italic">Aucun contact renseigné</div>`
+      :'';
+    return `<div class="admin-member-item">
+      <div class="admin-member-avatar">👤</div>
+      <div style="flex:1;min-width:0;">
+        <div class="admin-member-name">${m.name||'—'}</div>
+        <div class="admin-member-username">@${m.username||'—'}</div>
+        ${signal}${whatsapp}${noContact}
+        ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:3px">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
       </div>
-      <div style="padding-left:46px;display:flex;flex-wrap:wrap;gap:6px;">
-        ${contactBadges||'<span style="font-size:0.68rem;color:#333;font-style:italic;">Aucun contact renseigné</span>'}
-      </div>
+      <div class="admin-member-num">#${i+1}</div>
     </div>`;
   }).join('');
 }
@@ -1106,6 +1104,7 @@ function renderAdminDetailOrders(list){
   if(!list.length){el.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucune commande.</p>';return;}
   el.innerHTML=list.map((c)=>`<div class="admin-order-item"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;"><div style="font-family:'Barlow Condensed',sans-serif;font-size:0.92rem;font-weight:800;color:#4ade80;text-transform:uppercase;">${c.contact?c.contact.substring(0,24):'—'}</div><div style="font-family:'Bebas Neue',sans-serif;font-size:1.05rem;color:var(--gold);letter-spacing:1px;flex-shrink:0;margin-left:8px;">${c.total||0}€</div></div><div style="font-size:0.72rem;color:#444;margin-bottom:6px;font-weight:600;">📅 ${c.date||'—'} · ${c.mode==='Livraison'?'🚚':'📍'} ${c.mode||'—'}${c.postalCode?' · 📮 '+c.postalCode:''}</div><div style="font-size:0.78rem;color:#777;line-height:1.6;">${(c.items||'').replace(/\n/g,'<br>')}</div></div>`).join('');
 }
+
 window.filterAdminDetail=function(){
   const q=document.getElementById('admin-detail-search').value.toLowerCase().trim();
   const countEl=document.getElementById('admin-detail-count');
@@ -1175,7 +1174,6 @@ document.getElementById('gate-verify-btn').addEventListener('click',async()=>{
 
 document.getElementById('gate-request-btn').addEventListener('click',()=>{showContactChoiceModal('🔐 Bonjour, je souhaite accéder au site Snowfall69. Pourriez-vous m\'envoyer le code d\'accès ? Merci 🙏',false);});
 
-// ── INSCRIPTION avec Signal/WhatsApp obligatoires ─────────────────────────────
 document.getElementById('reg-submit-btn').addEventListener('click',async()=>{
   const name=document.getElementById('reg-name').value.trim(),
     username=document.getElementById('reg-username').value.trim().toLowerCase(),
@@ -1185,14 +1183,11 @@ document.getElementById('reg-submit-btn').addEventListener('click',async()=>{
     whatsapp=document.getElementById('reg-whatsapp').value.trim(),
     errEl=document.getElementById('gate-reg-error');
   errEl.textContent='';
-
   if(!name||!username||!password){errEl.textContent='Remplissez tous les champs obligatoires.';return;}
   if(password.length<6){errEl.textContent='Mot de passe trop court (min. 6 caractères).';return;}
   if(password!==password2){errEl.textContent='Les mots de passe ne correspondent pas.';return;}
   if(!/^[a-z0-9_]+$/.test(username)){errEl.textContent='Identifiant invalide (lettres, chiffres, _ uniquement).';return;}
   if(username===ADMIN_USERNAME){errEl.textContent='❌ Identifiant non disponible.';return;}
-
-  // Validation contact obligatoire
   if(!signal&&!whatsapp){
     errEl.textContent='📲 Renseignez au moins Signal ou WhatsApp pour continuer.';
     const sEl=document.getElementById('reg-signal'),wEl=document.getElementById('reg-whatsapp');
@@ -1200,20 +1195,11 @@ document.getElementById('reg-submit-btn').addEventListener('click',async()=>{
     setTimeout(()=>{sEl.style.borderColor='rgba(58,159,213,0.25)';wEl.style.borderColor='rgba(37,211,102,0.25)';},2500);
     return;
   }
-
   const btn=document.getElementById('reg-submit-btn');btn.disabled=true;btn.textContent='Création...';
   try{
     const cred=await createUserWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,password);
     await updateProfile(cred.user,{displayName:name});
-    // Sauvegarde Signal et WhatsApp dans Firestore
-    await setDoc(doc(_db,'users',username),{
-      uid:cred.user.uid,
-      name,
-      username,
-      signal:signal||null,
-      whatsapp:whatsapp||null,
-      createdAt:Date.now()
-    });
+    await setDoc(doc(_db,'users',username),{uid:cred.user.uid,name,username,signal:signal||null,whatsapp:whatsapp||null,createdAt:Date.now()});
     saveLocalSession(cred.user.uid,name,username);
     launchApp();
   }catch(e){
@@ -1233,7 +1219,6 @@ function launchApp(){const user=_auth.currentUser;if(user)recordVisit(user.uid);
 
 async function recordVisit(uid){try{const ref=doc(_db,'stats','visits');let snap;try{snap=await getDoc(ref);}catch(e){return;}const data=snap.exists()?snap.data():{total_sessions:0};await setDoc(ref,{total_sessions:(data.total_sessions||0)+1,lastUpdated:Date.now()},{merge:true});}catch(e){console.warn('recordVisit:',e);}}
 
-// ── Stats Admin ────────────────────────────────────────────────────────────────
 async function loadAdminStats(){
   const el=document.getElementById('admin-stats-block');if(!el)return;
   el.innerHTML='<div class="stats-loading">⏳ Chargement...</div>';
@@ -1268,7 +1253,6 @@ async function loadAdminStats(){
   }catch(e){el.innerHTML=`<div style="text-align:center;padding:20px;color:#ef4444;font-size:0.82rem">❌ Erreur chargement stats</div>`;console.error(e);}
 }
 
-// ── Cloudinary ─────────────────────────────────────────────────────────────────
 const CLOUDINARY_CLOUD='doc0z0zik',CLOUDINARY_PRESET='ju1mk58m',CLOUDINARY_UPLOAD_URL=`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/upload`;
 async function uploadToCloudinary(file,pbId,sId,pwId){
   const pw=document.getElementById(pwId),pb=document.getElementById(pbId),se=document.getElementById(sId);
@@ -1478,29 +1462,24 @@ function renderCart(){
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
 document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
 
-// ── Commande avec Signal + WhatsApp ───────────────────────────────────────────
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
   const modeBtn=document.querySelector('.option-btn.active');if(!modeBtn)return alert('Choisissez un mode de récupération.');
   const postal=document.getElementById('order-postal')?.value.trim()||'';
   const signal=document.getElementById('order-signal').value.trim();
   const whatsapp=document.getElementById('order-whatsapp').value.trim();
-
   if(!signal&&!whatsapp){
     const sEl=document.getElementById('order-signal'),wEl=document.getElementById('order-whatsapp');
     sEl.style.borderColor='#ef4444';wEl.style.borderColor='#ef4444';
     setTimeout(()=>{sEl.style.borderColor='rgba(255,255,255,0.1)';wEl.style.borderColor='rgba(255,255,255,0.1)';},2500);
     return alert('📲 Merci de renseigner au moins votre Signal ou votre WhatsApp pour valider la commande.');
   }
-
   if(modeBtn.dataset.type==='delivery'){
     if(!postal)return alert('📍 Merci de renseigner votre code postal (obligatoire).');
     if(!/^\d{5}$/.test(postal))return alert('📍 Code postal invalide — 5 chiffres requis.');
   }
-
   const mode=modeBtn.dataset.type==='pickup'?'Venir sur place':'Livraison';
   const user=_auth.currentUser;
-
   let message=`❄️ *NOUVELLE COMMANDE SNOWFALL69* ❄️\n\n👤 ${user?.displayName||'Client'}\n📅 ${new Date().toLocaleString('fr-FR')}\n\n🛍️ *Articles :*\n`;
   let total=0,itemsText='';
   cart.forEach(item=>{total+=parseInt(item.price)||0;message+=`• ${item.title} — ${item.qty} (${item.price})\n`;itemsText+=`• ${item.title} ${item.qty} (${item.price})\n`;});
@@ -1509,12 +1488,9 @@ document.getElementById('submit-order-btn').onclick=async()=>{
   if(postal)message+=`📍 *Code postal :* ${postal}\n`;
   if(signal)message+=`💬 *Signal :* ${signal}\n`;
   if(whatsapp)message+=`📱 *WhatsApp :* ${whatsapp}\n`;
-
   if(modeBtn.dataset.type==='pickup'){const h=document.getElementById('pickup-time').value;if(h)message+=`🕐 *Heure :* ${h}\n`;}
   else{const h=document.getElementById('delivery-time').value;const a=document.getElementById('delivery-address').value.trim();const det=document.getElementById('delivery-details').value.trim();if(h)message+=`🕐 *Heure :* ${h}\n`;if(a)message+=`📍 *Adresse :* ${a}\n`;if(det)message+=`📝 *Précisions :* ${det}\n`;}
-
   const contactSummary=[signal?`Signal: ${signal}`:'',whatsapp?`WhatsApp: ${whatsapp}`:''].filter(Boolean).join(' | ');
-
   if(user){
     try{await addDoc(collection(_db,'commandes'),{uid:user.uid,items:itemsText.trim(),total,mode,postalCode:postal||null,contact:contactSummary,signal:signal||null,whatsapp:whatsapp||null,date:new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'}),timestamp:serverTimestamp()});}catch(e){}
   }
