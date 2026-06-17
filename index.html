@@ -449,11 +449,11 @@
     .admin-detail-sheet{width:100%;background:#080808;border-radius:24px 24px 0 0;border-top:1.5px solid rgba(245,167,0,0.25);padding:22px 18px 44px;max-height:88dvh;overflow-y:auto;animation:slideUp 0.32s cubic-bezier(0.34,1.2,0.64,1);}
     .admin-detail-handle{width:38px;height:4px;background:rgba(255,255,255,0.1);border-radius:999px;margin:0 auto 20px;}
     .admin-detail-title{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:3px;color:#fff;text-align:center;margin-bottom:18px;}
-    .admin-member-item{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+    .admin-member-item{display:flex;align-items:flex-start;justify-content:space-between;background:rgba(255,255,255,0.02);border:1px solid rgba(245,167,0,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
     .admin-member-avatar{width:36px;height:36px;background:rgba(245,167,0,0.1);border:1.5px solid rgba(245,167,0,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1rem;flex-shrink:0;}
     .admin-member-name{font-family:'Barlow Condensed',sans-serif;font-size:0.95rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:0.5px;}
     .admin-member-username{font-size:0.72rem;color:#555;margin-top:2px;}
-    .admin-member-num{font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:rgba(245,167,0,0.35);letter-spacing:1px;}
+    .admin-member-num{font-family:'Bebas Neue',sans-serif;font-size:0.8rem;color:rgba(245,167,0,0.35);letter-spacing:1px;flex-shrink:0;margin-left:8px;}
     .admin-order-item{background:rgba(255,255,255,0.02);border:1px solid rgba(74,222,128,0.1);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
     .admin-detail-close-btn{width:100%;padding:13px;margin-top:14px;background:transparent;border:1.5px solid rgba(255,255,255,0.07);border-radius:12px;color:#333;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
     .admin-detail-search{width:100%;padding:11px 14px;background:rgba(255,255,255,0.04);border:1.5px solid rgba(245,167,0,0.2);border-radius:12px;color:#fff;font-size:0.9rem;font-family:'Barlow',sans-serif;outline:none;margin-bottom:14px;}
@@ -1042,6 +1042,15 @@ document.getElementById('ccm-potato').addEventListener('click',()=>{const msg=_c
 document.getElementById('ccm-cancel').addEventListener('click',closeContactChoiceModal);
 document.getElementById('contact-choice-modal').addEventListener('click',e=>{if(e.target===document.getElementById('contact-choice-modal'))closeContactChoiceModal();});
 
+// ── Toast helper ─────────────────────────────────────────────────────────────
+function showToast(msg,isSuccess=true){
+  const toast=document.createElement('div');
+  toast.textContent=msg;
+  toast.style.cssText=`position:fixed;bottom:110px;left:50%;transform:translateX(-50%);background:rgba(15,15,15,0.96);border:1px solid ${isSuccess?'rgba(74,222,128,0.4)':'rgba(239,68,68,0.4)'};color:${isSuccess?'#4ade80':'#ef4444'};padding:10px 20px;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-size:0.88rem;font-weight:800;letter-spacing:0.5px;z-index:99999;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.5);`;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.remove(),2800);
+}
+
 // ── Admin Detail Modal ─────────────────────────────────────────────────────────
 let _adminDetailMode='';
 function openAdminDetailModal(mode){
@@ -1064,7 +1073,7 @@ function openAdminDetailModal(mode){
   modal.classList.add('open');
 }
 
-// ── FONCTION MEMBRES MODIFIÉE : Signal + WhatsApp affichés sous le nom ─────────
+// ── MEMBRES : affiche Signal + WhatsApp + bouton Bannir/Réactiver ─────────────
 function renderAdminDetailMembers(list){
   const el=document.getElementById('admin-detail-list');
   if(!list.length){el.innerHTML='<p style="text-align:center;color:#444;padding:30px 0;font-size:0.88rem">Aucun membre inscrit.</p>';return;}
@@ -1074,30 +1083,62 @@ function renderAdminDetailMembers(list){
           <span style="font-size:0.85rem">💬</span>
           <span style="font-size:0.62rem;font-weight:800;color:#3a9fd5;letter-spacing:0.5px;text-transform:uppercase">Signal :</span>
           <span style="font-size:0.75rem;color:#3a9fd5;font-weight:700">${m.signal}</span>
-        </div>`
-      :'';
+        </div>`:'';
     const whatsapp=m.whatsapp
       ?`<div style="display:flex;align-items:center;gap:5px;margin-top:2px">
           <span style="font-size:0.85rem">📱</span>
           <span style="font-size:0.62rem;font-weight:800;color:#25d366;letter-spacing:0.5px;text-transform:uppercase">WhatsApp :</span>
           <span style="font-size:0.75rem;color:#25d366;font-weight:700">${m.whatsapp}</span>
-        </div>`
-      :'';
+        </div>`:'';
     const noContact=!m.signal&&!m.whatsapp
-      ?`<div style="margin-top:3px;font-size:0.7rem;color:#333;font-style:italic">Aucun contact renseigné</div>`
-      :'';
-    return `<div class="admin-member-item">
-      <div class="admin-member-avatar">👤</div>
-      <div style="flex:1;min-width:0;">
-        <div class="admin-member-name">${m.name||'—'}</div>
-        <div class="admin-member-username">@${m.username||'—'}</div>
-        ${signal}${whatsapp}${noContact}
-        ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:3px">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
+      ?`<div style="margin-top:3px;font-size:0.7rem;color:#333;font-style:italic">Aucun contact renseigné</div>`:'';
+    const isBanned=m.banned===true;
+    const banBtn=`<button onclick="adminToggleBan('${m.username}',${isBanned})"
+      style="margin-top:8px;padding:5px 14px;border-radius:8px;
+      border:1.5px solid ${isBanned?'rgba(74,222,128,0.5)':'rgba(239,68,68,0.5)'};
+      background:${isBanned?'rgba(74,222,128,0.07)':'rgba(239,68,68,0.07)'};
+      color:${isBanned?'#4ade80':'#ef4444'};
+      font-size:0.68rem;font-family:\'Barlow Condensed\',sans-serif;font-weight:800;
+      letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all 0.2s;">
+      ${isBanned?'✅ Réactiver le compte':'🚫 Bannir le compte'}
+    </button>`;
+    return `<div class="admin-member-item" id="member-item-${m.username}"
+      style="${isBanned?'opacity:0.55;border-color:rgba(239,68,68,0.25);background:rgba(239,68,68,0.03);':''}">
+      <div style="display:flex;align-items:flex-start;gap:10px;flex:1;min-width:0;">
+        <div class="admin-member-avatar" style="${isBanned?'background:rgba(239,68,68,0.1);border-color:rgba(239,68,68,0.3);':''}">
+          ${isBanned?'🚫':'👤'}
+        </div>
+        <div style="flex:1;min-width:0;">
+          <div class="admin-member-name" style="${isBanned?'text-decoration:line-through;color:#555;':''}">${m.name||'—'}</div>
+          <div class="admin-member-username">@${m.username||'—'}${isBanned?'&nbsp;<span style="color:#ef4444;font-size:0.62rem;font-weight:900;letter-spacing:0.5px">· BANNI</span>':''}</div>
+          ${signal}${whatsapp}${noContact}
+          ${m.createdAt?`<div style="font-size:0.65rem;color:#333;margin-top:3px">📅 ${new Date(m.createdAt).toLocaleDateString('fr-FR',{day:'2-digit',month:'short',year:'numeric'})}</div>`:''}
+          ${banBtn}
+        </div>
       </div>
       <div class="admin-member-num">#${i+1}</div>
     </div>`;
   }).join('');
 }
+
+// ── Bannir / Réactiver un utilisateur ────────────────────────────────────────
+window.adminToggleBan=async(username,currentlyBanned)=>{
+  if(!adminAuthenticated||!isAdminUser(_auth.currentUser)){alert('❌ Accès refusé.');return;}
+  const action=currentlyBanned?'réactiver':'bannir';
+  if(!confirm(`Voulez-vous vraiment ${action} le compte de @${username} ?\n\n${currentlyBanned?'L\'utilisateur pourra à nouveau se connecter.':'L\'utilisateur ne pourra plus se connecter au site.'}`))return;
+  const newBanned=!currentlyBanned;
+  try{
+    await updateDoc(doc(_db,'users',username),{banned:newBanned});
+    const member=window._adminMembersList.find(m=>m.username===username);
+    if(member)member.banned=newBanned;
+    // Re-render avec filtre actuel
+    const q=document.getElementById('admin-detail-search').value.toLowerCase().trim();
+    const all=window._adminMembersList||[];
+    const filtered=q?all.filter(m=>(m.name||'').toLowerCase().includes(q)||(m.username||'').toLowerCase().includes(q)||(m.signal||'').toLowerCase().includes(q)||(m.whatsapp||'').toLowerCase().includes(q)):all;
+    renderAdminDetailMembers(filtered);
+    showToast(newBanned?`🚫 @${username} a été banni`:`✅ @${username} a été réactivé`,!newBanned);
+  }catch(e){alert('❌ Erreur Firestore : '+e.message);}
+};
 
 function renderAdminDetailOrders(list){
   const el=document.getElementById('admin-detail-list');
@@ -1154,6 +1195,51 @@ function saveLocalSession(uid,displayName,username){safeStorageSet('sf69_session
 function clearLocalSession(){safeStorageDel('sf69_session');}
 async function initGate(){switchGateTab('login');try{const cd=await getActiveCode();if(cd)startGateTimer(cd.expiresAt);}catch(e){console.warn(e);}}
 
+// ── Gate : Connexion avec vérification bannissement ───────────────────────────
+document.getElementById('login-submit-btn').addEventListener('click',async()=>{
+  const username=document.getElementById('login-user').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value;
+  const errEl=document.getElementById('gate-login-error');
+  errEl.textContent='';
+  if(!username||!pass){errEl.textContent='Remplissez tous les champs.';return;}
+  const btn=document.getElementById('login-submit-btn');
+  btn.disabled=true;btn.textContent='Connexion...';
+  try{
+    const cred=await signInWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,pass);
+    // Vérification bannissement (sauf pour l'admin)
+    if(!isAdminUser(cred.user)){
+      try{
+        const userDoc=await getDoc(doc(_db,'users',username));
+        if(userDoc.exists()&&userDoc.data().banned===true){
+          await signOut(_auth);
+          errEl.innerHTML='<div style="background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 14px;margin-top:4px;line-height:1.6;">'
+            +'<div style="font-size:0.9rem;font-weight:900;color:#ef4444;margin-bottom:4px;">🚫 Compte suspendu</div>'
+            +'<div style="font-size:0.76rem;color:#888;">Votre accès a été révoqué par l\'administrateur. Pour plus d\'informations, contactez le support.</div>'
+            +'</div>';
+          btn.disabled=false;btn.textContent='Se connecter';
+          return;
+        }
+      }catch(e){console.warn('ban check:',e);}
+    }
+    if(isAdminUser(cred.user)){
+      saveLocalSession(cred.user.uid,cred.user.displayName||'Admin',username);
+      document.getElementById('access-gate').classList.add('hidden');
+      showSplashThenLaunch(true);
+    }else{
+      saveLocalSession(cred.user.uid,cred.user.displayName||username,username);
+      document.getElementById('access-gate').classList.add('hidden');
+      showSplashThenLaunch(false);
+    }
+  }catch(e){
+    if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')
+      errEl.textContent='❌ Identifiant ou mot de passe incorrect.';
+    else if(isInAppBrowser())
+      errEl.innerHTML='⚠️ Ouvre ce site dans Chrome ou Safari.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;">📱 Ouvrir</button>';
+    else errEl.textContent='❌ Erreur de connexion. Réessayez.';
+  }
+  btn.disabled=false;btn.textContent='Se connecter';
+});
+
 document.getElementById('admin-gate-login-btn').addEventListener('click',async()=>{
   const username=document.getElementById('admin-login-user').value.trim().toLowerCase(),pass=document.getElementById('admin-login-pass').value,errEl=document.getElementById('gate-admin-error');errEl.textContent='';
   if(!username||!pass){errEl.textContent='Remplissez tous les champs.';return;}
@@ -1199,7 +1285,7 @@ document.getElementById('reg-submit-btn').addEventListener('click',async()=>{
   try{
     const cred=await createUserWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,password);
     await updateProfile(cred.user,{displayName:name});
-    await setDoc(doc(_db,'users',username),{uid:cred.user.uid,name,username,signal:signal||null,whatsapp:whatsapp||null,createdAt:Date.now()});
+    await setDoc(doc(_db,'users',username),{uid:cred.user.uid,name,username,signal:signal||null,whatsapp:whatsapp||null,banned:false,createdAt:Date.now()});
     saveLocalSession(cred.user.uid,name,username);
     launchApp();
   }catch(e){
@@ -1229,14 +1315,16 @@ async function loadAdminStats(){
     try{const cs=await getDocs(query(collection(_db,'commandes'),orderBy('timestamp','desc')));totalOrders=cs.size;cs.forEach(d=>{const cd=d.data();totalRevenue+=cd.total||0;allOrders.push(cd);if(recentOrders.length<5)recentOrders.push(cd);});}catch(e){console.warn(e);}
     window._adminMembersList=membersList;
     window._adminAllOrders=allOrders;
+    const bannedCount=membersList.filter(m=>m.banned===true).length;
     const convRate=totalMembers>0?((totalOrders/totalMembers)*100).toFixed(1):'0.0';
     const avgOrder=totalOrders>0?Math.round(totalRevenue/totalOrders):0;
     const now=new Date().toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
     let html=`<div class="admin-stats-grid">
       <div class="stat-card stat-card-members stat-card-clickable" onclick="openAdminDetailModal('members')" title="Voir tous les membres">
         <span class="stat-card-emoji">👥</span><span class="stat-card-num">${totalMembers}</span>
-        <span class="stat-card-lbl">Membres inscrits</span><span class="stat-card-sub">${totalSessions} connexions total</span>
-        <span class="stat-card-tap-hint">👆 APPUYER POUR VOIR LA LISTE</span>
+        <span class="stat-card-lbl">Membres inscrits</span>
+        <span class="stat-card-sub">${totalSessions} connexions · ${bannedCount} banni${bannedCount>1?'s':''}</span>
+        <span class="stat-card-tap-hint">👆 APPUYER POUR GÉRER</span>
       </div>
       <div class="stat-card stat-card-orders stat-card-clickable" onclick="openAdminDetailModal('orders')" title="Voir toutes les commandes">
         <span class="stat-card-emoji">📦</span><span class="stat-card-num">${totalOrders}</span>
@@ -1348,7 +1436,7 @@ function openAuthModal(){document.getElementById('auth-modal').classList.add('op
 function closeAuthModal(){document.getElementById('auth-modal').classList.remove('open');}
 document.getElementById('auth-modal').addEventListener('click',e=>{if(e.target===document.getElementById('auth-modal'))closeAuthModal();});
 window.doLogin=async()=>{const u=document.getElementById('login-username').value.trim().toLowerCase(),p=document.getElementById('login-password').value,eEl=document.getElementById('auth-error'),btn=document.getElementById('login-btn');if(!u||!p){eEl.textContent='Remplissez tous les champs.';return;}btn.disabled=true;btn.textContent='Connexion...';try{const cred=await signInWithEmailAndPassword(_auth,u+ADMIN_EMAIL_DOMAIN,p);saveLocalSession(cred.user.uid,cred.user.displayName||u,u);closeAuthModal();renderProfilPage();}catch(e){try{const cred=await signInWithEmailAndPassword(_auth,u+'@bart76.app',p);saveLocalSession(cred.user.uid,cred.user.displayName||u,u);closeAuthModal();renderProfilPage();}catch(e2){eEl.textContent='Identifiant ou mot de passe incorrect.';}}btn.disabled=false;btn.textContent='Se connecter';};
-window.doRegisterModal=async()=>{const n=document.getElementById('reg-name-modal').value.trim(),u=document.getElementById('reg-username-modal').value.trim().toLowerCase(),p=document.getElementById('reg-password-modal').value,eEl=document.getElementById('auth-error'),btn=document.getElementById('register-btn');if(!n||!u||!p){eEl.textContent='Remplissez tous les champs.';return;}if(p.length<6){eEl.textContent='Mot de passe trop court.';return;}if(!/^[a-z0-9_]+$/.test(u)){eEl.textContent='Identifiant invalide.';return;}if(u===ADMIN_USERNAME){eEl.textContent='❌ Identifiant non disponible.';return;}btn.disabled=true;btn.textContent='Création...';try{const cred=await createUserWithEmailAndPassword(_auth,u+ADMIN_EMAIL_DOMAIN,p);await updateProfile(cred.user,{displayName:n});await setDoc(doc(_db,'users',u),{uid:cred.user.uid,name:n,username:u,createdAt:Date.now()});saveLocalSession(cred.user.uid,n,u);closeAuthModal();renderProfilPage();}catch(e){eEl.textContent=e.code==='auth/email-already-in-use'?'Identifiant déjà utilisé.':'Erreur : '+e.message;}btn.disabled=false;btn.textContent='Créer mon compte';};
+window.doRegisterModal=async()=>{const n=document.getElementById('reg-name-modal').value.trim(),u=document.getElementById('reg-username-modal').value.trim().toLowerCase(),p=document.getElementById('reg-password-modal').value,eEl=document.getElementById('auth-error'),btn=document.getElementById('register-btn');if(!n||!u||!p){eEl.textContent='Remplissez tous les champs.';return;}if(p.length<6){eEl.textContent='Mot de passe trop court.';return;}if(!/^[a-z0-9_]+$/.test(u)){eEl.textContent='Identifiant invalide.';return;}if(u===ADMIN_USERNAME){eEl.textContent='❌ Identifiant non disponible.';return;}btn.disabled=true;btn.textContent='Création...';try{const cred=await createUserWithEmailAndPassword(_auth,u+ADMIN_EMAIL_DOMAIN,p);await updateProfile(cred.user,{displayName:n});await setDoc(doc(_db,'users',u),{uid:cred.user.uid,name:n,username:u,banned:false,createdAt:Date.now()});saveLocalSession(cred.user.uid,n,u);closeAuthModal();renderProfilPage();}catch(e){eEl.textContent=e.code==='auth/email-already-in-use'?'Identifiant déjà utilisé.':'Erreur : '+e.message;}btn.disabled=false;btn.textContent='Créer mon compte';};
 window.doLogout=async()=>{if(!confirm('Se déconnecter ?'))return;await signOut(_auth);clearLocalSession();adminAuthenticated=false;renderProfilPage();};
 window.openAuthModal=openAuthModal;
 
@@ -1460,7 +1548,7 @@ function renderCart(){
   document.getElementById('cart-total').innerHTML=`TOTAL : <strong>${total}€</strong>`;
 }
 document.getElementById('cart-page').addEventListener('click',e=>{if(e.target.classList.contains('delete-btn')){cart.splice(parseInt(e.target.dataset.index),1);saveCart();renderCart();}});
-document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('pickup-questions').style.display=btn.dataset.type==='pickup'?'block':'none';document.getElementById('delivery-questions').style.display=btn.dataset.type==='delivery'?'block':'none';});});
+document.querySelectorAll('.option-btn').forEach(btn=>{btn.addEventListener('click',()=>{document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById
 
 document.getElementById('submit-order-btn').onclick=async()=>{
   if(!cart.length)return alert('Votre panier est vide');
