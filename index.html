@@ -1154,6 +1154,29 @@ function saveLocalSession(uid,displayName,username){safeStorageSet('sf69_session
 function clearLocalSession(){safeStorageDel('sf69_session');}
 async function initGate(){switchGateTab('login');try{const cd=await getActiveCode();if(cd)startGateTimer(cd.expiresAt);}catch(e){console.warn(e);}}
 
+// ── BOUTON "SE CONNECTER" DE L'ÉCRAN D'ACCÈS (correctif : il manquait son listener) ──
+document.getElementById('login-submit-btn').addEventListener('click',async()=>{
+  const username=document.getElementById('login-user').value.trim().toLowerCase(),pass=document.getElementById('login-pass').value,errEl=document.getElementById('gate-login-error');errEl.textContent='';
+  if(!username||!pass){errEl.textContent='Remplissez tous les champs.';return;}
+  const btn=document.getElementById('login-submit-btn');btn.disabled=true;btn.textContent='Connexion...';
+  try{
+    const cred=await signInWithEmailAndPassword(_auth,username+ADMIN_EMAIL_DOMAIN,pass);
+    saveLocalSession(cred.user.uid,cred.user.displayName||username,username);
+    if(isAdminUser(cred.user)){
+      document.getElementById('access-gate').classList.add('hidden');
+      showSplashThenLaunch(true);
+    }else{
+      document.getElementById('access-gate').classList.add('hidden');
+      showSplashThenLaunch(false);
+    }
+  }catch(e){
+    if(e.code==='auth/user-not-found'||e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')errEl.textContent='❌ Identifiant ou mot de passe incorrect.';
+    else if(isInAppBrowser())errEl.innerHTML='⚠️ Ouvre ce site dans Chrome ou Safari.<br><button onclick="openInRealBrowser()" style="margin-top:8px;padding:8px 16px;background:var(--gold);color:#000;border:none;border-radius:8px;font-weight:700;cursor:pointer;">📱 Ouvrir</button>';
+    else errEl.textContent='❌ Erreur de connexion. Réessayez.';
+  }
+  btn.disabled=false;btn.textContent='Se connecter';
+});
+
 document.getElementById('admin-gate-login-btn').addEventListener('click',async()=>{
   const username=document.getElementById('admin-login-user').value.trim().toLowerCase(),pass=document.getElementById('admin-login-pass').value,errEl=document.getElementById('gate-admin-error');errEl.textContent='';
   if(!username||!pass){errEl.textContent='Remplissez tous les champs.';return;}
